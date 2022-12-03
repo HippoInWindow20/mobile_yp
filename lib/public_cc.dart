@@ -4,8 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import "package:mobile_yp/color_schemes.g.dart";
 import "package:mobile_yp/custom_color.g.dart";
+import 'package:mobile_yp/main.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+Future<List<Widget>> items = getCC();
+List<Widget> items_list = <Widget>[];
 
+Future<List<Widget>> getCC () async {
+  var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
+  var response = await http.get(url);
+  var document = parse(response.body);
+  var TDs = document.getElementsByTagName("td");
+  List titles = [];
+  List agencies = [];
+  List dates = [];
+  for (var i in TDs) {
+    if (i.outerHtml.toString().contains('width="75"')){
+      var tmp = i.innerHtml;
+      var str = tmp.substring(44,(tmp.length - 7));
+      agencies.add(str);
+    }
+  }
 
+  var As = document.getElementsByTagName("a");
+  for (var j in As) {
+    var tmp = j.innerHtml;
+    var str = tmp.substring(22,(tmp.length - 7));
+    titles.add(str);
+  }
+
+  var SPANs = document.getElementsByTagName("span");
+  for (var k in SPANs) {
+    if (k.children.length == 0){
+      dates.add(k.innerHtml);
+    }
+  }
+  dates.removeAt(dates.length - 1);
+  var result = <Widget>[];
+  for (var y = 0; y < dates.length;y++){
+    result.add(ListCard(title: titles[y], agency: agencies[y], date: dates[y],));
+  }
+  return result;
+}
 
 class publicCC extends StatelessWidget {
   @override
@@ -24,23 +64,7 @@ class publicCC extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            ListCard(
-              title: "Title 1",
-              agency: "My agency",
-              date: "2022/11/17",
-            ),
-            ListCard(
-              title: "Title 1",
-              agency: "My agency",
-              date: "2022/11/17",
-            ),
-            ListCard(
-              title: "Title 1",
-              agency: "My agency",
-              date: "2022/11/17",
-            ),
-          ]
+          children: items_list
         ),
       ),
     );
@@ -57,61 +81,78 @@ class ListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        debugPrint('Tapped!');
-      },
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-        elevation: 0,
-        color: lightColorScheme.onPrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 10, top: 10,bottom: 10),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(title,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+    return
+      Card(
+          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+          elevation: 0,
+          color: lightColorScheme.secondaryContainer,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: InkWell(
+            onTap: () {
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Hello!'),
+                  content: Text(title),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('OK'),
+                    ),
+                  ],
                 ),
-              ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10, top: 0,bottom: 10),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(agency,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 10,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(title,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10, top: 0,bottom: 10),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(date,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(agency,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(date,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          )
+        );
   }
 }

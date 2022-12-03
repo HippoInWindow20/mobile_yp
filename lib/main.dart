@@ -9,6 +9,8 @@ import "package:mobile_yp/custom_color.g.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 
+
+
 Map<int, Color> color =
 {
   50:Color.fromRGBO(50,107,0, .1),
@@ -23,8 +25,13 @@ Map<int, Color> color =
   900:Color.fromRGBO(50,107,0, 1),
 };
 
-Future<void> main() async {
+
+
+Future<void> main()  async {
   runApp(MobileYP());
+
+  items_list = await items;
+
 }
 
 class MobileYP extends StatelessWidget {
@@ -119,16 +126,13 @@ class _currentPage extends State<MainApp> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
 
-          var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
-          var response = await http.get(url);
-          var document = parse(response.body);
-          var grid = document.getElementById("GridView1")?.innerHtml;
+
           showDialog<String>(
             context: context,
             builder: (BuildContext context) => AlertDialog(
               title: const Text('Hello!'),
               content: SingleChildScrollView(
-                child: Text(grid!),
+                child: Text("Nope"),
               ),
               actions: <Widget>[
                 TextButton(
@@ -143,10 +147,10 @@ class _currentPage extends State<MainApp> {
             ),
           );
         },
-        backgroundColor: lightColorScheme.secondaryContainer,
+        backgroundColor: lightColorScheme.tertiaryContainer,
         child: Icon(
             Icons.info_outlined,
-          color: lightColorScheme.onSecondaryContainer,
+          color: lightColorScheme.onTertiaryContainer,
         ),
       ),
     );
