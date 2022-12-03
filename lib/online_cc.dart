@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import "package:mobile_yp/color_schemes.g.dart";
+import "package:mobile_yp/custom_color.g.dart";
 class OnlineCC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
