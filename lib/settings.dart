@@ -4,15 +4,16 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leading: Icon(
-      //     Icons.settings_outlined,
-      //     color: Colors.white,
-      //     size: 30.0,
-      //     semanticLabel: '設定',
-      //   ),
-      //   title: Text("設定"),
-      // ),
+      appBar: AppBar(
+        toolbarHeight: 0,
+        leading: Icon(
+          Icons.settings_outlined,
+          color: Colors.white,
+          size: 30.0,
+          semanticLabel: '設定',
+        ),
+        title: Text("設定"),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[

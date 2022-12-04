@@ -5,12 +5,31 @@ import 'package:flutter/foundation.dart';
 import "package:mobile_yp/color_schemes.g.dart";
 import "package:mobile_yp/custom_color.g.dart";
 import 'package:mobile_yp/main.dart';
+import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-Future<List<Widget>> items = getCC();
-List<Widget> items_list = <Widget>[];
+List list = [];
 
-Future<List<Widget>> getCC () async {
+Route _createRoute(title,agency,date) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => View(title: title,agency: agency,date: date,),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+
+Future<List<dynamic>> getCC () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
   var response = await http.get(url);
   var document = parse(response.body);
@@ -40,9 +59,9 @@ Future<List<Widget>> getCC () async {
     }
   }
   dates.removeAt(dates.length - 1);
-  var result = <Widget>[];
+  var result = <dynamic>[];
   for (var y = 0; y < dates.length;y++){
-    result.add(ListCard(title: titles[y], agency: agencies[y], date: dates[y],));
+    result.add([titles[y],agencies[y],dates[y],y]);
   }
   return result;
 }
@@ -57,27 +76,38 @@ class publicCC extends StatelessWidget {
         toolbarHeight: 100,
         title: Text(
           "公告欄",
-        style: TextStyle(
-          fontSize: 40
-        ),),
+          style: TextStyle(
+              fontSize: 40
+          ),
+        ),
         backgroundColor: lightColorScheme.background,
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.refresh))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: items_list
+            children: List.generate(list.length,(index){
+              return ListCard(title: list[index][0],agency: list[index][1],date: list[index][2],count: index);
+            }
+          ),
         ),
       ),
     );
   }
+
+
 }
+
 
 class ListCard extends StatelessWidget {
   const ListCard({
-    Key? key, required this.title, required this.agency, required this.date,
+    Key? key, required this.title, required this.agency, required this.date, required this.count,
   }) : super(key: key);
   final String title;
   final String agency;
   final String date;
+  final int count;
 
   @override
   Widget build(BuildContext context) {
@@ -89,23 +119,7 @@ class ListCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
-              showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Hello!'),
-                  content: Text(title),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'OK'),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
+              Navigator.of(context).push(_createRoute(title,agency,date));
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

@@ -8,7 +8,7 @@ import "package:mobile_yp/color_schemes.g.dart";
 import "package:mobile_yp/custom_color.g.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-
+import 'package:mobile_yp/view.dart';
 
 
 Map<int, Color> color =
@@ -29,9 +29,8 @@ Map<int, Color> color =
 
 Future<void> main()  async {
   runApp(MobileYP());
-
-  items_list = await items;
-
+  Future<List> _futureOfList = getCC();
+  list = await _futureOfList ;
 }
 
 class MobileYP extends StatelessWidget {
@@ -60,13 +59,18 @@ class MainApp extends StatefulWidget {
 
 
 }
-
+int currentPage = 0;
+int actualPage = 0;
 class _currentPage extends State<MainApp> {
-  dynamic currentPage = 0;
-  dynamic publiccc  = Colors.green;
-  dynamic onlinecc = Colors.black;
-  dynamic settings = Colors.black;
+
   var title = "行動延平";
+
+
+  void setStateFromChild (index) {
+    setState(() {
+      currentPage = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
