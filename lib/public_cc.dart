@@ -8,32 +8,17 @@ import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-List list = [];
-
-Route _createRoute(title,agency,date) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => View(title: title,agency: agency,date: date,),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
+Future<List> result = Future.value([]);
 
 
-Future<List<dynamic>> getCC () async {
+Future<List> getCC () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
   var response = await http.get(url);
   var document = parse(response.body);
   var TDs = document.getElementsByTagName("td");
+  viewstateGenerator = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+  eventValidation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
+  viewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
   List titles = [];
   List agencies = [];
   List dates = [];
@@ -44,6 +29,8 @@ Future<List<dynamic>> getCC () async {
       agencies.add(str);
     }
   }
+
+
 
   var As = document.getElementsByTagName("a");
   for (var j in As) {
@@ -66,7 +53,20 @@ Future<List<dynamic>> getCC () async {
   return result;
 }
 
-class publicCC extends StatelessWidget {
+class publicCC extends StatefulWidget {
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return _publicCCState();
+  }
+
+}
+
+
+
+
+class _publicCCState extends State<publicCC> {
   @override
 
   Widget build(BuildContext context) {
@@ -82,22 +82,38 @@ class publicCC extends StatelessWidget {
         ),
         backgroundColor: lightColorScheme.background,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.refresh))
+          IconButton(onPressed: () {
+            setState(() {
+              result = getCC();
+            });
+          }, icon: Icon(Icons.refresh))
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-            children: List.generate(list.length,(index){
-              return ListCard(title: list[index][0],agency: list[index][1],date: list[index][2],count: index);
+        child: FutureBuilder<List>(
+          future: result,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: List.generate(snapshot.data!.length, (index) =>
+                  ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
             }
-          ),
+
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
         ),
-      ),
-    );
+        ),
+      );
   }
 
-
 }
+
+
 
 
 class ListCard extends StatelessWidget {
@@ -119,7 +135,9 @@ class ListCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(_createRoute(title,agency,date));
+              content = getContentOfCC();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {return View(title: title,agency: agency,date: date,count: count,);}));
+
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

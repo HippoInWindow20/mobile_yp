@@ -25,12 +25,14 @@ Map<int, Color> color =
   900:Color.fromRGBO(50,107,0, 1),
 };
 
+String? eventValidation = "";
+String? viewstateGenerator = "";
+String? viewState = "";
 
 
 Future<void> main()  async {
   runApp(MobileYP());
-  Future<List> _futureOfList = getCC();
-  list = await _futureOfList ;
+
 }
 
 class MobileYP extends StatelessWidget {
@@ -43,11 +45,17 @@ class MobileYP extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: MaterialColor(lightColorScheme.primary.value,color),
         useMaterial3: true,
+        pageTransitionsTheme: myPageTransitionsTheme,
       ),
       home: MainApp(),
     );
   }
 }
+
+PageTransitionsTheme myPageTransitionsTheme = PageTransitionsTheme(builders: {
+  TargetPlatform.android: ZoomPageTransitionsBuilder(),
+  TargetPlatform.iOS: ZoomPageTransitionsBuilder()
+});
 
 class MainApp extends StatefulWidget {
   const MainApp({
@@ -62,6 +70,11 @@ class MainApp extends StatefulWidget {
 int currentPage = 0;
 int actualPage = 0;
 class _currentPage extends State<MainApp> {
+
+  void initState() {
+    super.initState();
+    result = getCC();
+  }
 
   var title = "行動延平";
 
@@ -84,14 +97,14 @@ class _currentPage extends State<MainApp> {
         selectedIndex: currentPage,
         destinations: const <Widget>[
           NavigationDestination(
+          selectedIcon: Icon(Icons.info),
+          icon: Icon(Icons.info_outlined),
+          label: '公告欄',
+        ),
+          NavigationDestination(
             selectedIcon: Icon(Icons.campaign),
             icon: Icon(Icons.campaign_outlined),
             label: '網路聯絡簿',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.info),
-            icon: Icon(Icons.info_outlined),
-            label: '公告欄',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.upload),
@@ -107,14 +120,14 @@ class _currentPage extends State<MainApp> {
       ),
       body: <Widget>[
         Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: OnlineCC(),
-        ),
+        color: Colors.green,
+        alignment: Alignment.center,
+        child: publicCC(),
+      ),
         Container(
           color: Colors.green,
           alignment: Alignment.center,
-          child: publicCC(),
+          child: OnlineCC(),
         ),
         Container(
           color: lightColorScheme.onPrimary,

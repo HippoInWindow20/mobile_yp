@@ -1,18 +1,48 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import "package:mobile_yp/color_schemes.g.dart";
+import 'package:mobile_yp/main.dart';
 import "package:mobile_yp/public_cc.dart";
 import "package:mobile_yp/custom_color.g.dart";
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
 
+Future<String> content = Future.value("");
 
+Future<String> getContentOfCC () async {
+  var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
+  var response = await http.post(
+    url,
+    headers: {
+    "Content-Type":"application/x-www-form-urlencoded",
+      "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+  },
+      body: {
+        "__EVENTTARGET": "GridView1",
+        "__EVENTARGUMENT":"count\$0",
+        "__LASTFOCUS":"",
+        "__VIEWSTATE":viewState,
+        "__VIEWSTATEGENERATOR":viewstateGenerator,
+        "__EVENTVALIDATION":eventValidation,
+        "DL1":"不分",
+        "DL2":"不分",
+        "DL3":"全部",
+      },
+  );
+  var document = parse(response.body);
+  return document.outerHtml;
+}
 
 class View extends StatelessWidget {
   const View({
-    Key? key, required this.title,required this.agency,required this.date,
+    Key? key, required this.title,required this.agency,required this.date, required this.count,
   }) : super(key: key);
   final String title;
   final String agency;
   final String date;
+  final int count;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,20 +118,24 @@ class View extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.only(left:20,bottom: 15),
                 child: Padding(padding: EdgeInsets.only(top: 15),
-                  child: Text("""Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec facilisis diam. Sed interdum magna vitae elit pellentesque, sit amet euismod nunc consectetur. Sed pretium varius nibh, et vehicula lectus scelerisque vitae. Vivamus vestibulum odio vel nisl luctus, non lacinia sem sollicitudin. In molestie mollis nibh quis condimentum. Aliquam iaculis tincidunt rutrum. Praesent bibendum mattis nisl a consequat. Mauris eu turpis ex. Donec semper fermentum nisi eget efficitur. Fusce nec feugiat turpis.
+                  child: FutureBuilder<String>(
+                    future: content,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data!,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: lightColorScheme.onSecondaryContainer
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      }
 
-                      Integer lectus ante, dapibus sed sem eu, dapibus venenatis sapien. Phasellus quis ultrices enim. Nulla aliquet dolor at enim rutrum, vitae sagittis ligula bibendum. Aliquam id ullamcorper lectus. Sed interdum maximus fringilla. Sed pharetra vel ex varius placerat. Maecenas maximus viverra mauris, vitae scelerisque diam vehicula ut. Etiam consectetur risus vel erat viverra, id elementum odio rhoncus.
-
-                      Nunc dolor ligula, blandit id risus eu, congue aliquet mi. Morbi diam diam, molestie et lectus ut, sollicitudin iaculis neque. Etiam vitae leo rhoncus, dictum nunc tristique, blandit tellus. Mauris lacus odio, consequat quis mi sit amet, molestie scelerisque velit. Fusce orci enim, interdum quis consectetur fringilla, commodo id nisl. Donec vel tortor ut ante aliquam dignissim quis eget lectus. Suspendisse varius cursus dictum. Nunc porta lorem lectus, et dictum ex pharetra ac. Integer aliquam viverra ante, id condimentum tortor imperdiet sit amet. Curabitur gravida diam non sem pretium, sit amet fringilla mi aliquet. Praesent sit amet justo hendrerit, fermentum ex ac, egestas ligula. Sed porta odio at massa pharetra pulvinar.
-
-                      Quisque ac dapibus libero. Mauris eget eros et urna efficitur congue. Suspendisse quis ante efficitur, suscipit dui quis, ornare urna. Sed commodo nec libero et faucibus. Sed bibendum eu sapien et cursus. Curabitur sollicitudin consequat nisi, eu tincidunt purus condimentum eget. Nam ornare et ipsum sed venenatis. Etiam velit nunc, porttitor in dolor eget, gravida tincidunt ex. Nullam sollicitudin euismod sem, eget pretium felis sagittis non. Etiam tincidunt orci urna, ut accumsan justo vulputate id. Fusce tempus augue eu nisl vehicula, eget fermentum tortor iaculis. Vivamus blandit luctus felis hendrerit placerat. Donec nec scelerisque sem. Nam at felis bibendum, aliquet est at, iaculis mi.`
-
-                      Fusce vitae mattis lectus. Integer vitae risus pulvinar, pulvinar odio vitae, bibendum metus. Curabitur ornare leo non massa sodales, pharetra ornare metus porttitor. Nullam ligula ipsum, pulvinar ut justo ac, cursus porttitor libero. Sed ultricies lacinia posuere. Nunc congue felis at diam pretium fermentum. Nunc nisl ante, venenatis sed fringilla vel, tempus in sapien.""",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: lightColorScheme.onSecondaryContainer
-                    ),
-                  ),
+                      // By default, show a loading spinner.
+                      return const CircularProgressIndicator();
+                    },
+                  )
                 )
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
