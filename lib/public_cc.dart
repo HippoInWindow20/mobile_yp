@@ -100,11 +100,13 @@ class _publicCCState extends State<publicCC> {
                 ),
               );
             } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
+              return ErrorCard(errorCode: snapshot.error.toString());
             }
 
             // By default, show a loading spinner.
-            return const CircularProgressIndicator();
+            return const Center(
+                child: CircularProgressIndicator()
+            );
           },
         ),
         ),
@@ -186,5 +188,85 @@ class ListCard extends StatelessWidget {
             ),
           )
         );
+  }
+}
+
+class ErrorCard extends StatelessWidget {
+  const ErrorCard({
+    Key? key, required this.errorCode,
+  }) : super(key: key);
+  final String errorCode;
+
+  @override
+  Widget build(BuildContext context) {
+    return
+      Card(
+          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+          elevation: 0,
+          color: lightColorScheme.errorContainer,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: InkWell(
+            onTap: () {
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 10,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child:
+                          Icon(
+                            Icons.signal_cellular_connected_no_internet_0_bar_sharp,
+                            size: 30,
+                            color: lightColorScheme.onErrorContainer,
+                          ),
+                        ),
+                        Text("連線錯誤",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: lightColorScheme.onErrorContainer,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text("點擊重新整理重試",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(errorCode,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+      );
   }
 }

@@ -116,7 +116,7 @@ class View extends StatelessWidget {
                 )
             ),
             Padding(
-                padding: EdgeInsets.only(left:20,bottom: 15),
+                padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
                 child: Padding(padding: EdgeInsets.only(top: 15),
                   child: FutureBuilder<String>(
                     future: content,
@@ -129,11 +129,13 @@ class View extends StatelessWidget {
                           ),
                         );
                       } else if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
+                        return ErrorCard(errorCode: snapshot.error.toString());
                       }
 
                       // By default, show a loading spinner.
-                      return const CircularProgressIndicator();
+                      return Center(
+                          child: CircularProgressIndicator()
+                      );
                     },
                   )
                 )
