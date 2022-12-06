@@ -90,6 +90,7 @@ class View extends StatelessWidget {
             Container(
               color: lightColorScheme.secondaryContainer,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: EdgeInsets.all(20),
