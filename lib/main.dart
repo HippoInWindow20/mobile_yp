@@ -28,6 +28,7 @@ Map<int, Color> color =
 String? eventValidation = "";
 String? viewstateGenerator = "";
 String? viewState = "";
+String? ASPCookie = "";
 
 
 Future<void> main()  async {

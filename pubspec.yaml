@@ -39,6 +39,7 @@ dependencies:
   local_auth: ^2.1.2
   dynamic_color: ^1.4.0
   html: ^0.15.1
+  flutter_custom_tabs: ^1.0.4
 
 dev_dependencies:
   flutter_test:

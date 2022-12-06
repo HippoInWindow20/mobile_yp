@@ -13,12 +13,13 @@ Future<List> result = Future.value([]);
 
 Future<List> getCC () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
-  var response = await http.get(url);
+  var response = await http.post(url,body: {});
   var document = parse(response.body);
   var TDs = document.getElementsByTagName("td");
   viewstateGenerator = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
   viewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
+  ASPCookie = response.headers.toString().substring(60,103);
   List titles = [];
   List agencies = [];
   List dates = [];
@@ -137,7 +138,7 @@ class ListCard extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
-              content = getContentOfCC();
+              content = getContentOfCC(count);
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {return View(title: title,agency: agency,date: date,count: count,);}));
 
             },
