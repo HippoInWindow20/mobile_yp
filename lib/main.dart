@@ -111,12 +111,7 @@ class _currentPage extends State<MainApp> {
             selectedIcon: Icon(Icons.upload),
             icon: Icon(Icons.upload_outlined),
             label: '聯絡簿上傳',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.settings),
-            icon: Icon(Icons.settings_outlined),
-            label: '設定',
-          ),
+          )
         ],
       ),
       body: <Widget>[
@@ -134,12 +129,7 @@ class _currentPage extends State<MainApp> {
           color: lightColorScheme.onPrimary,
           alignment: Alignment.center,
           child: const Text('Page 3'),
-        ),
-        Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: Settings(),
-        ),
+        )
       ][currentPage],
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

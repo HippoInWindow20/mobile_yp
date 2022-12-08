@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import "package:mobile_yp/color_schemes.g.dart";
 import "package:mobile_yp/custom_color.g.dart";
 import 'package:mobile_yp/main.dart';
+import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
@@ -73,43 +74,78 @@ class _publicCCState extends State<publicCC> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: lightColorScheme.background,
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: Text(
-          "公告欄",
-          style: TextStyle(
-              fontSize: 40
-          ),
-        ),
-        backgroundColor: lightColorScheme.background,
-        actions: [
-          IconButton(onPressed: () {
-            setState(() {
-              result = getCC();
-            });
-          }, icon: Icon(Icons.refresh))
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: FutureBuilder<List>(
-          future: result,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: List.generate(snapshot.data!.length, (index) =>
-                  ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return ErrorCard(errorCode: snapshot.error.toString());
-            }
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: false,
+            snap: true,
+            floating: true,
+            toolbarHeight: 100,
+            title: Text(
+              "公告欄",
+              style: TextStyle(
+                color: lightColorScheme.onBackground,
+                fontSize: 40
+              ),
+            ),
+            backgroundColor: lightColorScheme.background,
+            actions: [
+              PopupMenuButton(
+                onSelected: (choice) {
+                  switch (choice) {
+                    case '重新整理':
+                      result = Future.value([]);
+                      setState(() {
 
-            // By default, show a loading spinner.
-            return const Center(
-                child: CircularProgressIndicator()
-            );
-          },
-        ),
+                      });
+                      result = getCC();
+                      break;
+                    case '設定':
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {return Settings();}));
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return {'重新整理', '設定'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(choice,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList();
+                }
+                ,
+
+              )
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: FutureBuilder<List>(
+              future: result,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: List.generate(snapshot.data!.length, (index) =>
+                        ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return ErrorCard(errorCode: snapshot.error.toString());
+                }
+
+                // By default, show a loading spinner.
+                return const Center(
+                    child: CircularProgressIndicator()
+                );
+              },
+            ),
+          ),
+        ],
         ),
       );
   }
@@ -146,7 +182,7 @@ class ListCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 20, top: 10,bottom: 10,right: 20),
+                  padding: EdgeInsets.only(left: 20, top: 20,bottom: 10,right: 20),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(title,
@@ -159,31 +195,49 @@ class ListCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(agency,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child:Icon(Icons.apartment_outlined,color: lightColorScheme.onSecondaryContainer,size: 20,),
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(date,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20,right: 10),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(agency,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child:Icon(Icons.calendar_month_outlined,color: lightColorScheme.onSecondaryContainer,size: 20,),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(date,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),

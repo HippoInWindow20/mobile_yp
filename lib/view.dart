@@ -81,7 +81,7 @@ class View extends StatelessWidget {
     return Scaffold(
       backgroundColor: lightColorScheme.background,
       appBar: AppBar(
-        backgroundColor: lightColorScheme.background,
+        backgroundColor: lightColorScheme.secondaryContainer,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -154,13 +154,11 @@ class View extends StatelessWidget {
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return ErrorCard(errorCode: snapshot.error.toString());
+                                  return Text("");
                                 }
 
                                 // By default, show a loading spinner.
-                                return Center(
-                                    child: CircularProgressIndicator()
-                                );
+                                return Text("");
                               },
                             ),
                           )
@@ -233,12 +231,15 @@ class View extends StatelessWidget {
                                       padding: EdgeInsets.only(right: 10),
                                       child: Row(
                                         children: [
-                                          Icon(Icons.language_outlined),
-                                          Padding(padding: EdgeInsets.only(left: 10),
+                                          Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                            child: Icon(Icons.language_outlined,size: 30,),
+                                          ),
+                                          Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
                                               child: Text("訪問連結",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                    fontSize: 20
+                                                    fontSize: 25,
+                                                  fontWeight: FontWeight.normal
                                                 ),
                                               )
                                           )
@@ -256,12 +257,10 @@ class View extends StatelessWidget {
                     return Padding(padding: EdgeInsets.only());
                   }
                 } else if (snapshot.hasError) {
-                  return ErrorCard(errorCode: snapshot.error.toString());
+                  return Text("");
                 }
                 // By default, show a loading spinner.
-                return Center(
-                    child: CircularProgressIndicator()
-                );
+                return Text("");
               },
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 50)),
