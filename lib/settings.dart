@@ -1,7 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:mobile_yp/color_schemes.g.dart';
+import 'package:mobile_yp/online_cc.dart';
+import 'package:mobile_yp/public_cc.dart';
 import 'package:settings_ui/settings_ui.dart';
+
+import 'package:mobile_yp/admin.dart';
 
 bool sampleSwitch = true;
 TextStyle SettingsTitleTextStyle = TextStyle(
@@ -34,10 +38,10 @@ class __SettingsState extends State<Settings>{
         backgroundColor: lightColorScheme.background,
       ),
       body:SettingsList(
-        lightTheme: SettingsThemeData(
+       lightTheme:SettingsThemeData(
             settingsSectionBackground: lightColorScheme.background,
             settingsListBackground: lightColorScheme.background
-        ),
+        ) ,
         sections: [
           SettingsSection(
             title: Text("設定",
@@ -103,15 +107,27 @@ class __SettingsState extends State<Settings>{
               SettingsTile.navigation(
                 title: Text('資訊股長上傳',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return adminPage();
+                          }
+                      )
+                  );
                 },
               ),
               SettingsTile.navigation(
                 title: Text('網路聯絡簿',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return OnlineCC();
+                          }
+                      )
+                  );
                 },
-              ),
+              )
 
             ],
           ),

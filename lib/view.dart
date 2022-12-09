@@ -81,6 +81,9 @@ class View extends StatelessWidget {
     return Scaffold(
       backgroundColor: lightColorScheme.background,
       appBar: AppBar(
+        actionsIconTheme: IconThemeData(
+          color: lightColorScheme.onSecondaryContainer
+        ),
         backgroundColor: lightColorScheme.secondaryContainer,
       ),
       body: SingleChildScrollView(
@@ -124,7 +127,7 @@ class View extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.calendar_month_outlined,size: 30),
+                          Icon(Icons.calendar_month_outlined,size: 30,color: lightColorScheme.onSecondaryContainer),
                           Padding(padding: EdgeInsets.only(left: 15),
                             child: Text(date,
                               style: TextStyle(
@@ -141,7 +144,7 @@ class View extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.person_outlined,size: 30),
+                          Icon(Icons.person_outlined,size: 30,color: lightColorScheme.onSecondaryContainer),
                           Padding(padding: EdgeInsets.only(left: 15),
                             child: FutureBuilder<List>(
                               future: content,
@@ -222,7 +225,11 @@ class View extends StatelessWidget {
                             ),
                             Padding(padding: EdgeInsets.only(top: 15),
                               child: Tooltip(
+                                message: snapshot.data![2],
                                 child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(lightColorScheme.tertiaryContainer)
+                                    ),
                                     clipBehavior: Clip.hardEdge,
                                     onPressed: () {
                                       _launchURL(context, snapshot.data![2]);
@@ -232,14 +239,15 @@ class View extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Icon(Icons.language_outlined,size: 30,),
+                                            child: Icon(Icons.language_outlined,size: 30,color: lightColorScheme.onTertiaryContainer,),
                                           ),
                                           Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
                                               child: Text("訪問連結",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     fontSize: 25,
-                                                  fontWeight: FontWeight.normal
+                                                  fontWeight: FontWeight.normal,
+                                                  color: lightColorScheme.onTertiaryContainer
                                                 ),
                                               )
                                           )
@@ -247,7 +255,6 @@ class View extends StatelessWidget {
                                       ),
                                     )
                                 ),
-                                message: snapshot.data![2],
                               ),
                             )
                           ],

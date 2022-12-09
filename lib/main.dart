@@ -9,6 +9,7 @@ import "package:mobile_yp/custom_color.g.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/view.dart';
+import 'package:animations/animations.dart';
 
 
 Map<int, Color> color =
@@ -42,21 +43,16 @@ class MobileYP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Mobile YP.",
+      title: "行動延平. Mobile YP.",
       theme: ThemeData(
-        primarySwatch: MaterialColor(lightColorScheme.primary.value,color),
+        primarySwatch: Colors.green,
         useMaterial3: true,
-        pageTransitionsTheme: myPageTransitionsTheme,
       ),
       home: MainApp(),
     );
   }
 }
 
-PageTransitionsTheme myPageTransitionsTheme = PageTransitionsTheme(builders: {
-  TargetPlatform.android: ZoomPageTransitionsBuilder(),
-  TargetPlatform.iOS: ZoomPageTransitionsBuilder()
-});
 
 class MainApp extends StatefulWidget {
   const MainApp({
@@ -90,6 +86,7 @@ class _currentPage extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         onDestinationSelected: (int index) {
           setState(() {
             currentPage = index;
@@ -98,10 +95,10 @@ class _currentPage extends State<MainApp> {
         selectedIndex: currentPage,
         destinations: const <Widget>[
           NavigationDestination(
-          selectedIcon: Icon(Icons.info),
-          icon: Icon(Icons.info_outlined),
-          label: '公告欄',
-        ),
+            selectedIcon: Icon(Icons.info),
+            icon: Icon(Icons.info_outlined),
+            label: '公告欄',
+          ),
           NavigationDestination(
             selectedIcon: Icon(Icons.campaign),
             icon: Icon(Icons.campaign_outlined),
@@ -135,24 +132,13 @@ class _currentPage extends State<MainApp> {
         onPressed: () async {
 
 
-          showDialog<String>(
+          showAboutDialog(
             context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text('Hello!'),
-              content: SingleChildScrollView(
-                child: Text("Nope"),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
+            applicationName: "行動延平. Mobile YP.",
+            applicationVersion: "1.0 beta",
+            children: [
+              Text("Why use that crappy old website when you have an optimised version in the palm of your hands?")
+            ]
           );
         },
         backgroundColor: lightColorScheme.tertiaryContainer,

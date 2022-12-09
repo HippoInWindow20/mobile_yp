@@ -41,6 +41,7 @@ dependencies:
   html: ^0.15.1
   flutter_custom_tabs: ^1.0.4
   settings_ui: ^2.0.2
+  animations: ^2.0.7
 
 dev_dependencies:
   flutter_test:

@@ -9,6 +9,9 @@ import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
+import 'package:animations/animations.dart';
+
+
 Future<List> result = Future.value([]);
 
 
@@ -66,6 +69,20 @@ class publicCC extends StatefulWidget {
 }
 
 
+Widget gotoSettings (child) {
+  return PageTransitionSwitcher(
+      transitionBuilder: (child, animation, secondaryAnimation) {
+        return SharedAxisTransition(
+          child: child,
+          transitionType: SharedAxisTransitionType.horizontal,
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+        );
+      },
+    child: child,
+    duration: Duration(milliseconds: 1000),
+  );
+}
 
 
 class _publicCCState extends State<publicCC> {
@@ -91,6 +108,7 @@ class _publicCCState extends State<publicCC> {
             backgroundColor: lightColorScheme.background,
             actions: [
               PopupMenuButton(
+                icon: Icon(Icons.more_vert,color: lightColorScheme.onBackground,),
                 onSelected: (choice) {
                   switch (choice) {
                     case '重新整理':
@@ -101,12 +119,21 @@ class _publicCCState extends State<publicCC> {
                       result = getCC();
                       break;
                     case '設定':
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) {return Settings();}));
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return gotoSettings(
+                                  Settings()
+                                );
+                              }
+                           )
+                      );
                   }
                 },
                 itemBuilder: (BuildContext context) {
                   return {'重新整理', '設定'}.map((String choice) {
                     return PopupMenuItem<String>(
+                      padding: null,
                       value: choice,
                       child: Padding(
                         padding: EdgeInsets.all(10),
@@ -188,7 +215,7 @@ class ListCard extends StatelessWidget {
                     child: Text(title,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: lightColorScheme.onSecondaryContainer,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -211,7 +238,7 @@ class ListCard extends StatelessWidget {
                         child: Text(agency,
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: lightColorScheme.onSecondaryContainer,
                             fontSize: 16,
                           ),
                         ),
@@ -231,7 +258,7 @@ class ListCard extends StatelessWidget {
                         child: Text(date,
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: Colors.black,
+                            color: lightColorScheme.onSecondaryContainer,
                             fontSize: 16,
                           ),
                         ),
