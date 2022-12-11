@@ -7,17 +7,9 @@ import 'package:settings_ui/settings_ui.dart';
 
 import 'package:mobile_yp/admin.dart';
 
+
 bool sampleSwitch = true;
-TextStyle SettingsTitleTextStyle = TextStyle(
-  fontSize: 25,
-  color: lightColorScheme.onBackground
-);
-TextStyle SettingsSubtitleTextStyle = TextStyle(
-    fontSize: 15,
-    color: lightColorScheme.onSecondaryContainer,
-
-);
-
+Object? setDisplayMode = "深色";
 class Settings extends StatefulWidget {
   @override
 
@@ -29,25 +21,47 @@ class Settings extends StatefulWidget {
 }
 
 class __SettingsState extends State<Settings>{
+
+  void setStateExtend (){
+    setState(() {
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+
+    TextStyle SettingsTitleTextStyle = TextStyle(
+        fontSize: 25,
+        color: Theme.of(context).colorScheme.onBackground
+    );
+    TextStyle SettingsSubtitleTextStyle = TextStyle(
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.onSecondaryContainer,
+
+    );
     return Scaffold(
-      backgroundColor: lightColorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         toolbarHeight: 60,
-        backgroundColor: lightColorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body:SettingsList(
        lightTheme:SettingsThemeData(
-            settingsSectionBackground: lightColorScheme.background,
-            settingsListBackground: lightColorScheme.background
+            settingsSectionBackground: Theme.of(context).colorScheme.background,
+            settingsListBackground: Theme.of(context).colorScheme.background
         ) ,
         sections: [
           SettingsSection(
             title: Text("設定",
               style: TextStyle(
                   fontSize: 50,
-                  color: lightColorScheme.onBackground
+                  color: Theme.of(context).colorScheme.onBackground
               ),
             ), tiles: [],
           ),
@@ -55,18 +69,26 @@ class __SettingsState extends State<Settings>{
             title: Text("一般",
               style: TextStyle(
                   fontSize: 20,
-                  color: lightColorScheme.primary
+                  color: Theme.of(context).colorScheme.primary
               ),
             ),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
-                title: Text('深色模式',style: SettingsTitleTextStyle,),
+                title: Text('主題',style: SettingsTitleTextStyle,),
                 value: Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Text('關閉',style: SettingsSubtitleTextStyle,),
+                  child: Text(setDisplayMode.toString(),style: SettingsSubtitleTextStyle,),
                 ),
                 onPressed: (context) {
-
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("主題"),
+                          content: ModeSelection(setStateCallBack: setStateExtend,),
+                        );
+                      }
+                  );
                 },
               ),
               SettingsTile.navigation(
@@ -100,7 +122,7 @@ class __SettingsState extends State<Settings>{
             title: Text("帳號設定",
               style: TextStyle(
                   fontSize: 20,
-                  color: lightColorScheme.primary
+                  color: Theme.of(context).colorScheme.primary
               ),
             ),
             tiles: <SettingsTile>[
@@ -136,4 +158,84 @@ class __SettingsState extends State<Settings>{
     );
   }
 
+}
+
+class ModeSelection extends StatefulWidget {
+  ModeSelection({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
+  @override
+  State<StatefulWidget> createState() {
+    return __ModeSelection(setStateCallBack: setStateCallBack);
+  }
+
+}
+
+class __ModeSelection extends State<ModeSelection>{
+   __ModeSelection({
+    required this.setStateCallBack,
+  });
+
+  final Function setStateCallBack;
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      direction: Axis.vertical,
+      children: [
+        Row(
+          children: [
+            Radio(
+                value: "淺色",
+                groupValue: setDisplayMode,
+                onChanged: (value) {
+
+                  setState(() {
+                    setDisplayMode = value;
+                  });
+                  setStateCallBack();
+                  Navigator.pop(context);
+                }
+            ),
+            Text("淺色")
+          ],
+        ),
+        Row(
+          children: [
+            Radio(
+                value: "深色",
+                groupValue: setDisplayMode,
+                onChanged: (value) {
+
+                  setState(() {
+                    setDisplayMode = value;
+                  });
+                  setStateCallBack();
+                  Navigator.pop(context);
+                }
+            ),
+            Text("深色")
+          ],
+        ),
+
+        Row(
+          children: [
+            Radio(
+                value: "系統預設",
+                groupValue: setDisplayMode,
+                onChanged: (value) {
+
+                  setState(() {
+                    setDisplayMode = value;
+                  });
+                  setStateCallBack();
+                  Navigator.pop(context);
+                }
+            ),
+            Text("系統預設")
+          ],
+        ),
+      ],
+    );
+  }
 }

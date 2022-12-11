@@ -18,23 +18,36 @@ class adminPage extends StatefulWidget {
 class __adminState extends State<adminPage>{
   @override
   Widget build(BuildContext context) {
+    TextStyle SettingsTitleTextStyle = TextStyle(
+        fontSize: 25,
+        color: Theme.of(context).colorScheme.onBackground
+    );
+    TextStyle SettingsSubtitleTextStyle = TextStyle(
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.onSecondaryContainer,
+
+    );
     return Scaffold(
-      backgroundColor: lightColorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         toolbarHeight: 60,
-        backgroundColor: lightColorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body:SettingsList(
        lightTheme:SettingsThemeData(
-            settingsSectionBackground: lightColorScheme.background,
-            settingsListBackground: lightColorScheme.background
+            settingsSectionBackground: Theme.of(context).colorScheme.background,
+            settingsListBackground: Theme.of(context).colorScheme.background
         ) ,
         sections: [
           SettingsSection(
             title: Text("資訊股長設定",
               style: TextStyle(
                   fontSize: 50,
-                  color: lightColorScheme.onBackground
+                  color: Theme.of(context).colorScheme.onBackground
               ),
             ), tiles: [],
           ),
@@ -55,96 +68,7 @@ class __adminState extends State<adminPage>{
                 title: Text('設定帳號密碼',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        toolbarHeight: 0,
-                      ),
-                      body: Center(
-                        child: Wrap(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.only(left: 20),
-                              child: Text("修改帳號密碼",
-                                style: TextStyle(
-                                    fontSize: 50,
-                                    color: lightColorScheme.onBackground
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    focusColor: lightColorScheme.primary,
-                                    prefixIcon: Icon(Icons.person_outlined),
-                                    labelText: "帳號",
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.lock_outlined),
-                                    suffixIcon: IconButton(icon: Icon(Icons.remove_red_eye), onPressed: () {  },),
-                                    labelText: "密碼",
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.sensor_door_outlined),
-                                    labelText: "導班",
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 16),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("取消"),
-                                  style: ButtonStyle(
-                                    fixedSize: MaterialStatePropertyAll(
-                                        Size(
-                                            MediaQuery.of(context).size.width,50
-                                        )
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                                child: ElevatedButton(
-                                    onPressed: () {},
-                                    child: Text("儲存"),
-                                    style: ButtonStyle(
-                                      fixedSize: MaterialStatePropertyAll(
-                                        Size(
-                                            MediaQuery.of(context).size.width,50
-                                        )
-                                      ),
-                                    ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                      ),
-                    );
+                    return editAdmin();
                   }
                   )
                   );
@@ -158,4 +82,175 @@ class __adminState extends State<adminPage>{
     );
   }
 
+}
+
+class editAdmin extends StatelessWidget {
+  const editAdmin({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: Theme.of(context).colorScheme.background,
+      ),
+      body: Center(
+        child: Wrap(
+          children: [
+            Padding(
+                padding: EdgeInsets.only(left: 20),
+              child: Text("修改帳號密碼",
+                style: TextStyle(
+                    fontSize: 50,
+                    color: Theme.of(context).colorScheme.onBackground
+                ),
+              ),
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                child: TextFormField(
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground
+                  ),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.person_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                    hintText: "上傳帳號",
+                    hintStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground
+                   ),
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground
+                    ),
+                    focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                    labelText: '帳號',
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onBackground
+                        )
+                    ),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onBackground
+                        )
+                    )
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                child: TextFormField(
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.lock_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.remove_red_eye_outlined),
+                        color: Theme.of(context).colorScheme.onBackground,
+                        onPressed: () {  },),
+                      hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground
+                      ),
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground
+                      ),
+                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                      labelText: '密碼',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onBackground
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onBackground
+                          )
+                      )
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                child: TextFormField(
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground
+                  ),
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.sensor_door_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                      hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground
+                      ),
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground
+                      ),
+                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                      labelText: '導班',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onBackground
+                          )
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onBackground
+                          )
+                      )
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("取消",style: TextStyle(fontSize: 20),),
+                  style: ButtonStyle(
+                    fixedSize: MaterialStatePropertyAll(
+                        Size(
+                            (MediaQuery.of(context).size.width / 2 - 32),50
+                        ),
+                    ),
+                    backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                    elevation: MaterialStatePropertyAll(0)
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("儲存",style: TextStyle(fontSize: 20),),
+                  style: ButtonStyle(
+                      fixedSize: MaterialStatePropertyAll(
+                        Size(
+                            (MediaQuery.of(context).size.width / 2 - 32),50
+                        ),
+                      ),
+                      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                      elevation: MaterialStatePropertyAll(0)
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+      ),
+    );
+  }
 }

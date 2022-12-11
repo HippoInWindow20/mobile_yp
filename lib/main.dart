@@ -44,7 +44,14 @@ class MobileYP extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "行動延平. Mobile YP.",
+      darkTheme: ThemeData(
+        colorScheme: darkColorScheme,
+        primarySwatch: Colors.green,
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system,
       theme: ThemeData(
+        colorScheme: lightColorScheme,
         primarySwatch: Colors.green,
         useMaterial3: true,
       ),
@@ -85,31 +92,47 @@ class _currentPage extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.info),
-            icon: Icon(Icons.info_outlined),
-            label: '公告欄',
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+          iconTheme: MaterialStatePropertyAll(
+            IconThemeData(
+              color: Theme.of(context).colorScheme.onBackground
+            )
           ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.campaign),
-            icon: Icon(Icons.campaign_outlined),
-            label: '網路聯絡簿',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.upload),
-            icon: Icon(Icons.upload_outlined),
-            label: '聯絡簿上傳',
+          labelTextStyle: MaterialStatePropertyAll(
+            TextStyle(
+              color: Theme.of(context).colorScheme.onBackground
+            )
           )
-        ],
+        ),
+        child: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPage = index;
+            });
+          },
+          selectedIndex: currentPage,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.info),
+              icon: Icon(Icons.info_outlined),
+              label: '公告欄',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.campaign),
+              icon: Icon(Icons.campaign_outlined),
+              label: '網路聯絡簿',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.upload),
+              icon: Icon(Icons.upload_outlined),
+              label: '聯絡簿上傳',
+            )
+          ],
+        ),
       ),
       body: <Widget>[
         Container(
@@ -123,7 +146,7 @@ class _currentPage extends State<MainApp> {
           child: OnlineCC(),
         ),
         Container(
-          color: lightColorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: const Text('Page 3'),
         )
@@ -141,10 +164,10 @@ class _currentPage extends State<MainApp> {
             ]
           );
         },
-        backgroundColor: lightColorScheme.tertiaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
         child: Icon(
             Icons.info_outlined,
-          color: lightColorScheme.onTertiaryContainer,
+          color: Theme.of(context).colorScheme.onTertiaryContainer,
         ),
       ),
     );

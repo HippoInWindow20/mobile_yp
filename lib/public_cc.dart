@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import "package:mobile_yp/color_schemes.g.dart";
@@ -90,7 +91,7 @@ class _publicCCState extends State<publicCC> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightColorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -101,53 +102,68 @@ class _publicCCState extends State<publicCC> {
             title: Text(
               "公告欄",
               style: TextStyle(
-                color: lightColorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onBackground,
                 fontSize: 40
               ),
             ),
-            backgroundColor: lightColorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.background,
             actions: [
-              PopupMenuButton(
-                icon: Icon(Icons.more_vert,color: lightColorScheme.onBackground,),
-                onSelected: (choice) {
-                  switch (choice) {
-                    case '重新整理':
+              AppPopupMenu<int>(
+                padding: EdgeInsets.all(20),
+                menuItems:  [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                        '重新整理',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onTertiaryContainer,
+                        fontSize: 20
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Text(
+                        '設定',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onTertiaryContainer,
+                            fontSize: 20
+                        )
+                    ),
+                  ),
+                ],
+                onSelected: (int value) {
+                  switch (value){
+                    case 1:
                       result = Future.value([]);
                       setState(() {
 
                       });
                       result = getCC();
                       break;
-                    case '設定':
+                    case 2:
                       Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) {
                                 return gotoSettings(
-                                  Settings()
+                                    Settings()
                                 );
                               }
-                           )
+                          )
                       );
+                      break;
                   }
                 },
-                itemBuilder: (BuildContext context) {
-                  return {'重新整理', '設定'}.map((String choice) {
-                    return PopupMenuItem<String>(
-                      padding: null,
-                      value: choice,
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(choice,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList();
-                }
-                ,
-
+                onCanceled: () {
+                },
+                tooltip: "更多選項",
+                elevation: 30,
+                icon: Icon(Icons.more_vert,size: 30,color: Theme.of(context).colorScheme.onBackground,),
+                offset: const Offset(0, 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                color: Theme.of(context).colorScheme.tertiaryContainer,
               )
             ],
           ),
@@ -197,7 +213,7 @@ class ListCard extends StatelessWidget {
       Card(
           margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
           elevation: 0,
-          color: lightColorScheme.secondaryContainer,
+          color: Theme.of(context).colorScheme.secondaryContainer,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
@@ -215,7 +231,7 @@ class ListCard extends StatelessWidget {
                     child: Text(title,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: lightColorScheme.onSecondaryContainer,
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -228,7 +244,7 @@ class ListCard extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child:Icon(Icons.apartment_outlined,color: lightColorScheme.onSecondaryContainer,size: 20,),
+                        child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
                       ),
                     ),
                     Padding(
@@ -238,7 +254,7 @@ class ListCard extends StatelessWidget {
                         child: Text(agency,
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: lightColorScheme.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                             fontSize: 16,
                           ),
                         ),
@@ -248,7 +264,7 @@ class ListCard extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child:Icon(Icons.calendar_month_outlined,color: lightColorScheme.onSecondaryContainer,size: 20,),
+                        child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
                       ),
                     ),
                     Padding(
@@ -258,7 +274,7 @@ class ListCard extends StatelessWidget {
                         child: Text(date,
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: lightColorScheme.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                             fontSize: 16,
                           ),
                         ),
@@ -285,7 +301,7 @@ class ErrorCard extends StatelessWidget {
       Card(
           margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
           elevation: 0,
-          color: lightColorScheme.errorContainer,
+          color: Theme.of(context).colorScheme.errorContainer,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
@@ -305,13 +321,13 @@ class ErrorCard extends StatelessWidget {
                           Icon(
                             Icons.signal_cellular_connected_no_internet_0_bar_sharp,
                             size: 30,
-                            color: lightColorScheme.onErrorContainer,
+                            color: Theme.of(context).colorScheme.onErrorContainer,
                           ),
                         ),
                         Text("連線錯誤",
                           textAlign: TextAlign.start,
                           style: TextStyle(
-                            color: lightColorScheme.onErrorContainer,
+                            color: Theme.of(context).colorScheme.onErrorContainer,
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                           ),

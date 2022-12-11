@@ -79,19 +79,23 @@ class View extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightColorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        actionsIconTheme: IconThemeData(
-          color: lightColorScheme.onSecondaryContainer
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: lightColorScheme.secondaryContainer,
+        actionsIconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onSecondaryContainer
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              color: lightColorScheme.secondaryContainer,
+              color: Theme.of(context).colorScheme.secondaryContainer,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -101,7 +105,7 @@ class View extends StatelessWidget {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontSize: 30,
-                          color: lightColorScheme.onSecondaryContainer
+                          color: Theme.of(context).colorScheme.onSecondaryContainer
                       ),
                     ),
                   ),
@@ -110,12 +114,12 @@ class View extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.apartment,size: 30,color: lightColorScheme.onSecondaryContainer),
+                          Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
                           Padding(padding: EdgeInsets.only(left: 15),
                             child: Text(agency,
                               style: TextStyle(
                                   fontSize: 22,
-                                  color: lightColorScheme.onSecondaryContainer
+                                  color: Theme.of(context).colorScheme.onSecondaryContainer
                               ),
                             ),
                           )
@@ -127,12 +131,12 @@ class View extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.calendar_month_outlined,size: 30,color: lightColorScheme.onSecondaryContainer),
+                          Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
                           Padding(padding: EdgeInsets.only(left: 15),
                             child: Text(date,
                               style: TextStyle(
                                   fontSize: 22,
-                                  color: lightColorScheme.onSecondaryContainer
+                                  color: Theme.of(context).colorScheme.onSecondaryContainer
                               ),
                             ),
                           )
@@ -144,7 +148,7 @@ class View extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Icon(Icons.person_outlined,size: 30,color: lightColorScheme.onSecondaryContainer),
+                          Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
                           Padding(padding: EdgeInsets.only(left: 15),
                             child: FutureBuilder<List>(
                               future: content,
@@ -153,7 +157,7 @@ class View extends StatelessWidget {
                                   return Text(snapshot.data![0],
                                     style: TextStyle(
                                       fontSize: 22,
-                                      color: lightColorScheme.onSecondaryContainer,
+                                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
@@ -185,7 +189,7 @@ class View extends StatelessWidget {
                               Text(snapshot.data![1][index].trim(),
                                 style: TextStyle(
                                     fontSize: 22,
-                                    color: lightColorScheme.onSecondaryContainer,
+                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
                                   letterSpacing: 2,
                                   height: 1.7
                                 ),
@@ -219,7 +223,7 @@ class View extends StatelessWidget {
                             Text("連結",
                               style: TextStyle(
                                   fontSize: 22,
-                                  color: lightColorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontWeight: FontWeight.bold
                               ),
                             ),
@@ -228,7 +232,7 @@ class View extends StatelessWidget {
                                 message: snapshot.data![2],
                                 child: ElevatedButton(
                                     style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(lightColorScheme.tertiaryContainer)
+                                      backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiaryContainer)
                                     ),
                                     clipBehavior: Clip.hardEdge,
                                     onPressed: () {
@@ -239,7 +243,7 @@ class View extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Icon(Icons.language_outlined,size: 30,color: lightColorScheme.onTertiaryContainer,),
+                                            child: Icon(Icons.language_outlined,size: 30,color: Theme.of(context).colorScheme.onTertiaryContainer,),
                                           ),
                                           Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
                                               child: Text("訪問連結",
@@ -247,7 +251,7 @@ class View extends StatelessWidget {
                                                 style: TextStyle(
                                                     fontSize: 25,
                                                   fontWeight: FontWeight.normal,
-                                                  color: lightColorScheme.onTertiaryContainer
+                                                  color: Theme.of(context).colorScheme.onTertiaryContainer
                                                 ),
                                               )
                                           )
