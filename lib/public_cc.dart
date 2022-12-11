@@ -213,7 +213,7 @@ class ListCard extends StatelessWidget {
       Card(
           margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
           elevation: 0,
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: Theme.of(context).colorScheme.onSecondary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
             onTap: () {
@@ -225,7 +225,7 @@ class ListCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 20, top: 20,bottom: 10,right: 20),
+                  padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(title,
@@ -233,7 +233,6 @@ class ListCard extends StatelessWidget {
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSecondaryContainer,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

@@ -117,7 +117,7 @@ class editAdmin extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onBackground
                   ),
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                    prefixIcon: Icon(Icons.person_outlined),
                     hintText: "上傳帳號",
                     hintStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
@@ -149,7 +149,7 @@ class editAdmin extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onBackground
                   ),
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                      prefixIcon: Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
                         icon: Icon(Icons.remove_red_eye_outlined),
                         color: Theme.of(context).colorScheme.onBackground,
@@ -184,7 +184,7 @@ class editAdmin extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onBackground
                   ),
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.sensor_door_outlined,color: Theme.of(context).colorScheme.onBackground,),
+                      prefixIcon: Icon(Icons.sensor_door_outlined),
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground
                       ),

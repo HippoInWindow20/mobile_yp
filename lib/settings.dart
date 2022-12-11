@@ -84,7 +84,11 @@ class __SettingsState extends State<Settings>{
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("主題"),
+                          contentPadding: EdgeInsets.all(10),
+                          title: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("主題"),
+                          ),
                           content: ModeSelection(setStateCallBack: setStateExtend,),
                         );
                       }
@@ -183,59 +187,77 @@ class __ModeSelection extends State<ModeSelection>{
     return Wrap(
       direction: Axis.vertical,
       children: [
-        Row(
-          children: [
-            Radio(
-                value: "淺色",
-                groupValue: setDisplayMode,
-                onChanged: (value) {
-
-                  setState(() {
-                    setDisplayMode = value;
-                  });
-                  setStateCallBack();
-                  Navigator.pop(context);
-                }
-            ),
-            Text("淺色")
-          ],
-        ),
-        Row(
-          children: [
-            Radio(
-                value: "深色",
-                groupValue: setDisplayMode,
-                onChanged: (value) {
-
-                  setState(() {
-                    setDisplayMode = value;
-                  });
-                  setStateCallBack();
-                  Navigator.pop(context);
-                }
-            ),
-            Text("深色")
-          ],
-        ),
-
-        Row(
-          children: [
-            Radio(
-                value: "系統預設",
-                groupValue: setDisplayMode,
-                onChanged: (value) {
-
-                  setState(() {
-                    setDisplayMode = value;
-                  });
-                  setStateCallBack();
-                  Navigator.pop(context);
-                }
-            ),
-            Text("系統預設")
-          ],
-        ),
+        RadioItem(setStateFunction: setStateCallBack,value: "淺色"),
+        RadioItem(setStateFunction: setStateCallBack,value: "深色"),
+        RadioItem(setStateFunction: setStateCallBack,value: "系統預設"),
       ],
+    );
+  }
+}
+
+class RadioItem extends StatefulWidget {
+  RadioItem({
+    required this.setStateFunction,
+    required this.value
+  });
+  final Function setStateFunction;
+  final Object value;
+  @override
+  State<StatefulWidget> createState() {
+    return __RadioItem(value: value,setStateFunc: setStateFunction);
+  }
+
+
+}
+
+class __RadioItem  extends State<RadioItem>{
+  __RadioItem({
+    required this.setStateFunc,
+    required this.value
+  });
+  final Function setStateFunc;
+  final Object value;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        child: Container(
+          width: 250,
+          child: Row(
+            children: [
+              Transform.scale(
+                scale: 1.5,
+                child: Radio(
+                    value: value,
+                    groupValue: setDisplayMode,
+                    onChanged: (value) {
+
+                      setState(() {
+                        setDisplayMode = value;
+                      });
+                      setStateFunc();
+                      Navigator.pop(context);
+                    }
+                ),
+              ),
+              Text(
+                value.toString(),
+                style: TextStyle(
+                    fontSize: 20
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          setDisplayMode = value;
+        });
+        setStateFunc();
+        Navigator.pop(context);
+      },
     );
   }
 }
