@@ -342,7 +342,7 @@ class ErrorCard extends StatelessWidget {
                     child: Text("點擊重新整理重試",
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
                         fontSize: 20,
                       ),
                     ),
@@ -355,7 +355,7 @@ class ErrorCard extends StatelessWidget {
                     child: Text(errorCode,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
                         fontSize: 12,
                       ),
                     ),
