@@ -43,6 +43,7 @@ dependencies:
   settings_ui: ^2.0.2
   animations: ^2.0.7
   app_popup_menu: ^1.0.0
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

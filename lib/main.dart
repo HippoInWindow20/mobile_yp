@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/view.dart';
 import 'package:animations/animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 Map<int, Color> color =
@@ -33,14 +34,48 @@ String? ASPCookie = "";
 
 
 Future<void> main()  async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final Object? savedTheme = prefs.get("savedTheme");
+  if (savedTheme != null){
+    setDisplayMode = savedTheme.toString();
+    if (savedTheme.toString() == "深色")
+      preferredTheme = ThemeMode.dark;
+    else if  (savedTheme.toString() == "淺色")
+      preferredTheme = ThemeMode.light;
+    else if  (savedTheme.toString() == "系統預設")
+      preferredTheme = ThemeMode.system;
+  }
   runApp(MobileYP());
 
 }
 
-class MobileYP extends StatelessWidget {
+ThemeMode preferredTheme = ThemeMode.system;
+
+class MobileYP extends StatefulWidget {
   const MobileYP({Key? key}) : super(key: key);
 
   @override
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return __MobileYPState();
+  }
+
+  static __MobileYPState of(BuildContext context) =>
+      context.findAncestorStateOfType<__MobileYPState>()!;
+}
+
+class __MobileYPState extends State<MobileYP>{
+  @override
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      preferredTheme = themeMode;
+    });
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "行動延平. Mobile YP.",
@@ -49,7 +84,7 @@ class MobileYP extends StatelessWidget {
         primarySwatch: Colors.green,
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system,
+      themeMode: preferredTheme,
       theme: ThemeData(
         colorScheme: lightColorScheme,
         primarySwatch: Colors.green,
@@ -58,6 +93,7 @@ class MobileYP extends StatelessWidget {
       home: MainApp(),
     );
   }
+
 }
 
 
@@ -69,10 +105,8 @@ class MainApp extends StatefulWidget {
   @override
   State<MainApp> createState() => _currentPage();
 
-
 }
 int currentPage = 0;
-int actualPage = 0;
 class _currentPage extends State<MainApp> {
 
   void initState() {

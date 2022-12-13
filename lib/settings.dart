@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:mobile_yp/color_schemes.g.dart';
+import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/online_cc.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import 'package:mobile_yp/admin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 bool sampleSwitch = true;
@@ -143,7 +145,7 @@ class __SettingsState extends State<Settings>{
                 },
               ),
               SettingsTile.navigation(
-                title: Text('網路聯絡簿',style: SettingsTitleTextStyle,),
+                title: Text('個人資訊',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
                   Navigator.of(context).push(
                       MaterialPageRoute(
@@ -187,9 +189,9 @@ class __ModeSelection extends State<ModeSelection>{
     return Wrap(
       direction: Axis.vertical,
       children: [
-        RadioItem(setStateFunction: setStateCallBack,value: "淺色"),
-        RadioItem(setStateFunction: setStateCallBack,value: "深色"),
-        RadioItem(setStateFunction: setStateCallBack,value: "系統預設"),
+        RadioItem(setStateFunction: setStateCallBack,value: "淺色",thememode: ThemeMode.light,),
+        RadioItem(setStateFunction: setStateCallBack,value: "深色",thememode: ThemeMode.dark,),
+        RadioItem(setStateFunction: setStateCallBack,value: "系統預設",thememode: ThemeMode.system,),
       ],
     );
   }
@@ -198,13 +200,15 @@ class __ModeSelection extends State<ModeSelection>{
 class RadioItem extends StatefulWidget {
   RadioItem({
     required this.setStateFunction,
-    required this.value
+    required this.value,
+    required this.thememode
   });
   final Function setStateFunction;
   final Object value;
+  final ThemeMode thememode;
   @override
   State<StatefulWidget> createState() {
-    return __RadioItem(value: value,setStateFunc: setStateFunction);
+    return __RadioItem(value: value,setStateFunc: setStateFunction, thememode: thememode);
   }
 
 
@@ -213,10 +217,12 @@ class RadioItem extends StatefulWidget {
 class __RadioItem  extends State<RadioItem>{
   __RadioItem({
     required this.setStateFunc,
-    required this.value
+    required this.value,
+    required this.thememode,
   });
   final Function setStateFunc;
   final Object value;
+  final ThemeMode thememode;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -231,13 +237,16 @@ class __RadioItem  extends State<RadioItem>{
                 child: Radio(
                     value: value,
                     groupValue: setDisplayMode,
-                    onChanged: (value) {
+                    onChanged: (value) async {
+                      var prefs = await SharedPreferences.getInstance();
+                      await prefs.setString("savedValue", value.toString());
 
                       setState(() {
                         setDisplayMode = value;
                       });
                       setStateFunc();
                       Navigator.pop(context);
+                      MobileYP.of(context).changeTheme(thememode);
                     }
                 ),
               ),
@@ -251,12 +260,15 @@ class __RadioItem  extends State<RadioItem>{
           ),
         ),
       ),
-      onTap: () {
+      onTap: () async {
+        var prefs = await SharedPreferences.getInstance();
+        await prefs.setString("savedValue", value.toString());
         setState(() {
           setDisplayMode = value;
         });
         setStateFunc();
         Navigator.pop(context);
+        MobileYP.of(context).changeTheme(thememode);
       },
     );
   }
