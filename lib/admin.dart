@@ -145,6 +145,7 @@ class editAdmin extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  obscureText: true,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),

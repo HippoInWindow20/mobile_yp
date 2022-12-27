@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -11,9 +12,20 @@ import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 
 Future<List> result = Future.value([]);
+
+String cookieGenerator (int length){
+  var ListChar = "abcdefghijklmnopqrstuvwxyz012345";
+  var res = "";
+  for (var x = 0;x < length;x++){
+    var intValue = Random().nextInt(ListChar.length);
+    res += ListChar[intValue].toString();
+  }
+  return res;
+}
 
 
 Future<List> getCC () async {
@@ -24,7 +36,25 @@ Future<List> getCC () async {
   viewstateGenerator = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
   viewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
-  ASPCookie = response.headers.toString().substring(60,103);
+  ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
+  http.post(
+    url,
+    headers: {
+      "Content-Type":"application/x-www-form-urlencoded",
+      "cookie":ASPCookie!
+    },
+    body: {
+      "__EVENTTARGET": "GridView1",
+      "__EVENTARGUMENT":"count\$0",
+      "__LASTFOCUS":"",
+      "__VIEWSTATE":viewState,
+      "__VIEWSTATEGENERATOR":viewstateGenerator,
+      "__EVENTVALIDATION":eventValidation,
+      "DL1":"不分",
+      "DL2":"不分",
+      "DL3":"全部",
+    },
+  );
   List titles = [];
   List agencies = [];
   List dates = [];
@@ -90,6 +120,15 @@ class _publicCCState extends State<publicCC> {
   @override
 
   Widget build(BuildContext context) {
+    TextStyle SettingsTitleTextStyle = TextStyle(
+        fontSize: 25,
+        color: Theme.of(context).colorScheme.onBackground
+    );
+    TextStyle SettingsSubtitleTextStyle = TextStyle(
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.onSecondaryContainer,
+
+    );
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
@@ -108,6 +147,21 @@ class _publicCCState extends State<publicCC> {
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
             actions: [
+              IconButton(
+                style: ButtonStyle(
+                  padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
+                  iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
+                ),
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return FilterOptions(SettingsTitleTextStyle: SettingsTitleTextStyle);
+                    },
+                  );
+                },
+                icon: Icon(Icons.tune_outlined),
+              ),
               AppPopupMenu<int>(
                 padding: EdgeInsets.all(20),
                 menuItems:  [
@@ -195,6 +249,52 @@ class _publicCCState extends State<publicCC> {
 
 }
 
+class FilterOptions extends StatelessWidget {
+  const FilterOptions({
+    super.key,
+    required this.SettingsTitleTextStyle,
+  });
+
+  final TextStyle SettingsTitleTextStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      color: Theme.of(context).colorScheme.background,
+      child: SettingsList(
+        lightTheme: SettingsThemeData(
+          settingsSectionBackground: Theme.of(context).colorScheme.background,
+          settingsListBackground: Theme.of(context).colorScheme.background,
+        ),
+          sections: [
+            SettingsSection(
+                tiles: [
+                  SettingsTile.navigation(
+                    title: Text("處室",style: SettingsTitleTextStyle,),
+                    leading: Icon(Icons.apartment_outlined),
+                    onPressed: (context) {},
+                  ),
+                  SettingsTile.navigation(
+                    title: Text("日期",style: SettingsTitleTextStyle,),
+                    leading: Icon(Icons.calendar_month_outlined),
+                    onPressed: (context) {
+                      showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(DateTime.now().year - 1),
+                          lastDate: DateTime.now(),
+                      );
+                    },
+                  ),
+                ]
+            )
+          ]
+      ),
+    );
+  }
+}
+
 
 
 
@@ -210,81 +310,86 @@ class ListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return
-      Card(
-          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-          elevation: 0,
-          color: Theme.of(context).colorScheme.onSecondary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: InkWell(
-            onTap: () {
-              content = getContentOfCC(count);
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {return View(title: title,agency: agency,date: date,count: count,);}));
+      Hero(
+        tag: "main" + count.toString(),
+        child: Card(
+            clipBehavior: Clip.hardEdge,
+            margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: InkWell(
+              onTap: () {
+                content = getContentOfCC(count);
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return View(title: title,agency: agency,date: date,count: count,);}));
 
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(title,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        fontSize: 20,
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(title,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20,right: 10),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(agency,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondaryContainer,
-                            fontSize: 16,
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20,right: 10),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(agency,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondaryContainer,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(date,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondaryContainer,
-                            fontSize: 16,
-                          ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          )
-        );
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(date,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondaryContainer,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+        ),
+
+      );
   }
 }
 
@@ -303,8 +408,6 @@ class ErrorCard extends StatelessWidget {
           color: Theme.of(context).colorScheme.errorContainer,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: InkWell(
-            onTap: () {
-            },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[

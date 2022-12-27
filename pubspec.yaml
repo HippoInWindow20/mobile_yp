@@ -44,6 +44,8 @@ dependencies:
   animations: ^2.0.7
   app_popup_menu: ^1.0.0
   shared_preferences: ^2.0.15
+  flutter_tesseract_ocr: ^0.4.20
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +70,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/tessdata/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

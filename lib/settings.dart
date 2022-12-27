@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_yp/color_schemes.g.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/online_cc.dart';
+import 'package:mobile_yp/personal.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -76,6 +77,7 @@ class __SettingsState extends State<Settings>{
             ),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
+                leading: Icon(Icons.contrast_outlined),
                 title: Text('主題',style: SettingsTitleTextStyle,),
                 value: Padding(
                   padding: EdgeInsets.only(top: 5),
@@ -98,6 +100,7 @@ class __SettingsState extends State<Settings>{
                 },
               ),
               SettingsTile.navigation(
+                leading: Icon(Icons.palette_outlined),
                 title: Text('主色系',style: SettingsTitleTextStyle,),
                 value: Padding(
                   padding: EdgeInsets.only(top: 5),
@@ -108,19 +111,11 @@ class __SettingsState extends State<Settings>{
                 },
               ),
               SettingsTile.navigation(
+                leading: Icon(Icons.reorder_outlined),
                 title: Text('導覽列排序',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
 
                 },
-              ),
-              SettingsTile.switchTile(
-                onToggle: (value) {
-                  setState(() {
-                    sampleSwitch = value;
-                  });
-                },
-                initialValue: sampleSwitch,
-                title: Text('Enable custom theme',style: SettingsTitleTextStyle,),
               ),
             ],
           ),
@@ -133,6 +128,7 @@ class __SettingsState extends State<Settings>{
             ),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
+                leading: Icon(Icons.admin_panel_settings_outlined),
                 title: Text('資訊股長上傳',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
                   Navigator.of(context).push(
@@ -145,12 +141,13 @@ class __SettingsState extends State<Settings>{
                 },
               ),
               SettingsTile.navigation(
+                leading: Icon(Icons.contact_mail_outlined),
                 title: Text('個人資訊',style: SettingsTitleTextStyle,),
                 onPressed: (context) {
                   Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) {
-                            return OnlineCC();
+                            return personal();
                           }
                       )
                   );

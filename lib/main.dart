@@ -31,6 +31,11 @@ String? eventValidation = "";
 String? viewstateGenerator = "";
 String? viewState = "";
 String? ASPCookie = "";
+String? eventValidation2 = "";
+String? viewstateGenerator2 = "";
+String? viewState2 = "";
+String? ASPCookie2 = "";
+
 
 
 Future<void> main()  async {
@@ -112,6 +117,7 @@ class _currentPage extends State<MainApp> {
   void initState() {
     super.initState();
     result = getCC();
+    personalResult = displayChkCode();
   }
 
   var title = "行動延平";
@@ -128,18 +134,7 @@ class _currentPage extends State<MainApp> {
     return Scaffold(
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          indicatorColor: Theme.of(context).colorScheme.primaryContainer,
-          iconTheme: MaterialStatePropertyAll(
-            IconThemeData(
-              color: Theme.of(context).colorScheme.onBackground
-            )
-          ),
-          labelTextStyle: MaterialStatePropertyAll(
-            TextStyle(
-              color: Theme.of(context).colorScheme.onBackground
-            )
-          )
+
         ),
         child: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -188,20 +183,31 @@ class _currentPage extends State<MainApp> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
 
-
+          personalResult = returnCC();
           showAboutDialog(
             context: context,
             applicationName: "行動延平. Mobile YP.",
             applicationVersion: "1.0 beta",
             children: [
-              Text("Why use that crappy old website when you have an optimised version in the palm of your hands?")
+              // Text("Why use that crappy old website when you have an optimised version in the palm of your hands?")
+              FutureBuilder<Widget>(
+                future: personalResult,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return snapshot.data!;
+                  } else if (snapshot.hasError) {
+                    return Text("");
+                  }
+
+                  // By default, show a loading spinner.
+                  return Text("");
+                },
+              )
             ]
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
         child: Icon(
             Icons.info_outlined,
-          color: Theme.of(context).colorScheme.onTertiaryContainer,
         ),
       ),
     );

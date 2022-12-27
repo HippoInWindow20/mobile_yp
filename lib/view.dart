@@ -90,193 +90,199 @@ class View extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              color: Theme.of(context).colorScheme.secondaryContainer,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text(title,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontSize: 30,
-                          color: Theme.of(context).colorScheme.onSecondaryContainer
+      body: Hero(
+        tag: "main" + count.toString(),
+        child: Material(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(title,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Theme.of(context).colorScheme.onSecondaryContainer
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(left:20,bottom: 15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
-                          Padding(padding: EdgeInsets.only(left: 15),
-                            child: Text(agency,
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  color: Theme.of(context).colorScheme.onSecondaryContainer
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(left:20,bottom: 15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
-                          Padding(padding: EdgeInsets.only(left: 15),
-                            child: Text(date,
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  color: Theme.of(context).colorScheme.onSecondaryContainer
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(left:20,bottom: 15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
-                          Padding(padding: EdgeInsets.only(left: 15),
-                            child: FutureBuilder<List>(
-                              future: content,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Text(snapshot.data![0],
-                                    style: TextStyle(
+                      Padding(
+                          padding: EdgeInsets.only(left:20,bottom: 15),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Padding(padding: EdgeInsets.only(left: 15),
+                                child: Text(agency,
+                                  style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                    ),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Text("");
-                                }
-
-                                // By default, show a loading spinner.
-                                return Text("");
-                              },
-                            ),
+                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                  ),
+                                ),
+                              )
+                            ],
                           )
-                        ],
-                      )
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(left:20,bottom: 15),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Padding(padding: EdgeInsets.only(left: 15),
+                                child: Text(date,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(left:20,bottom: 15),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Padding(padding: EdgeInsets.only(left: 15),
+                                child: FutureBuilder<List>(
+                                  future: content,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Text(snapshot.data![0],
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                        ),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Text("");
+                                    }
+
+                                    // By default, show a loading spinner.
+                                    return Text("");
+                                  },
+                                ),
+                              )
+                            ],
+                          )
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
 
-            Padding(
-                padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
-                child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
-                  child: FutureBuilder<List>(
-                    future: content,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(snapshot.data![1].length, (index) =>
-                              Text(snapshot.data![1][index].trim(),
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                  letterSpacing: 2,
-                                  height: 1.7
-                                ),
-                              )                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return ErrorCard(errorCode: snapshot.error.toString());
-                      }
-
-                      // By default, show a loading spinner.
-                      return Center(
-                          child: CircularProgressIndicator()
-                      );
-                    },
-                  )
-                )
-            ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-
-
-            FutureBuilder<List>(
-              future: content,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data![2].length != 1){
-                    return Padding(
-                        padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text("連結",
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 15),
-                              child: Tooltip(
-                                message: snapshot.data![2],
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiaryContainer)
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                    onPressed: () {
-                                      _launchURL(context, snapshot.data![2]);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Row(
-                                        children: [
-                                          Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Icon(Icons.language_outlined,size: 30,color: Theme.of(context).colorScheme.onTertiaryContainer,),
-                                          ),
-                                          Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                                              child: Text("訪問連結",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 25,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Theme.of(context).colorScheme.onTertiaryContainer
-                                                ),
-                                              )
-                                          )
-                                        ],
+                Padding(
+                    padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
+                    child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
+                        child: FutureBuilder<List>(
+                          future: content,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: List.generate(snapshot.data![1].length, (index) =>
+                                    Text(snapshot.data![1][index].trim(),
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                          letterSpacing: 2,
+                                          height: 1.7
                                       ),
-                                    )
-                                ),
-                              ),
-                            )
-                          ],
+                                    )                          ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return ErrorCard(errorCode: snapshot.error.toString());
+                            }
+
+                            // By default, show a loading spinner.
+                            return Center(
+                                child: CircularProgressIndicator()
+                            );
+                          },
                         )
-                    );
-                  }else{
-                    return Padding(padding: EdgeInsets.only());
-                  }
-                } else if (snapshot.hasError) {
-                  return Text("");
-                }
-                // By default, show a loading spinner.
-                return Text("");
-              },
+                    )
+                ),
+                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+
+
+                FutureBuilder<List>(
+                  future: content,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data![2].length != 1){
+                        return Padding(
+                            padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text("連結",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.only(top: 15),
+                                  child: Tooltip(
+                                    message: snapshot.data![2],
+                                    child: ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiaryContainer)
+                                        ),
+                                        clipBehavior: Clip.hardEdge,
+                                        onPressed: () {
+                                          _launchURL(context, snapshot.data![2]);
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Row(
+                                            children: [
+                                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                                child: Icon(Icons.language_outlined,size: 30,color: Theme.of(context).colorScheme.onTertiaryContainer,),
+                                              ),
+                                              Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                                  child: Text("訪問連結",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight: FontWeight.normal,
+                                                        color: Theme.of(context).colorScheme.onTertiaryContainer
+                                                    ),
+                                                  )
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                        );
+                      }else{
+                        return Padding(padding: EdgeInsets.only());
+                      }
+                    } else if (snapshot.hasError) {
+                      return Text("");
+                    }
+                    // By default, show a loading spinner.
+                    return Text("");
+                  },
+                ),
+                Padding(padding: EdgeInsets.symmetric(vertical: 50)),
+              ],
             ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 50)),
-          ],
+          ),
         ),
+
       ),
     );
   }
