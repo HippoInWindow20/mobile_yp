@@ -10,9 +10,11 @@ import "package:mobile_yp/custom_color.g.dart";
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
+import 'package:mobile_yp/public_cc.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
+import 'package:mobile_yp/view_private.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -90,7 +92,54 @@ Future<Widget> returnCC () async {
         "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
       },
   );
-  return Text(response.body);
+
+  var document = parse(response.body);
+
+  List titles = [];
+  List agencies = [];
+  List dates = [];
+  var TDs = document.getElementsByTagName("td");
+  for (var i in TDs) {
+    if (i.outerHtml.toString().contains('width="70"')){
+      var tmp = i.innerHtml;
+      var str = tmp.substring(22,(tmp.length - 7));
+      agencies.add(str);
+    }
+  }
+
+  for (var j in TDs) {
+    if (j.outerHtml.toString().contains('width="400"')){
+      var tmp = j.innerHtml;
+      var str = tmp.substring(22,(tmp.length - 7));
+      titles.add(str);
+    }
+  }
+
+  for (var k in TDs) {
+    if (k.outerHtml.toString().contains('width="180"')){
+      var tmp = k.innerHtml;
+      var str = tmp.substring(22,(tmp.length - 7));
+      dates.add(str);
+    }
+  }
+
+  var result = [];
+
+  for (var m = 0;m < dates.length;m++){
+    result.add([titles[m],agencies[m],dates[m],m]);
+  }
+
+
+  return Column(
+    children: List.generate(
+        result.length, (index) =>
+        ListCardPrivate(
+            title: result[index][0],
+            agency: result[index][1],
+            date: result[index][2],
+            count: result[index][3])
+    ),
+  );
 }
 
 
@@ -238,8 +287,8 @@ class _OnlineCCState extends State<OnlineCC> {
 
 }
 
-class ListCard extends StatelessWidget {
-  const ListCard({
+class ListCardPrivate extends StatelessWidget {
+  const ListCardPrivate({
     Key? key, required this.title, required this.agency, required this.date, required this.count,
   }) : super(key: key);
   final String title;
@@ -260,8 +309,8 @@ class ListCard extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: InkWell(
               onTap: () {
-                content = getContentOfCC(count);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return View(title: title,agency: agency,date: date,count: count,);}));
+                contentPrivate = getContentOfOnlineCC(count);
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewPrivate(title: title,agency: agency,date: date,count: count,);}));
 
               },
               child: Column(
@@ -302,6 +351,10 @@ class ListCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  Row(
+                    children: [
                       Padding(
                         padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
                         child: Align(
@@ -321,9 +374,10 @@ class ListCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
+
                 ],
               ),
             )
@@ -333,80 +387,3 @@ class ListCard extends StatelessWidget {
   }
 }
 
-class ErrorCard extends StatelessWidget {
-  const ErrorCard({
-    Key? key, required this.errorCode,
-  }) : super(key: key);
-  final String errorCode;
-
-  @override
-  Widget build(BuildContext context) {
-    return
-      Card(
-          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-          elevation: 0,
-          color: Theme.of(context).colorScheme.errorContainer,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: InkWell(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 10,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child:
-                          Icon(
-                            Icons.signal_cellular_connected_no_internet_0_bar_sharp,
-                            size: 30,
-                            color: Theme.of(context).colorScheme.onErrorContainer,
-                          ),
-                        ),
-                        Text("連線錯誤",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onErrorContainer,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("點擊重新整理重試",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(errorCode,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-      );
-  }
-}

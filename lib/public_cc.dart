@@ -170,7 +170,7 @@ class _publicCCState extends State<publicCC> {
                     child: Text(
                         '重新整理',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onTertiaryContainer,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 20
                       ),
                     ),
@@ -180,7 +180,7 @@ class _publicCCState extends State<publicCC> {
                     child: Text(
                         '設定',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onTertiaryContainer,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             fontSize: 20
                         )
                     ),
@@ -217,7 +217,7 @@ class _publicCCState extends State<publicCC> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                color: Theme.of(context).colorScheme.tertiaryContainer,
+                color: Theme.of(context).colorScheme.surfaceVariant,
               )
             ],
           ),
