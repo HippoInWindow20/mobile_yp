@@ -13,6 +13,10 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 Future<List> contentPrivate = Future.value([]);
 
 Future<List> getContentOfOnlineCC (count) async {
+  count = (count + 2).toString();
+  if (count.length < 2){
+    count = "0" + count;
+  }
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2-1.aspx');
   var response = await http.post(
     url,
@@ -23,16 +27,20 @@ Future<List> getContentOfOnlineCC (count) async {
     body: {
       "__EVENTTARGET": "",
       "__EVENTARGUMENT":"",
-      "__VIEWSTATE":viewState2,
-      "__VIEWSTATEGENERATOR":viewstateGenerator2,
-      "__EVENTVALIDATION":eventValidation2,
-      "GridViewS\$ctl02\$but_vf1":"詳細內容"
+      "__VIEWSTATE":viewState3,
+      "__VIEWSTATEGENERATOR":viewstateGenerator3,
+      "__EVENTVALIDATION":eventValidation3,
+      "GridViewS\$ctl"+count+"\$but_vf1":"詳細內容"
     },
   );
   var document = parse(response.body);
   var innerContent = document.getElementById("Lab_content")?.innerHtml;
-  var link = document.getElementById("Lab_link")?.innerHtml;
-  return ["innerContent","link"];
+  var LinkCollection = document.getElementsByTagName("a");
+  String? link = "";
+  if (LinkCollection.length == 1){
+    link = LinkCollection[0].attributes['href'];
+  }
+  return [innerContent,link];
 }
 
 class ViewPrivate extends StatelessWidget {
@@ -153,7 +161,12 @@ class ViewPrivate extends StatelessWidget {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data![0])
+                                  Text(
+                                    snapshot.data![0],
+                                    style: TextStyle(
+                                      fontSize: 18
+                                    ),
+                                  )
                                 ],
                               );
                             } else if (snapshot.hasError) {
@@ -175,7 +188,7 @@ class ViewPrivate extends StatelessWidget {
                   future: contentPrivate,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data![1].length != 1){
+                      if (snapshot.data![1].length > 1){
                         return Padding(
                             padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
                             child: Column(
@@ -192,9 +205,6 @@ class ViewPrivate extends StatelessWidget {
                                   child: Tooltip(
                                     message: snapshot.data![1],
                                     child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiaryContainer)
-                                        ),
                                         clipBehavior: Clip.hardEdge,
                                         onPressed: () {
                                           _launchURL(context, snapshot.data![1]);
@@ -204,7 +214,7 @@ class ViewPrivate extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                                child: Icon(Icons.language_outlined,size: 30,color: Theme.of(context).colorScheme.onTertiaryContainer,),
+                                                child: Icon(Icons.language_outlined,size: 30),
                                               ),
                                               Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
                                                   child: Text("訪問連結",
@@ -212,7 +222,6 @@ class ViewPrivate extends StatelessWidget {
                                                     style: TextStyle(
                                                         fontSize: 25,
                                                         fontWeight: FontWeight.normal,
-                                                        color: Theme.of(context).colorScheme.onTertiaryContainer
                                                     ),
                                                   )
                                               )

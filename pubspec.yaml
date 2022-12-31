@@ -46,6 +46,7 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_tesseract_ocr: ^0.4.20
   path_provider: ^2.0.11
+  swipe_refresh: ^1.0.2
 
 dev_dependencies:
   flutter_test:

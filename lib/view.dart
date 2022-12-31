@@ -234,9 +234,6 @@ class View extends StatelessWidget {
                                   child: Tooltip(
                                     message: snapshot.data![2],
                                     child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiaryContainer)
-                                        ),
                                         clipBehavior: Clip.hardEdge,
                                         onPressed: () {
                                           _launchURL(context, snapshot.data![2]);
@@ -246,7 +243,7 @@ class View extends StatelessWidget {
                                           child: Row(
                                             children: [
                                               Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                                child: Icon(Icons.language_outlined,size: 30,color: Theme.of(context).colorScheme.onTertiaryContainer,),
+                                                child: Icon(Icons.language_outlined,size: 30),
                                               ),
                                               Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
                                                   child: Text("訪問連結",
@@ -254,7 +251,6 @@ class View extends StatelessWidget {
                                                     style: TextStyle(
                                                         fontSize: 25,
                                                         fontWeight: FontWeight.normal,
-                                                        color: Theme.of(context).colorScheme.onTertiaryContainer
                                                     ),
                                                   )
                                               )

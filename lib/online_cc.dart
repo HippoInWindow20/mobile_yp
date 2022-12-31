@@ -23,38 +23,6 @@ import 'package:settings_ui/settings_ui.dart';
 Future<Widget> personalResult = Future.value(Text(""));
 
 
-Future<Widget> displayChkCode () async {
-  var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx'));
-  viewstateGenerator2 = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
-  eventValidation2 = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
-  viewState2 = parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
-  TextEditingController chkCodeController = TextEditingController();
-  Directory dir = await getTemporaryDirectory();
-  var getValidate = await http.get(
-      Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
-    headers: {
-      "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
-    }
-  );
-  File tempfile = File(dir.path + "/validate.png");
-  await tempfile.writeAsBytes(getValidate.bodyBytes);
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Image.file(tempfile),
-      TextField(
-        controller: chkCodeController,
-      ),
-      ElevatedButton(
-          onPressed: () {
-            personalResult = personalCC(chkCodeController.text);
-          },
-          child: Text("Validate")
-      )
-    ],
-  );
-}
-
 Future<Widget> personalCC (String chkCode) async {
 
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx');
@@ -94,6 +62,11 @@ Future<Widget> returnCC () async {
   );
 
   var document = parse(response.body);
+
+
+  viewstateGenerator3 = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+  eventValidation3 = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
+  viewState3 = document.getElementById("__VIEWSTATE")?.attributes['value'];
 
   List titles = [];
   List agencies = [];
@@ -156,25 +129,8 @@ class OnlineCC extends StatefulWidget {
 }
 
 
-Widget gotoSettings (child) {
-  return PageTransitionSwitcher(
-    transitionBuilder: (child, animation, secondaryAnimation) {
-      return SharedAxisTransition(
-        child: child,
-        transitionType: SharedAxisTransitionType.horizontal,
-        animation: animation,
-        secondaryAnimation: secondaryAnimation,
-      );
-    },
-    child: child,
-    duration: Duration(milliseconds: 1000),
-  );
-}
-
-
 class _OnlineCCState extends State<OnlineCC> {
   @override
-
 
   Widget build(BuildContext context) {
     TextStyle SettingsTitleTextStyle = TextStyle(
@@ -273,9 +229,11 @@ class _OnlineCCState extends State<OnlineCC> {
                   return ErrorCard(errorCode: snapshot.error.toString());
                 }
 
-                // By default, show a loading spinner.
                 return const Center(
-                    child: CircularProgressIndicator()
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: CircularProgressIndicator(),
+                    )
                 );
               },
             ),
@@ -317,7 +275,7 @@ class ListCardPrivate extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
+                    padding: EdgeInsets.only(left: 20, top: 20,bottom: 20,right: 20),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(title,

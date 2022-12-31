@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import "package:mobile_yp/public_cc.dart";
@@ -10,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/view.dart';
 import 'package:animations/animations.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -35,6 +38,9 @@ String? eventValidation2 = "";
 String? viewstateGenerator2 = "";
 String? viewState2 = "";
 String? ASPCookie2 = "";
+String? eventValidation3 = "";
+String? viewstateGenerator3 = "";
+String? viewState3 = "";
 
 
 
@@ -118,6 +124,42 @@ class _currentPage extends State<MainApp> {
     super.initState();
     result = getCC();
     personalResult = displayChkCode();
+  }
+
+  Future<Widget> displayChkCode () async {
+    var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx'));
+    viewstateGenerator2 = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+    eventValidation2 = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
+    viewState2 = parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
+    TextEditingController chkCodeController = TextEditingController();
+    Directory dir = await getTemporaryDirectory();
+    var getValidate = await http.get(
+        Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
+        headers: {
+          "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
+        }
+    );
+    File tempfile = File(dir.path + "/validate.png");
+    await tempfile.writeAsBytes(getValidate.bodyBytes);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.file(tempfile),
+        TextField(
+          controller: chkCodeController,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              personalResult = Future.value(CircularProgressIndicator());
+              setState(() {
+
+              });
+              personalResult = personalCC(chkCodeController.text);
+            },
+            child: Text("登入")
+        )
+      ],
+    );
   }
 
   var title = "行動延平";

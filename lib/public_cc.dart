@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
@@ -13,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:swipe_refresh/swipe_refresh.dart';
 
 
 Future<List> result = Future.value([]);
@@ -118,6 +120,9 @@ Widget gotoSettings (child) {
 
 class _publicCCState extends State<publicCC> {
   @override
+  final _controller = StreamController<SwipeRefreshState>.broadcast();
+
+  Stream<SwipeRefreshState> get _stream => _controller.stream;
 
   Widget build(BuildContext context) {
     TextStyle SettingsTitleTextStyle = TextStyle(
@@ -129,6 +134,12 @@ class _publicCCState extends State<publicCC> {
       color: Theme.of(context).colorScheme.onSecondaryContainer,
 
     );
+
+    Future<void> _refresh() async {
+      result = getCC();
+      _controller.sink.add(SwipeRefreshState.hidden);
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
@@ -227,9 +238,20 @@ class _publicCCState extends State<publicCC> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Column(
-                    children: List.generate(snapshot.data!.length, (index) =>
-                        ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                    ),
+                    children:
+                      // [SwipeRefresh.material(
+                      //   shrinkWrap: true,
+                      //   stateStream: _stream,
+                      //   onRefresh: _refresh,
+                      //   padding: const EdgeInsets.symmetric(vertical: 10),
+                      //   children: List.generate(snapshot.data!.length, (index) =>
+                      //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                      //   ),
+                      // ),
+                      List.generate(snapshot.data!.length, (index) =>
+                          ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                      )
+                    // ],
                   );
                 } else if (snapshot.hasError) {
                   return ErrorCard(errorCode: snapshot.error.toString());
@@ -237,7 +259,10 @@ class _publicCCState extends State<publicCC> {
 
                 // By default, show a loading spinner.
                 return const Center(
-                    child: CircularProgressIndicator()
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: CircularProgressIndicator(),
+                    )
                 );
               },
             ),
