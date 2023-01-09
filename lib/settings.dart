@@ -1,10 +1,14 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile_yp/color_schemes.g.dart';
+import 'package:mobile_yp/themes/blue.dart';
+import 'package:mobile_yp/themes/green.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/online_cc.dart';
 import 'package:mobile_yp/personal.dart';
 import 'package:mobile_yp/public_cc.dart';
+import 'package:mobile_yp/themes/orange.dart';
+import 'package:mobile_yp/themes/purple.dart';
+import 'package:mobile_yp/themes/red.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import 'package:mobile_yp/admin.dart';
@@ -13,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 bool sampleSwitch = true;
 Object? setDisplayMode = "深色";
+Object? setColourMode = "延平綠";
 class Settings extends StatefulWidget {
   @override
 
@@ -104,10 +109,22 @@ class __SettingsState extends State<Settings>{
                 title: Text('主色系',style: SettingsTitleTextStyle,),
                 value: Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Text('延平綠',style: SettingsSubtitleTextStyle,),
+                  child: Text(setColourMode.toString(),style: SettingsSubtitleTextStyle,),
                 ),
                 onPressed: (context) {
-
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          contentPadding: EdgeInsets.all(10),
+                          title: Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text("主色系"),
+                          ),
+                          content: ColourSelection(setStateCallBack: setStateExtend,),
+                        );
+                      }
+                  );
                 },
               ),
               SettingsTile.navigation(
@@ -266,6 +283,118 @@ class __RadioItem  extends State<RadioItem>{
         setStateFunc();
         Navigator.pop(context);
         MobileYP.of(context).changeTheme(thememode);
+      },
+    );
+  }
+}
+
+//Colour Selection
+
+class ColourSelection extends StatefulWidget {
+  ColourSelection({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
+  @override
+  State<StatefulWidget> createState() {
+    return __ColourSelection(setStateCallBack: setStateCallBack);
+  }
+
+}
+
+class __ColourSelection extends State<ColourSelection>{
+  __ColourSelection({
+    required this.setStateCallBack,
+  });
+
+  final Function setStateCallBack;
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      direction: Axis.vertical,
+      children: [
+        RadioItemColour(setStateFunction: setStateCallBack,value: "延平綠",colour: green,),
+        RadioItemColour(setStateFunction: setStateCallBack,value: "深夜藍",colour: blue,),
+        RadioItemColour(setStateFunction: setStateCallBack,value: "低調紫",colour: purple,),
+        RadioItemColour(setStateFunction: setStateCallBack,value: "熱血紅",colour: red,),
+        RadioItemColour(setStateFunction: setStateCallBack,value: "陽光橘",colour: orange,),
+      ],
+    );
+  }
+}
+
+class RadioItemColour extends StatefulWidget {
+  RadioItemColour({
+    required this.setStateFunction,
+    required this.value,
+    required this.colour
+  });
+  final Function setStateFunction;
+  final Object value;
+  final List<ColorScheme> colour;
+  @override
+  State<StatefulWidget> createState() {
+    return __RadioItemColour(value: value,setStateFunc: setStateFunction, colour: colour);
+  }
+
+
+}
+
+class __RadioItemColour  extends State<RadioItemColour>{
+  __RadioItemColour({
+    required this.setStateFunc,
+    required this.value,
+    required this.colour,
+  });
+  final Function setStateFunc;
+  final Object value;
+  final List<ColorScheme> colour;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        child: Container(
+          width: 250,
+          child: Row(
+            children: [
+              Transform.scale(
+                scale: 1.5,
+                child: Radio(
+                    value: value,
+                    groupValue: setColourMode,
+                    onChanged: (value) async {
+                      var prefs = await SharedPreferences.getInstance();
+                      await prefs.setString("savedCS", value.toString());
+
+                      setState(() {
+                        setColourMode = value;
+                      });
+                      setStateFunc();
+                      Navigator.pop(context);
+                      MobileYP.of(context).changeColour(colour);
+                    }
+                ),
+              ),
+              Text(
+                value.toString(),
+                style: TextStyle(
+                    fontSize: 20
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      onTap: () async {
+        var prefs = await SharedPreferences.getInstance();
+        await prefs.setString("savedCS", value.toString());
+        setState(() {
+          setColourMode = value;
+        });
+        setStateFunc();
+        Navigator.pop(context);
+        MobileYP.of(context).changeColour(colour);
       },
     );
   }

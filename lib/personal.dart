@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile_yp/color_schemes.g.dart';
+import 'package:mobile_yp/themes/green.dart';
 import 'package:mobile_yp/online_cc.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:mobile_yp/settings.dart';

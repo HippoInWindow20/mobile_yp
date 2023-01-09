@@ -2,10 +2,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import "package:mobile_yp/color_schemes.g.dart";
+import 'package:mobile_yp/themes/green.dart';
 import 'package:mobile_yp/main.dart';
 import "package:mobile_yp/public_cc.dart";
-import "package:mobile_yp/custom_color.g.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';

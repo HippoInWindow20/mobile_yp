@@ -6,10 +6,14 @@ import "package:mobile_yp/public_cc.dart";
 import 'package:local_auth/local_auth.dart';
 import "package:mobile_yp/settings.dart";
 import "package:mobile_yp/online_cc.dart";
-import "package:mobile_yp/color_schemes.g.dart";
-import "package:mobile_yp/custom_color.g.dart";
+import 'package:mobile_yp/themes/blue.dart';
+import 'package:mobile_yp/themes/green.dart';
+import 'package:mobile_yp/themes/orange.dart';
+import 'package:mobile_yp/themes/purple.dart';
+import 'package:mobile_yp/themes/red.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
+import 'package:mobile_yp/themes/theme.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:animations/animations.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,6 +52,7 @@ Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final Object? savedTheme = prefs.get("savedTheme");
+  final Object? savedCS = prefs.get("savedCS");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -57,6 +62,19 @@ Future<void> main()  async {
     else if  (savedTheme.toString() == "系統預設")
       preferredTheme = ThemeMode.system;
   }
+  if (savedCS != null){
+    setColourMode = savedCS.toString();
+    if (savedCS.toString() == "延平綠")
+      preferredCS = green;
+    else if  (savedCS.toString() == "深夜藍")
+      preferredCS = blue;
+    else if  (savedCS.toString() == "低調紫")
+      preferredCS = purple;
+    else if  (savedCS.toString() == "熱血紅")
+      preferredCS = red;
+    else if  (savedCS.toString() == "陽光橘")
+      preferredCS = orange;
+  }
   runApp(MobileYP());
 
 }
@@ -65,9 +83,6 @@ ThemeMode preferredTheme = ThemeMode.system;
 
 class MobileYP extends StatefulWidget {
   const MobileYP({Key? key}) : super(key: key);
-
-  @override
-
 
   @override
   State<StatefulWidget> createState() {
@@ -87,17 +102,23 @@ class __MobileYPState extends State<MobileYP>{
     });
   }
 
+  void changeColour(List<ColorScheme> colour) {
+    setState(() {
+      preferredCS = colour;
+    });
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "行動延平. Mobile YP.",
       darkTheme: ThemeData(
-        colorScheme: darkColorScheme,
+        colorScheme: preferredCS[1],
         primarySwatch: Colors.green,
         useMaterial3: true,
       ),
       themeMode: preferredTheme,
       theme: ThemeData(
-        colorScheme: lightColorScheme,
+        colorScheme: preferredCS[0],
         primarySwatch: Colors.green,
         useMaterial3: true,
       ),
@@ -219,7 +240,7 @@ class _currentPage extends State<MainApp> {
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: const Text('Page 3'),
+          child: const Text('Under construction',style: TextStyle(fontSize: 40),),
         )
       ][currentPage],
       floatingActionButton: FloatingActionButton(
