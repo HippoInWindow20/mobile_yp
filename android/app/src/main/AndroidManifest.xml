@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shippohsu.mobileyp.mobile_yp">
    <application
-        android:label="mobile_yp"
+        android:label="行動延平"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

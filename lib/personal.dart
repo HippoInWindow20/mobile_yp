@@ -5,8 +5,15 @@ import 'package:mobile_yp/online_cc.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool adminSwitch = true;
+String defaultNumber = "";
+String defaultPwd = "";
+String defaultSerial = "";
+String defaultBD = "";
+bool obscureText = true;
+IconData eye = Icons.visibility_outlined;
 
 class personal extends StatefulWidget {
   @override
@@ -18,24 +25,26 @@ class personal extends StatefulWidget {
 class __personal extends State<personal>{
   @override
   Widget build(BuildContext context) {
-    TextStyle SettingsTitleTextStyle = TextStyle(
-        fontSize: 25,
-        color: Theme.of(context).colorScheme.onBackground
-    );
-    TextStyle SettingsSubtitleTextStyle = TextStyle(
-      fontSize: 15,
-      color: Theme.of(context).colorScheme.onSecondaryContainer,
 
-    );
     return editPersonal();
   }
 
 }
 
-class editPersonal extends StatelessWidget {
-  const editPersonal({
-    Key? key,
-  }) : super(key: key);
+class editPersonal extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return editPersonalState();
+  }
+
+}
+
+class editPersonalState extends State<editPersonal> {
+
+  final NumberController = TextEditingController(text: defaultNumber);
+  final PwdController = TextEditingController(text: defaultPwd);
+  final SerialController = TextEditingController(text: defaultSerial);
+  final BDController = TextEditingController(text: defaultBD);
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +79,8 @@ class editPersonal extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: NumberController,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground
                   ),
@@ -102,16 +113,27 @@ class editPersonal extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
-                  obscureText: true,
+                  controller: PwdController,
+                  obscureText: obscureText,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye_outlined),
+                        icon: Icon(eye),
                         color: Theme.of(context).colorScheme.onBackground,
-                        onPressed: () {  },),
+                        onPressed: () {
+                          setState(() {
+                            if (obscureText == true) {
+                              obscureText = false;
+                              eye = Icons.visibility_off_outlined;
+                            }else {
+                              obscureText = true;
+                              eye = Icons.visibility_outlined;
+                            }
+                          });
+                        },),
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground
                       ),
@@ -138,6 +160,7 @@ class editPersonal extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  controller: SerialController,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),
@@ -169,6 +192,8 @@ class editPersonal extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: BDController,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),
@@ -182,6 +207,7 @@ class editPersonal extends StatelessWidget {
                       ),
                       focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
                       labelText: '生日',
+                      hintText: "範例：20060101",
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Theme.of(context).colorScheme.onBackground
@@ -220,7 +246,17 @@ class editPersonal extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    var prefs = await SharedPreferences.getInstance();
+                    defaultNumber = NumberController.text;
+                    await prefs.setString("savedNumber", NumberController.text);
+                    defaultPwd = PwdController.text;
+                    await prefs.setString("savedPwd", PwdController.text);
+                    defaultSerial = SerialController.text;
+                    await prefs.setString("savedSerial", SerialController.text);
+                    defaultBD = BDController.text;
+                    await prefs.setString("savedBD", BDController.text);
+
                     Navigator.of(context).pop();
                   },
                   child: Text("儲存",style: TextStyle(fontSize: 20),),

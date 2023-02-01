@@ -6,6 +6,7 @@ import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_yp/main.dart';
+import 'package:mobile_yp/personal.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:mobile_yp/public_cc.dart';
@@ -28,15 +29,15 @@ Future<Widget> personalCC (String chkCode) async {
       url,
       headers: {
         "Content-Type":"application/x-www-form-urlencoded",
-        "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
+        "cookie":ASPCookie!
       },
       body: {
         "__VIEWSTATE": viewState2,
         "__VIEWSTATEGENERATOR": viewstateGenerator2,
         "__EVENTVALIDATION":eventValidation2,
         "chk_id":"學生",
-        "tbx_sno": "11031123",
-        "tbx_pwd": "shippo123456",
+        "tbx_sno": defaultNumber,
+        "tbx_pwd": defaultPwd,
         "txtChkCode": chkCode,
         "but_login_stud":"登入"
       }
@@ -55,7 +56,7 @@ Future<Widget> returnCC () async {
       url,
       headers: {
         "Content-Type":"application/x-www-form-urlencoded",
-        "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
+        "cookie":ASPCookie!
       },
   );
 

@@ -73,6 +73,21 @@ class __SettingsState extends State<Settings>{
               ),
             ), tiles: [],
           ),
+
+          SettingsSection(
+            tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: Icon(Icons.account_circle_outlined),
+                title: Text('許晉誠',style: SettingsTitleTextStyle,),
+                description: Text("學號：11031123\n導班：2206"),
+                onPressed: (context) {
+
+                },
+              ),
+
+            ],
+          ),
+
           SettingsSection(
             title: Text("一般",
               style: TextStyle(
@@ -170,6 +185,28 @@ class __SettingsState extends State<Settings>{
                   );
                 },
               )
+
+            ],
+          ),
+          SettingsSection(
+            title: Text("",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).colorScheme.primary
+              ),
+            ),
+            tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: Icon(Icons.info_outlined),
+                title: Text('關於應用程式',style: SettingsTitleTextStyle,),
+                description: Text(
+                  "Version 1.0",
+                  style: SettingsSubtitleTextStyle,
+                ),
+                onPressed: (context) {
+                  showAboutDialog(context: context);
+                },
+              ),
 
             ],
           ),

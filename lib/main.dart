@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:mobile_yp/admin_list.dart';
+import 'package:mobile_yp/personal.dart';
 import "package:mobile_yp/public_cc.dart";
 import 'package:local_auth/local_auth.dart';
 import "package:mobile_yp/settings.dart";
@@ -41,18 +43,28 @@ String? ASPCookie = "";
 String? eventValidation2 = "";
 String? viewstateGenerator2 = "";
 String? viewState2 = "";
-String? ASPCookie2 = "";
 String? eventValidation3 = "";
 String? viewstateGenerator3 = "";
 String? viewState3 = "";
+String? eventValidationUpload = "";
+String? viewstateGeneratorUpload = "";
+String? viewStateUpload = "";
+String? eventValidationUploadReal = "";
+String? viewstateGeneratorUploadReal = "";
+String? viewStateUploadReal = "";
 
 
 
 Future<void> main()  async {
+  ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final Object? savedTheme = prefs.get("savedTheme");
   final Object? savedCS = prefs.get("savedCS");
+  final Object? savedNumber = prefs.get("savedNumber");
+  final Object? savedPwd = prefs.get("savedPwd");
+  final Object? savedSerial = prefs.get("savedSerial");
+  final Object? savedBD = prefs.get("savedBD");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -74,6 +86,18 @@ Future<void> main()  async {
       preferredCS = red;
     else if  (savedCS.toString() == "陽光橘")
       preferredCS = orange;
+  }
+  if (savedNumber != null){
+    defaultNumber = savedNumber.toString();
+  }
+  if (savedPwd != null){
+    defaultPwd = savedPwd.toString();
+  }
+  if (savedSerial != null){
+    defaultSerial = savedSerial.toString();
+  }
+  if (savedBD != null){
+    defaultBD = savedBD.toString();
   }
   runApp(MobileYP());
 
@@ -145,6 +169,7 @@ class _currentPage extends State<MainApp> {
     super.initState();
     result = getCC();
     personalResult = displayChkCode();
+    uploadResult = retrieveAdminList();
   }
 
   Future<Widget> displayChkCode () async {
@@ -157,7 +182,7 @@ class _currentPage extends State<MainApp> {
     var getValidate = await http.get(
         Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
         headers: {
-          "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
+          "cookie":ASPCookie!
         }
     );
     File tempfile = File(dir.path + "/validate.png");
@@ -240,39 +265,9 @@ class _currentPage extends State<MainApp> {
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: const Text('Under construction',style: TextStyle(fontSize: 40),),
+          child: UploadCC(),
         )
       ][currentPage],
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-
-          personalResult = returnCC();
-          showAboutDialog(
-            context: context,
-            applicationName: "行動延平. Mobile YP.",
-            applicationVersion: "1.0 beta",
-            children: [
-              // Text("Why use that crappy old website when you have an optimised version in the palm of your hands?")
-              FutureBuilder<Widget>(
-                future: personalResult,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return snapshot.data!;
-                  } else if (snapshot.hasError) {
-                    return Text("");
-                  }
-
-                  // By default, show a loading spinner.
-                  return Text("");
-                },
-              )
-            ]
-          );
-        },
-        child: Icon(
-            Icons.info_outlined,
-        ),
-      ),
     );
   }
 }

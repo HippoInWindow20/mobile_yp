@@ -37,7 +37,7 @@ Future<List> getCC () async {
   viewstateGenerator = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
   viewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
-  ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
+
   http.post(
     url,
     headers: {
@@ -166,7 +166,10 @@ class _publicCCState extends State<publicCC> {
                   showModalBottomSheet<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return FilterOptions(SettingsTitleTextStyle: SettingsTitleTextStyle);
+                      return Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: FilterOptions(),
+                      );
                     },
                   );
                 },
@@ -274,47 +277,59 @@ class _publicCCState extends State<publicCC> {
 }
 
 class FilterOptions extends StatelessWidget {
-  const FilterOptions({
-    super.key,
-    required this.SettingsTitleTextStyle,
-  });
-
-  final TextStyle SettingsTitleTextStyle;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      color: Theme.of(context).colorScheme.background,
-      child: SettingsList(
-        lightTheme: SettingsThemeData(
-          settingsSectionBackground: Theme.of(context).colorScheme.background,
-          settingsListBackground: Theme.of(context).colorScheme.background,
+    return Column(
+      children: [
+        InkWell(
+          child: Padding(
+              padding: EdgeInsets.only(left: 20,top:20,bottom: 20),
+              child: Row(
+                children: [
+                  Icon(Icons.apartment_outlined,size: 30,),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "處室",
+                      style: TextStyle(
+                          fontSize: 30
+                      ),
+                    ),
+                  )
+                ],
+              ),
+          ),
+          onTap: () {},
         ),
-          sections: [
-            SettingsSection(
-                tiles: [
-                  SettingsTile.navigation(
-                    title: Text("處室",style: SettingsTitleTextStyle,),
-                    leading: Icon(Icons.apartment_outlined),
-                    onPressed: (context) {},
+        InkWell(
+          child: Padding(
+            padding: EdgeInsets.only(left: 20,top:20,bottom: 20),
+            child: Row(
+              children: [
+                Icon(Icons.calendar_month_outlined,size: 30,),
+                Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "日期",
+                    style: TextStyle(
+                        fontSize: 30
+                    ),
                   ),
-                  SettingsTile.navigation(
-                    title: Text("日期",style: SettingsTitleTextStyle,),
-                    leading: Icon(Icons.calendar_month_outlined),
-                    onPressed: (context) {
-                      showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(DateTime.now().year - 1),
-                          lastDate: DateTime.now(),
-                      );
-                    },
-                  ),
-                ]
-            )
-          ]
-      ),
+                )
+              ],
+            ),
+          ),
+          onTap: () {
+            showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(DateTime.now().year - 1),
+              lastDate: DateTime.now(),
+            );
+          },
+        )
+      ],
     );
   }
 }

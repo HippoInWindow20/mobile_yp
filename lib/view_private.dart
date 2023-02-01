@@ -21,7 +21,7 @@ Future<List> getContentOfOnlineCC (count) async {
     url,
     headers: {
       "Content-Type":"application/x-www-form-urlencoded",
-      "cookie":"ASP.NET_SessionId=f1ugporoajrevet1tlo0c4vo"
+      "cookie":ASPCookie!
     },
     body: {
       "__EVENTTARGET": "",
@@ -163,7 +163,10 @@ class ViewPrivate extends StatelessWidget {
                                   Text(
                                     snapshot.data![0],
                                     style: TextStyle(
-                                      fontSize: 18
+                                        fontSize: 22,
+                                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                        letterSpacing: 2,
+                                        height: 1.7
                                     ),
                                   )
                                 ],
