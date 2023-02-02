@@ -20,16 +20,22 @@ Object? setDisplayMode = "深色";
 Object? setColourMode = "延平綠";
 class Settings extends StatefulWidget {
   @override
-
+  Settings({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
 
   @override
   State<StatefulWidget> createState() {
-    return __SettingsState();
+    return __SettingsState(setStateCallBack: setStateCallBack);
   }
 }
 
 class __SettingsState extends State<Settings>{
-
+  __SettingsState({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   void setStateExtend (){
     setState(() {
     });
@@ -166,7 +172,7 @@ class __SettingsState extends State<Settings>{
                   Navigator.of(context).push(
                       MaterialPageRoute(
                           builder: (context) {
-                            return adminPage();
+                            return adminPage(setStateCallBack: setStateCallBack);
                           }
                       )
                   );

@@ -29,7 +29,7 @@ Future<Widget> personalCC (String chkCode) async {
       url,
       headers: {
         "Content-Type":"application/x-www-form-urlencoded",
-        "cookie":ASPCookie!
+        "cookie":ASPCookie2!
       },
       body: {
         "__VIEWSTATE": viewState2,
@@ -50,16 +50,13 @@ Future<Widget> personalCC (String chkCode) async {
 }
 
 Future<Widget> returnCC () async {
-
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2-1.aspx');
   var response = await http.get(
       url,
       headers: {
-        "Content-Type":"application/x-www-form-urlencoded",
-        "cookie":ASPCookie!
+        "cookie":ASPCookie2!
       },
   );
-
   var document = parse(response.body);
 
 
@@ -118,29 +115,27 @@ Future<Widget> returnCC () async {
 
 
 class OnlineCC extends StatefulWidget {
-
+  OnlineCC({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
 
   @override
   State<StatefulWidget> createState() {
-    return _OnlineCCState();
+    return _OnlineCCState(setStateCallBack: setStateCallBack);
   }
 
 }
 
 
 class _OnlineCCState extends State<OnlineCC> {
+  _OnlineCCState({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   @override
 
   Widget build(BuildContext context) {
-    TextStyle SettingsTitleTextStyle = TextStyle(
-        fontSize: 25,
-        color: Theme.of(context).colorScheme.onBackground
-    );
-    TextStyle SettingsSubtitleTextStyle = TextStyle(
-      fontSize: 15,
-      color: Theme.of(context).colorScheme.onSecondaryContainer,
-
-    );
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
@@ -197,7 +192,7 @@ class _OnlineCCState extends State<OnlineCC> {
                           MaterialPageRoute(
                               builder: (context) {
                                 return gotoSettings(
-                                    Settings()
+                                    Settings(setStateCallBack: setStateCallBack,)
                                 );
                               }
                           )

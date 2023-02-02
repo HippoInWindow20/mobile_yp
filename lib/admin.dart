@@ -5,18 +5,32 @@ import 'package:mobile_yp/online_cc.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-bool adminSwitch = true;
+bool adminSwitch = false;
+String defaultAccount = "";
+String defaultAdminPwd = "";
+String defaultClass = "";
+bool obscureAdmin = true;
+IconData eye2 = Icons.visibility_outlined;
 
 class adminPage extends StatefulWidget {
   @override
+  adminPage({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   State<StatefulWidget> createState() {
-    return __adminState();
+    return __adminState(setStateCallBack: setStateCallBack);
   }
 }
 
 class __adminState extends State<adminPage>{
   @override
+  __adminState({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   Widget build(BuildContext context) {
     TextStyle SettingsTitleTextStyle = TextStyle(
         fontSize: 25,
@@ -57,23 +71,27 @@ class __adminState extends State<adminPage>{
                 title: Text('資訊股長上傳',style: SettingsTitleTextStyle,),
                 description: Text('顯示上傳選項',style: SettingsSubtitleTextStyle),
                 initialValue: adminSwitch,
-                onToggle: (bool value) {
+                onToggle: (bool value) async {
                   adminSwitch = value;
                   setState(() {
 
                   });
+                  setStateCallBack();
+                  var prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool("showAdmin", adminSwitch);
                 },
               ),
-              SettingsTile.navigation(
-                title: Text('設定帳號密碼',style: SettingsTitleTextStyle,),
-                onPressed: (context) {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                    return editAdmin();
-                  }
-                  )
-                  );
-                },
-              )
+              if (adminSwitch == true)
+                SettingsTile.navigation(
+                  title: Text('設定帳號密碼',style: SettingsTitleTextStyle,),
+                  onPressed: (context) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                      return editAdmin();
+                    }
+                    )
+                    );
+                  },
+                )
 
             ],
           ),
@@ -84,10 +102,18 @@ class __adminState extends State<adminPage>{
 
 }
 
-class editAdmin extends StatelessWidget {
-  const editAdmin({
-    Key? key,
-  }) : super(key: key);
+class editAdmin extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return editAdminState();
+  }
+}
+
+class editAdminState extends State<editAdmin> {
+
+  final AccountController = TextEditingController(text: defaultAccount);
+  final AdminPwdController = TextEditingController(text: defaultAdminPwd);
+  final ClassController = TextEditingController(text: defaultClass);
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +139,7 @@ class editAdmin extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  controller: AccountController,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground
                   ),
@@ -145,16 +172,27 @@ class editAdmin extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
-                  obscureText: true,
+                  controller: AdminPwdController,
+                  obscureText: obscureAdmin,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye_outlined),
+                        icon: Icon(eye2),
                         color: Theme.of(context).colorScheme.onBackground,
-                        onPressed: () {  },),
+                        onPressed: () {
+                          setState(() {
+                            if (obscureAdmin == true) {
+                              obscureAdmin = false;
+                              eye2 = Icons.visibility_off_outlined;
+                            }else {
+                              obscureAdmin = true;
+                              eye2 = Icons.visibility_outlined;
+                            }
+                          });
+                        },),
                       hintStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground
                       ),
@@ -181,6 +219,7 @@ class editAdmin extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  controller: ClassController,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
                   ),
@@ -232,7 +271,14 @@ class editAdmin extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    defaultAccount = AccountController.text;
+                    defaultAdminPwd = AdminPwdController.text;
+                    defaultClass = ClassController.text;
+                    var prefs = await SharedPreferences.getInstance();
+                    await prefs.setString("savedAccount", AccountController.text);
+                    await prefs.setString("savedAdminPwd", AdminPwdController.text);
+                    await prefs.setString("savedClass", ClassController.text);
                     Navigator.of(context).pop();
                   },
                   child: Text("儲存",style: TextStyle(fontSize: 20),),

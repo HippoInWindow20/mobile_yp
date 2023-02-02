@@ -91,11 +91,14 @@ Future<List> getCC () async {
 }
 
 class publicCC extends StatefulWidget {
-
+  publicCC({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
 
   @override
   State<StatefulWidget> createState() {
-    return _publicCCState();
+    return _publicCCState(setStateCallBack: setStateCallBack);
   }
 
 }
@@ -119,20 +122,15 @@ Widget gotoSettings (child) {
 
 class _publicCCState extends State<publicCC> {
   @override
+  _publicCCState({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   final _controller = StreamController<SwipeRefreshState>.broadcast();
 
   Stream<SwipeRefreshState> get _stream => _controller.stream;
 
   Widget build(BuildContext context) {
-    TextStyle SettingsTitleTextStyle = TextStyle(
-        fontSize: 25,
-        color: Theme.of(context).colorScheme.onBackground
-    );
-    TextStyle SettingsSubtitleTextStyle = TextStyle(
-      fontSize: 15,
-      color: Theme.of(context).colorScheme.onSecondaryContainer,
-
-    );
 
     Future<void> _refresh() async {
       result = getCC();
@@ -213,7 +211,7 @@ class _publicCCState extends State<publicCC> {
                           MaterialPageRoute(
                               builder: (context) {
                                 return gotoSettings(
-                                    Settings()
+                                    Settings(setStateCallBack: setStateCallBack,)
                                 );
                               }
                           )

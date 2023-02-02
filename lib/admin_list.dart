@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mobile_yp/admin.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
@@ -38,9 +39,9 @@ Future<Widget> retrieveAdminList () async {
         "__VIEWSTATE": viewStateUpload,
         "__VIEWSTATEGENERATOR": viewstateGeneratorUpload,
         "__EVENTVALIDATION":eventValidationUpload,
-        "tbox_acc": "ah0206",
-        "tbox_pwd": "vb5906bw",
-        "tbox_cls": "2206",
+        "tbox_acc": defaultAccount,
+        "tbox_pwd": defaultAdminPwd,
+        "tbox_cls": defaultClass,
         "but_login":"登　　入"
       }
   );
@@ -112,17 +113,24 @@ Future<Widget> returnUploadCC () async {
 
 
 class UploadCC extends StatefulWidget {
-
+  UploadCC({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
 
   @override
   State<StatefulWidget> createState() {
-    return _UploadCCState();
+    return _UploadCCState(setStateCallBack: setStateCallBack);
   }
 
 }
 
 
 class _UploadCCState extends State<UploadCC> {
+  _UploadCCState({
+    required this.setStateCallBack,
+  });
+  final Function setStateCallBack;
   @override
 
   Widget build(BuildContext context) {
@@ -182,7 +190,7 @@ class _UploadCCState extends State<UploadCC> {
                           MaterialPageRoute(
                               builder: (context) {
                                 return gotoSettings(
-                                    Settings()
+                                    Settings(setStateCallBack: setStateCallBack,)
                                 );
                               }
                           )

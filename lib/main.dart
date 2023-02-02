@@ -21,6 +21,8 @@ import 'package:animations/animations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'admin.dart';
+
 
 Map<int, Color> color =
 {
@@ -40,6 +42,7 @@ String? eventValidation = "";
 String? viewstateGenerator = "";
 String? viewState = "";
 String? ASPCookie = "";
+String? ASPCookie2 = "";
 String? eventValidation2 = "";
 String? viewstateGenerator2 = "";
 String? viewState2 = "";
@@ -57,6 +60,7 @@ String? viewStateUploadReal = "";
 
 Future<void> main()  async {
   ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
+  ASPCookie2 = "ASP.NET_SessionId=" + cookieGenerator(24);
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final Object? savedTheme = prefs.get("savedTheme");
@@ -65,6 +69,10 @@ Future<void> main()  async {
   final Object? savedPwd = prefs.get("savedPwd");
   final Object? savedSerial = prefs.get("savedSerial");
   final Object? savedBD = prefs.get("savedBD");
+  final Object? savedAccount = prefs.get("savedAccount");
+  final Object? savedAdminPwd = prefs.get("savedAdminPwd");
+  final Object? savedClass = prefs.get("savedClass");
+  final bool? savedAdminSwitch = prefs.getBool("showAdmin");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -98,6 +106,18 @@ Future<void> main()  async {
   }
   if (savedBD != null){
     defaultBD = savedBD.toString();
+  }
+  if (savedAdminSwitch != null){
+    adminSwitch = savedAdminSwitch;
+  }
+  if (savedAccount != null){
+    defaultAccount = savedAccount.toString();
+  }
+  if (savedAdminPwd != null){
+    defaultAdminPwd = savedAdminPwd.toString();
+  }
+  if (savedClass != null){
+    defaultClass = savedClass.toString();
   }
   runApp(MobileYP());
 
@@ -182,7 +202,7 @@ class _currentPage extends State<MainApp> {
     var getValidate = await http.get(
         Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
         headers: {
-          "cookie":ASPCookie!
+          "cookie":ASPCookie2!
         }
     );
     File tempfile = File(dir.path + "/validate.png");
@@ -216,56 +236,55 @@ class _currentPage extends State<MainApp> {
       currentPage = index;
     });
   }
-
+  void setStateFromMain () {
+    setState(() {
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-
-        ),
-        child: NavigationBar(
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPage = index;
-            });
-          },
-          selectedIndex: currentPage,
-          destinations: const <Widget>[
-            NavigationDestination(
-              selectedIcon: Icon(Icons.info),
-              icon: Icon(Icons.info_outlined),
-              label: '公告欄',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.campaign),
-              icon: Icon(Icons.campaign_outlined),
-              label: '網路聯絡簿',
-            ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPage = index;
+          });
+        },
+        selectedIndex: currentPage,
+        destinations: <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.info),
+            icon: Icon(Icons.info_outlined),
+            label: '公告欄',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.campaign),
+            icon: Icon(Icons.campaign_outlined),
+            label: '網路聯絡簿',
+          ),
+          if (adminSwitch == true)
             NavigationDestination(
               selectedIcon: Icon(Icons.upload),
               icon: Icon(Icons.upload_outlined),
               label: '聯絡簿上傳',
             )
-          ],
-        ),
+        ],
       ),
       body: <Widget>[
         Container(
         color: Colors.green,
         alignment: Alignment.center,
-        child: publicCC(),
+        child: publicCC(setStateCallBack: setStateFromMain,),
       ),
         Container(
           color: Colors.green,
           alignment: Alignment.center,
-          child: OnlineCC(),
+          child: OnlineCC(setStateCallBack: setStateFromMain,),
         ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: UploadCC(),
+          child: UploadCC(setStateCallBack: setStateFromMain,),
         )
       ][currentPage],
     );

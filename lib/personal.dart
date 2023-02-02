@@ -7,7 +7,6 @@ import 'package:mobile_yp/settings.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool adminSwitch = true;
 String defaultNumber = "";
 String defaultPwd = "";
 String defaultSerial = "";
