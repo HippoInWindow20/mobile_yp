@@ -5,7 +5,6 @@ import "package:flutter/material.dart";
 import 'package:mobile_yp/admin_list.dart';
 import 'package:mobile_yp/personal.dart';
 import "package:mobile_yp/public_cc.dart";
-import 'package:local_auth/local_auth.dart';
 import "package:mobile_yp/settings.dart";
 import "package:mobile_yp/online_cc.dart";
 import 'package:mobile_yp/themes/blue.dart';
@@ -16,8 +15,6 @@ import 'package:mobile_yp/themes/red.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/themes/theme.dart';
-import 'package:mobile_yp/view.dart';
-import 'package:animations/animations.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,6 +52,7 @@ String? viewStateUpload = "";
 String? eventValidationUploadReal = "";
 String? viewstateGeneratorUploadReal = "";
 String? viewStateUploadReal = "";
+String OnlineCCStep = "validation";
 
 
 
@@ -205,30 +203,81 @@ class _currentPage extends State<MainApp> {
           "cookie":ASPCookie2!
         }
     );
-    File tempfile = File(dir.path + "/validate.png");
+    var randomNumber = cookieGenerator(8);
+    File tempfile = File(dir.path + "/${randomNumber}.png");
     await tempfile.writeAsBytes(getValidate.bodyBytes);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.file(tempfile),
-        TextField(
-          controller: chkCodeController,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              personalResult = Future.value(CircularProgressIndicator());
-              setState(() {
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50,vertical: 30),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.file(
+                  tempfile,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+            child: TextFormField(
+              controller: chkCodeController,
+              decoration: InputDecoration(
+                  labelStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground
+                  ),
+                  focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                  labelText: '驗證碼',
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground
+                      )
+                  ),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onBackground
+                      )
+                  )
+              ),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.only(top: 30,left: 50,right: 50),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                textStyle: MaterialStatePropertyAll(
+                    TextStyle(
+                      fontSize: 30
+                    )
+                ),
+                fixedSize: MaterialStatePropertyAll(
+                  Size(
+                      (MediaQuery.of(context).size.width - 32),100
+                  ),
+                ),
+              ),
+                onPressed: () {
+                  personalResult = Future.value(CircularProgressIndicator());
+                  setState(() {
 
-              });
-              personalResult = personalCC(chkCodeController.text);
-            },
-            child: Text("登入")
-        )
-      ],
+                  });
+                  personalResult = personalCC(chkCodeController.text,context,displayChkCode,setStateFromMain);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20,horizontal: 50),
+                  child: Text("登入"),
+                )
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  var title = "行動延平";
 
 
   void setStateFromChild (index) {
@@ -279,7 +328,7 @@ class _currentPage extends State<MainApp> {
         Container(
           color: Colors.green,
           alignment: Alignment.center,
-          child: OnlineCC(setStateCallBack: setStateFromMain,),
+          child: OnlineCC(setStateCallBack: setStateFromMain,displayChkCode: displayChkCode,),
         ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,

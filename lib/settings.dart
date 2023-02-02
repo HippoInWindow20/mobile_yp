@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 bool sampleSwitch = true;
-Object? setDisplayMode = "深色";
+Object? setDisplayMode = "系統預設";
 Object? setColourMode = "延平綠";
 class Settings extends StatefulWidget {
   @override
@@ -296,7 +296,7 @@ class __RadioItem  extends State<RadioItem>{
                     groupValue: setDisplayMode,
                     onChanged: (value) async {
                       var prefs = await SharedPreferences.getInstance();
-                      await prefs.setString("savedValue", value.toString());
+                      await prefs.setString("savedTheme", value.toString());
 
                       setState(() {
                         setDisplayMode = value;
@@ -319,7 +319,7 @@ class __RadioItem  extends State<RadioItem>{
       ),
       onTap: () async {
         var prefs = await SharedPreferences.getInstance();
-        await prefs.setString("savedValue", value.toString());
+        await prefs.setString("savedTheme", value.toString());
         setState(() {
           setDisplayMode = value;
         });

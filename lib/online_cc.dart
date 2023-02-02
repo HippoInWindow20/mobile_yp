@@ -22,7 +22,7 @@ import 'package:settings_ui/settings_ui.dart';
 Future<Widget> personalResult = Future.value(Text(""));
 
 
-Future<Widget> personalCC (String chkCode) async {
+Future<Widget> personalCC (String chkCode, BuildContext context,Function displayChkCode,Function setState) async {
 
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx');
   var response = await http.post(
@@ -43,9 +43,60 @@ Future<Widget> personalCC (String chkCode) async {
       }
   );
   if (response.body.contains("Object moved")) {
+    OnlineCCStep = "main";
     return returnCC();
-  }else {
-    return Text(response.body);
+  }else if (response.body.contains("驗證碼錯誤")) {
+    return Column(
+      children: [
+        Text("驗證碼錯誤"),
+        TextButton(
+            onPressed: () {
+              personalResult = displayChkCode();
+              setState();
+            },
+            child: Text("重新輸入")
+        )
+      ],
+    );
+  }else if (response.body.contains("密碼錯誤")){
+    return Column(
+      children: [
+        Text("密碼錯誤"),
+        TextButton(
+            onPressed: () {
+              personalResult = displayChkCode();
+              setState();
+            },
+            child: Text("檢查設定")
+        )
+      ],
+    );
+  }else if (response.body.contains("學號錯誤")){
+    return Column(
+      children: [
+        Text("學號錯誤"),
+        TextButton(
+            onPressed: () {
+              personalResult = displayChkCode();
+              setState();
+            },
+            child: Text("檢查設定")
+        )
+      ],
+    );
+  }else{
+    return Column(
+      children: [
+        Text("未知錯誤"),
+        TextButton(
+            onPressed: () {
+              personalResult = displayChkCode();
+              setState();
+            },
+            child: Text("確定")
+        )
+      ],
+    );
   }
 }
 
@@ -117,12 +168,14 @@ Future<Widget> returnCC () async {
 class OnlineCC extends StatefulWidget {
   OnlineCC({
     required this.setStateCallBack,
+    required this.displayChkCode
   });
   final Function setStateCallBack;
+  final Function displayChkCode;
 
   @override
   State<StatefulWidget> createState() {
-    return _OnlineCCState(setStateCallBack: setStateCallBack);
+    return _OnlineCCState(setStateCallBack: setStateCallBack, displayChkCode: displayChkCode);
   }
 
 }
@@ -131,8 +184,10 @@ class OnlineCC extends StatefulWidget {
 class _OnlineCCState extends State<OnlineCC> {
   _OnlineCCState({
     required this.setStateCallBack,
+    required this.displayChkCode
   });
   final Function setStateCallBack;
+  final Function displayChkCode;
   @override
 
   Widget build(BuildContext context) {
@@ -185,7 +240,10 @@ class _OnlineCCState extends State<OnlineCC> {
                       setState(() {
 
                       });
-                      personalResult = returnCC();
+                      if (OnlineCCStep == "validation")
+                        personalResult = displayChkCode();
+                      else
+                        personalResult = returnCC();
                       break;
                     case 2:
                       Navigator.of(context).push(

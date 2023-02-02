@@ -235,7 +235,7 @@ class _UploadCCState extends State<UploadCC> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {  },
         child: Icon(
-          Icons.edit_outlined
+          Icons.add_outlined
         ),
 
       ),
@@ -305,7 +305,24 @@ class ListCardUpload extends StatelessWidget {
                       ),
                     ],
                   ),
-
+                  Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(bottom: 10,left: 10,right: 10),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.edit_outlined,size: 30,)
+                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10,right: 10),
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.delete_outlined,size: 30,)
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             )

@@ -88,6 +88,20 @@ class View extends StatelessWidget {
           color: Theme.of(context).colorScheme.onSecondaryContainer
         ),
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+        actions: [
+          IconButton(
+              onPressed: (){
+                //TODO: Convert to Stateful widget and add refresh function
+              },
+              icon: Icon(Icons.refresh_outlined)
+          ),
+          IconButton(
+              onPressed: (){
+                //TODO: Add share sheet function
+              },
+              icon: Icon(Icons.share_outlined)
+          ),
+        ],
       ),
       body: Hero(
         tag: "main" + count.toString(),

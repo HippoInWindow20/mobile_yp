@@ -219,6 +219,7 @@ class editAdminState extends State<editAdmin> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
                 child: TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: ClassController,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground
