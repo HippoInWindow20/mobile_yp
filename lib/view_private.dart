@@ -8,6 +8,7 @@ import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:share_plus/share_plus.dart';
 
 Future<List> contentPrivate = Future.value([]);
 
@@ -42,15 +43,35 @@ Future<List> getContentOfOnlineCC (count) async {
   return [innerContent,link];
 }
 
-class ViewPrivate extends StatelessWidget {
-  const ViewPrivate({
+class ViewPrivate extends StatefulWidget {
+  @override
+  ViewPrivate({
+    required this.title,
+    required this.agency,
+    required this.date,
+    required this.count,
+  });
+  final String title;
+  final String agency;
+  final String date;
+  final int count;
+  State<StatefulWidget> createState() {
+    return stateViewPrivate(title: title, agency: agency, date: date, count: count);
+  }
+}
+
+class stateViewPrivate extends State {
+  stateViewPrivate({
     Key? key, required this.title,required this.agency,required this.date, required this.count,
-  }) : super(key: key);
+  });
   final String title;
   final String agency;
   final String date;
   final int count;
   @override
+
+  var actualContent = "null";
+  var link = "null";
 
   void _launchURL(BuildContext context,link) async {
     try {
@@ -92,13 +113,28 @@ class ViewPrivate extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: (){
-                //TODO: Convert to Stateful widget and add refresh function
+                contentPrivate = getContentOfOnlineCC(count);
+                setState(() {
+
+                });
               },
               icon: Icon(Icons.refresh_outlined)
           ),
           IconButton(
               onPressed: (){
-                //TODO: Add share sheet function
+                if (actualContent != "null" && link != "null"){
+                  var newContent = actualContent + "\n\n連結： " + link;
+                  Share.share(newContent,subject: title);
+                }else if (actualContent != "null" && link == "null"){
+                  var newContent = actualContent;
+                  Share.share(newContent,subject: title);
+                }else {
+                  showDialog(context: context, builder: (context){
+                    return Dialog(
+                      child: Text("Nothing to share"),
+                    );
+                  });
+                }
               },
               icon: Icon(Icons.share_outlined)
           ),
@@ -171,6 +207,7 @@ class ViewPrivate extends StatelessWidget {
                           future: contentPrivate,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
+                              actualContent = snapshot.data![0];
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -186,6 +223,8 @@ class ViewPrivate extends StatelessWidget {
                                 ],
                               );
                             } else if (snapshot.hasError) {
+                              actualContent = "null";
+                              link = "null";
                               return ErrorCard(errorCode: snapshot.error.toString());
                             }
 
@@ -205,6 +244,7 @@ class ViewPrivate extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       if (snapshot.data![1].length > 1){
+                        link = snapshot.data![1];
                         return Padding(
                             padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
                             child: Column(

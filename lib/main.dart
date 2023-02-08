@@ -227,9 +227,6 @@ class _currentPage extends State<MainApp> {
             child: TextFormField(
               controller: chkCodeController,
               decoration: InputDecoration(
-                  labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                  ),
                   focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
                   labelText: '驗證碼',
                   enabledBorder: OutlineInputBorder(

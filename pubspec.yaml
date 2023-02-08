@@ -49,6 +49,7 @@ dependencies:
   swipe_refresh: ^1.0.2
   flutter_launcher_icons: ^0.11.0
   flutter_native_splash: ^2.2.16
+  share_plus: ^6.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile_yp/themes/green.dart';
-import 'package:mobile_yp/online_cc.dart';
-import 'package:mobile_yp/public_cc.dart';
-import 'package:mobile_yp/settings.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -255,7 +251,7 @@ class editAdminState extends State<editAdmin> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("取消",style: TextStyle(fontSize: 20),),
+
                   style: ButtonStyle(
                     fixedSize: MaterialStatePropertyAll(
                         Size(
@@ -263,8 +259,10 @@ class editAdminState extends State<editAdmin> {
                         ),
                     ),
                     backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                    elevation: MaterialStatePropertyAll(0)
+                    elevation: MaterialStatePropertyAll(0),
+
                   ),
+                  child: Text("取消",style: TextStyle(fontSize: 20),),
                 ),
               ),
             ),

@@ -46,44 +46,80 @@ Future<Widget> personalCC (String chkCode, BuildContext context,Function display
     OnlineCCStep = "main";
     return returnCC();
   }else if (response.body.contains("驗證碼錯誤")) {
-    return Column(
-      children: [
-        Text("驗證碼錯誤"),
-        TextButton(
-            onPressed: () {
-              personalResult = displayChkCode();
-              setState();
-            },
-            child: Text("重新輸入")
+    showDialog(context: context, builder: (context){
+      return Dialog(
+        child: Padding(
+            padding: EdgeInsets.all(20),
+          child: Wrap(
+            children: [
+              Column(
+                children: [
+                  Text("驗證碼錯誤"),
+                  TextButton(
+                      onPressed: () {
+                        setState();
+                        Navigator.pop(context);
+                      },
+                      child: Text("重新輸入")
+                  ),
+                ],
+              )
+            ],
+          )
         )
-      ],
-    );
+      );
+    },barrierDismissible: false);
+    return displayChkCode();
   }else if (response.body.contains("密碼錯誤")){
-    return Column(
-      children: [
-        Text("密碼錯誤"),
-        TextButton(
-            onPressed: () {
-              personalResult = displayChkCode();
-              setState();
-            },
-            child: Text("檢查設定")
-        )
-      ],
-    );
+    showDialog(context: context, builder: (context){
+      return Dialog(
+          child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Wrap(
+                children: [
+                  Column(
+                    children: [
+                      Text("密碼錯誤"),
+                      TextButton(
+                          onPressed: () {
+                            setState();
+                            Navigator.pop(context);
+                          },
+                          child: Text("檢查設定")
+                      ),
+                    ],
+                  )
+                ],
+              )
+          )
+      );
+    },barrierDismissible: false);
+    return displayChkCode();
   }else if (response.body.contains("學號錯誤")){
-    return Column(
-      children: [
-        Text("學號錯誤"),
-        TextButton(
-            onPressed: () {
-              personalResult = displayChkCode();
-              setState();
-            },
-            child: Text("檢查設定")
-        )
-      ],
-    );
+    showDialog(context: context, builder: (context){
+      return Dialog(
+          child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Wrap(
+                children: [
+                  Column(
+                    children: [
+                      Text("學號錯誤"),
+                      TextButton(
+                          onPressed: () {
+                            setState();
+                            Navigator.pop(context);
+                          },
+                          child: Text("檢查設定")
+                      ),
+                    ],
+                  )
+                ],
+              )
+          )
+      );
+    },barrierDismissible: false);
+    return displayChkCode();
   }else{
     return Column(
       children: [
