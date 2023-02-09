@@ -10,12 +10,14 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/upload.dart';
 
+import 'edit.dart';
+
 
 
 Future<Widget> uploadResult = Future.value(Text(""));
 
 
-Future<Widget> retrieveAdminList () async {
+Future<Widget> retrieveAdminList (Function setState) async {
   var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tua.aspx'));
   viewstateGeneratorUpload = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidationUpload = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
@@ -39,13 +41,13 @@ Future<Widget> retrieveAdminList () async {
       }
   );
   if (response.body.contains("Object moved")) {
-    return returnUploadCC();
+    return returnUploadCC(setState);
   }else {
     return Text(response.body);
   }
 }
 
-Future<Widget> returnUploadCC () async {
+Future<Widget> returnUploadCC (Function setState) async {
 
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
   var response = await http.get(
@@ -96,7 +98,8 @@ Future<Widget> returnUploadCC () async {
         ListCardUpload(
             title: result[index][0],
             date: result[index][1],
-            count: result[index][2]
+            count: result[index][2],
+          setState: setState,
         )
     ),
   );
@@ -176,7 +179,7 @@ class _UploadCCState extends State<UploadCC> {
                       setState(() {
 
                       });
-                      uploadResult = retrieveAdminList();
+                      uploadResult = retrieveAdminList(setStateCallBack);
                       break;
                     case 2:
                       Navigator.of(context).push(
@@ -250,11 +253,16 @@ class _UploadCCState extends State<UploadCC> {
 
 class ListCardUpload extends StatelessWidget {
   const ListCardUpload({
-    Key? key, required this.title, required this.date, required this.count,
+    Key? key,
+    required this.title,
+    required this.date,
+    required this.count,
+    required this.setState,
   }) : super(key: key);
   final String title;
   final String date;
   final int count;
+  final Function setState;
 
   @override
   Widget build(BuildContext context) {
@@ -314,14 +322,104 @@ class ListCardUpload extends StatelessWidget {
                       Padding(
                           padding: EdgeInsets.only(bottom: 10,left: 10,right: 10),
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var res = await getCCEdit(count);
+                              editTitleController.text = res[0].toString();
+                              editContentController.text = res[1].toString();
+                              editLinkController.text = res[2].toString();
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) {
+                                        return gotoSettings(
+                                            EditPage()
+                                        );
+                                      }
+                                  )
+                              );
+                            },
                             icon: Icon(Icons.edit_outlined,size: 30,)
                           ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 10,right: 10),
                         child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context){
+                                    return Dialog(
+                                      child: Padding(
+                                          padding: EdgeInsets.all(30),
+                                        child: Wrap(
+                                          direction: Axis.horizontal,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                                  child: Icon(Icons.warning_amber_outlined,size: 40,),
+                                                ),
+                                                Text("確定要刪除嗎？",
+                                                style: TextStyle(
+                                                    fontSize: 30
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      var res = await deleteCC(count);
+                                                      Navigator.pop(context);
+                                                      if (res == "failed"){
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return Dialog(
+                                                                child: Text("failed"),
+                                                              );
+                                                            }
+                                                        );
+                                                      }
+                                                      uploadResult = retrieveAdminList(setState);
+                                                      MobileYP.of(context).setStateFunc();
+                                                    },
+                                                    child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 100,vertical: 20),
+                                                      child: Text("是",
+                                                        style: TextStyle(
+                                                          fontSize: 30,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  style: ButtonStyle(
+                                                    maximumSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width,100))
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Padding(
+                                                        padding: EdgeInsets.symmetric(horizontal: 100,vertical: 20),
+                                                      child: Text("否",
+                                                        style: TextStyle(
+                                                            fontSize: 30
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  style: ButtonStyle(
+                                                      maximumSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width,100))
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
                             icon: Icon(Icons.delete_outlined,size: 30,)
                         ),
                       )
@@ -336,3 +434,70 @@ class ListCardUpload extends StatelessWidget {
   }
 }
 
+Future<List> getCCEdit (int count) async {
+  var realCount = count + 2;
+  String formattedCount = "";
+  if (realCount < 10){
+    formattedCount = "0" + realCount.toString();
+  }else{
+    formattedCount = realCount.toString();
+  }
+  var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
+  var response = await http.post(
+      url,
+      headers: {
+        "Content-Type":"application/x-www-form-urlencoded",
+        "cookie":ASPCookie!
+      },
+      body: {
+        "__EVENTTARGET":"",
+        "__EVENTARGUMENT":"",
+        "__VIEWSTATE": viewStateUploadReal,
+        "__VIEWSTATEGENERATOR": viewstateGeneratorUploadReal,
+        "__EVENTVALIDATION":eventValidationUploadReal,
+        "GridViewS\$ctl"+formattedCount+"\$but_vf1":"修改"
+      }
+  );
+  var document = parse(response.body);
+  var title = document.getElementById("tbox_purport")?.attributes['value'];
+  var content = document.getElementById("tbox_content")?.innerHtml;
+  var link = document.getElementById("tbox_link")?.attributes['value'];
+  newEventValiation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
+  newViewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
+  if (link == null){
+    return [title,content,""];
+  }else{
+    return [title,content,link];
+  }
+}
+
+Future<String> deleteCC (int count) async {
+  var realCount = count + 2;
+  String formattedCount = "";
+  if (realCount < 10){
+    formattedCount = "0" + realCount.toString();
+  }else{
+    formattedCount = realCount.toString();
+  }
+  var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
+  var response = await http.post(
+      url,
+      headers: {
+        "Content-Type":"application/x-www-form-urlencoded",
+        "cookie":ASPCookie!
+      },
+      body: {
+        "__EVENTTARGET":"",
+        "__EVENTARGUMENT":"",
+        "__VIEWSTATE": viewStateUploadReal,
+        "__VIEWSTATEGENERATOR": viewstateGeneratorUploadReal,
+        "__EVENTVALIDATION":eventValidationUploadReal,
+        "GridViewS\$ctl"+formattedCount+"\$Button1":"修改"
+      }
+  );
+  if (response.statusCode == 200){
+    return "success";
+  }else{
+    return "failed";
+  }
+}

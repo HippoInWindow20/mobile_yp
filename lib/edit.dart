@@ -2,41 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
+import 'package:mobile_yp/upload.dart';
 
 import 'admin_list.dart';
 
-String?  newViewState = "";
-String?  newEventValiation = "";
 
-Future<String> enterUploadMode () async {
-  var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
-  var response = await http.post(
-    url,
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded",
-      "cookie":ASPCookie!
-    },
-      body: {
-        "__EVENTTARGET":"",
-        "__EVENTARGUMENT":"",
-        "__VIEWSTATE": viewStateUploadReal,
-        "__VIEWSTATEGENERATOR": viewstateGeneratorUploadReal,
-        "__EVENTVALIDATION":eventValidationUploadReal,
-        "but_add":"新增"
-      }
-  );
-  var document = parse(response.body);
-  newEventValiation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
-  newViewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
-  if (response.statusCode == 200){
-    return "success";
-  }else{
-    return "failed";
-  }
-  //No problem here
-}
-
-Future<String> submitUpload (title,content,link) async {
+Future<String> submitEdit (title,content,link) async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
   var response = await http.post(
       url,
@@ -61,30 +32,32 @@ Future<String> submitUpload (title,content,link) async {
   }
 }
 
+var editTitleController = TextEditingController();
+var editContentController = TextEditingController();
+var editLinkController = TextEditingController();
 
-class UploadPage extends StatefulWidget {
+class EditPage extends StatefulWidget {
   @override
+
   State<StatefulWidget> createState() {
-    return stateUploadPage();
+    return stateEditPage();
   }
 }
 
 
-class stateUploadPage extends State {
-  final TitleController = TextEditingController();
-  final ContentController = TextEditingController();
-  final LinkController = TextEditingController();
+class stateEditPage extends State {
+  @override
   void setStateFunc () {
     setState(() {
 
     });
   }
-  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text("新增"),
+        title: Text("編輯"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
           onPressed: () => Navigator.of(context).pop(),
@@ -95,7 +68,7 @@ class stateUploadPage extends State {
         actions: [
           IconButton(
               onPressed: () async {
-                var result2 = await submitUpload(TitleController.text, ContentController.text, LinkController.text);
+                var result2 = await submitEdit(editTitleController.text, editContentController.text, editLinkController.text);
                 if (result2 == "success"){
 
                   uploadResult = Future.value(Text(""));
@@ -132,7 +105,7 @@ class stateUploadPage extends State {
                     Padding(
                       padding: EdgeInsets.all(20),
                       child: TextField(
-                        controller: TitleController,
+                        controller: editTitleController,
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onBackground
                         ),
@@ -161,7 +134,7 @@ class stateUploadPage extends State {
                     Padding(
                         padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
                         child: TextField(
-                          controller: ContentController,
+                          controller: editContentController,
                           minLines: 15,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
@@ -193,7 +166,7 @@ class stateUploadPage extends State {
                     Padding(
                         padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
                         child: TextField(
-                          controller: LinkController,
+                          controller: editLinkController,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.onBackground
                           ),

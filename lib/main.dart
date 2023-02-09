@@ -150,6 +150,11 @@ class __MobileYPState extends State<MobileYP>{
     });
   }
 
+  void setStateFunc() {
+    setState(() {
+    });
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "行動延平. Mobile YP.",
@@ -183,11 +188,17 @@ class MainApp extends StatefulWidget {
 int currentPage = 0;
 class _currentPage extends State<MainApp> {
 
+  void setStateFunc () {
+    setState(() {
+
+    });
+  }
+
   void initState() {
     super.initState();
     result = getCC();
     personalResult = displayChkCode();
-    uploadResult = retrieveAdminList();
+    uploadResult = retrieveAdminList(setStateFunc);
   }
 
   Future<Widget> displayChkCode () async {
