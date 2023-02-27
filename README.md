@@ -3,9 +3,15 @@
 An app aiming to create an intuitive experience for browsing information from YanPing servers.  
 This app aims to integrate all of the services most commonly used in the website, only less clutter.  
 
+# Preface
+
+*"YanPing mobile app. Please make it good for fuck's sake"*  
+
+That's the energy I gained when building this app, is to just mke it good. No unnecessary info included.
+
 # Why I'm doing this
 
-1. The website layout is GOOBAGE
+1. The website layout is GARBAGE
 2. The website isn't very user friendly
 3. The colour palette hurts my fucking eyes
 4. School project hehe
