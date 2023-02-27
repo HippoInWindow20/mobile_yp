@@ -120,24 +120,22 @@ class stateView extends State<View> {
           ),
           IconButton(
               onPressed: (){
-                if (actualContent != ["null"] && link != "null"){
-                  var newContent = "";
+                if (actualContent.toString().contains("null") == false && link.contains("null") == false){
+                  var newContent = "主旨：" + title + "\n\n";
                   for (var x = 0;x < actualContent.length;x++){
                     newContent += actualContent[x] + "\n";
                   }
                   newContent += "\n\n連結： " + link;
                   Share.share(newContent,subject: title);
-                }else if (actualContent != ["null"] && link == "null"){
-                  var newContent = "";
+                }else if (actualContent.toString().contains("null") == false && link.contains("null") == true){
+                  var newContent = "主旨：" + title + "\n\n";
                   for (var x = 0;x < actualContent.length;x++){
                     newContent += actualContent[x] + "\n";
                   }
                   Share.share(newContent,subject: title);
                 }else {
                   showDialog(context: context, builder: (context){
-                    return Dialog(
-                      child: Text("Nothing to share"),
-                    );
+                    return ErrorDesc(errordesc: "沒有分享的內容",);
                   });
                 }
               },
@@ -338,6 +336,90 @@ class stateView extends State<View> {
           ),
         ),
 
+      ),
+    );
+  }
+}
+
+class ErrorDesc extends StatelessWidget {
+  const ErrorDesc({
+    super.key,
+    required this.errordesc,
+  });
+  final String errordesc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+      child: Padding(
+          padding: EdgeInsets.all(20),
+        child: Wrap(
+          children: [
+            Column(
+              children: [
+                Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.error_outline_outlined,size: 40,),
+                      Padding(
+                          padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          "錯誤",
+                          style: TextStyle(
+                            fontSize: 30
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          errordesc,
+                          style: TextStyle(
+                              fontSize: 20
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                                "確定",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onErrorContainer
+                              ),
+                            )
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:html/parser.dart' show parse;
 
 import 'admin_list.dart';
 
+String DateCC = DateTime.now().year.toString()+ "/" + DateTime.now().month.toString()+ "/" + DateTime.now().day.toString() + "網路聯絡簿";
 String?  newViewState = "";
 String?  newEventValiation = "";
 
@@ -71,7 +72,7 @@ class UploadPage extends StatefulWidget {
 
 
 class stateUploadPage extends State {
-  final TitleController = TextEditingController();
+  final TitleController = TextEditingController(text: DateCC);
   final ContentController = TextEditingController();
   final LinkController = TextEditingController();
   void setStateFunc () {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'main.dart';
+
 bool adminSwitch = false;
 String defaultAccount = "";
 String defaultAdminPwd = "";
@@ -69,6 +71,9 @@ class __adminState extends State<adminPage>{
                 initialValue: adminSwitch,
                 onToggle: (bool value) async {
                   adminSwitch = value;
+                  if (value == false){
+                    currentPage = 0;
+                  }
                   setState(() {
 
                   });

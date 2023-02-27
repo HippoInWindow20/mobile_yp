@@ -19,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'admin.dart';
+import 'home.dart';
 
 
 Map<int, Color> color =
@@ -310,13 +311,18 @@ class _currentPage extends State<MainApp> {
         selectedIndex: currentPage,
         destinations: <Widget>[
           NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: '首頁',
+          ),
+          NavigationDestination(
             selectedIcon: Icon(Icons.info),
             icon: Icon(Icons.info_outlined),
             label: '公告欄',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.campaign),
-            icon: Icon(Icons.campaign_outlined),
+            selectedIcon: Icon(Icons.announcement),
+            icon: Icon(Icons.announcement_outlined),
             label: '網路聯絡簿',
           ),
           if (adminSwitch == true)
@@ -329,12 +335,17 @@ class _currentPage extends State<MainApp> {
       ),
       body: <Widget>[
         Container(
-        color: Colors.green,
-        alignment: Alignment.center,
-        child: publicCC(setStateCallBack: setStateFromMain,),
-      ),
+          color: Theme.of(context).colorScheme.onPrimary,
+          alignment: Alignment.center,
+          child: Homepage(setStateCallBack: setStateFromMain),
+        ),
         Container(
-          color: Colors.green,
+          color: Theme.of(context).colorScheme.onPrimary,
+          alignment: Alignment.center,
+          child: publicCC(setStateCallBack: setStateFromMain,),
+        ),
+        Container(
+          color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: OnlineCC(setStateCallBack: setStateFromMain,displayChkCode: displayChkCode,),
         ),

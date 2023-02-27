@@ -325,7 +325,7 @@ class ListCardUpload extends StatelessWidget {
                             onPressed: () async {
                               var res = await getCCEdit(count);
                               editTitleController.text = res[0].toString();
-                              editContentController.text = res[1].toString();
+                              editContentController.text = res[1].toString().substring(1,res[1].toString().length);
                               editLinkController.text = res[2].toString();
                               Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -337,7 +337,7 @@ class ListCardUpload extends StatelessWidget {
                                   )
                               );
                             },
-                            icon: Icon(Icons.edit_outlined,size: 30,)
+                            icon: Icon(Icons.edit_outlined,size: 35)
                           ),
                       ),
                       Padding(
@@ -420,7 +420,7 @@ class ListCardUpload extends StatelessWidget {
                                   }
                               );
                             },
-                            icon: Icon(Icons.delete_outlined,size: 30,)
+                            icon: Icon(Icons.delete_outlined,size: 35)
                         ),
                       )
                     ],
