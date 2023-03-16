@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import 'package:mobile_yp/admin_list.dart';
 import 'package:mobile_yp/personal.dart';
 import "package:mobile_yp/public_cc.dart";
+import 'package:mobile_yp/schedule.dart';
 import "package:mobile_yp/settings.dart";
 import "package:mobile_yp/online_cc.dart";
 import 'package:mobile_yp/themes/blue.dart';
@@ -53,6 +54,9 @@ String? viewStateUpload = "";
 String? eventValidationUploadReal = "";
 String? viewstateGeneratorUploadReal = "";
 String? viewStateUploadReal = "";
+String? eventValidationCal = "";
+String? viewstateGeneratorCal = "";
+String? viewStateCal = "";
 String OnlineCCStep = "validation";
 
 
@@ -137,7 +141,6 @@ class MobileYP extends StatefulWidget {
 }
 
 class __MobileYPState extends State<MobileYP>{
-  @override
 
   void changeTheme(ThemeMode themeMode) {
     setState(() {
@@ -200,6 +203,7 @@ class _currentPage extends State<MainApp> {
     result = getCC();
     personalResult = displayChkCode();
     uploadResult = retrieveAdminList(setStateFunc);
+    calResult = getCal();
   }
 
   Future<Widget> displayChkCode () async {
@@ -325,6 +329,11 @@ class _currentPage extends State<MainApp> {
             icon: Icon(Icons.announcement_outlined),
             label: '網路聯絡簿',
           ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_month_outlined),
+            label: '行事曆',
+          ),
           if (adminSwitch == true)
             NavigationDestination(
               selectedIcon: Icon(Icons.upload),
@@ -348,6 +357,11 @@ class _currentPage extends State<MainApp> {
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: OnlineCC(setStateCallBack: setStateFromMain,displayChkCode: displayChkCode,),
+        ),
+        Container(
+          color: Theme.of(context).colorScheme.onPrimary,
+          alignment: Alignment.center,
+          child: Schedule(setStateCallBack: setStateFromMain,),
         ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,

@@ -46,7 +46,6 @@ class EditPage extends StatefulWidget {
 
 
 class stateEditPage extends State {
-  @override
   void setStateFunc () {
     setState(() {
 

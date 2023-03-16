@@ -39,9 +39,9 @@ Future<List> getContentOfCC (count) async {
 }
 
 
-class View extends StatefulWidget {
+class ViewC extends StatefulWidget {
   @override
-  View({
+  ViewC({
     required this.title,
     required this.agency,
     required this.date,
@@ -57,7 +57,7 @@ class View extends StatefulWidget {
 }
 
 
-class stateView extends State<View> {
+class stateView extends State<ViewC> {
   stateView({
     required this.title,required this.agency,required this.date, required this.count,
   });
@@ -65,7 +65,6 @@ class stateView extends State<View> {
   final String agency;
   final String date;
   final int count;
-  @override
 
   var actualContent = ["null"];
   var link = "null";

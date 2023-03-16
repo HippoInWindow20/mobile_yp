@@ -68,7 +68,6 @@ class stateViewPrivate extends State {
   final String agency;
   final String date;
   final int count;
-  @override
 
   var actualContent = "null";
   var link = "null";

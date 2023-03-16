@@ -399,6 +399,9 @@ class ListCardUpload extends StatelessWidget {
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
+                                                  style: ButtonStyle(
+                                                      maximumSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width,100))
+                                                  ),
                                                     child: Padding(
                                                         padding: EdgeInsets.symmetric(horizontal: 100,vertical: 20),
                                                       child: Text("否",
@@ -407,9 +410,7 @@ class ListCardUpload extends StatelessWidget {
                                                         ),
                                                       ),
                                                     ),
-                                                  style: ButtonStyle(
-                                                      maximumSize: MaterialStatePropertyAll(Size(MediaQuery.of(context).size.width,100))
-                                                  ),
+
                                                 ),
                                               ],
                                             )

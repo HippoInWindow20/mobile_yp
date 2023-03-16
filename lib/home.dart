@@ -29,11 +29,12 @@ class HomepageState extends State {
   @override
   Widget build(BuildContext context) {
     ButtonStyle menuTileStyle = ButtonStyle(
-        fixedSize: MaterialStatePropertyAll(
-            Size(
-                (MediaQuery.of(context).size.width/3.5),(MediaQuery.of(context).size.width/3.5)
-            )
-        )
+      elevation: MaterialStatePropertyAll(0),
+      fixedSize: MaterialStatePropertyAll(
+          Size(
+              (MediaQuery.of(context).size.width/3.3),(MediaQuery.of(context).size.width/3.3)
+          )
+      )
     );
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -79,9 +80,10 @@ class HomepageState extends State {
                     ),
                     MenuTile(
                       menuTileStyle: menuTileStyle,
-                      icon: Icons.announcement_outlined,
-                      title: "lol",
+                      icon: Icons.calendar_month_outlined,
+                      title: "行事曆",
                       function: () {
+                        currentPage = 3;
                       },
                       setState: setStateCallBack,
                     ),
@@ -187,8 +189,12 @@ class MenuTile extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Icon(icon),
-                  Text(title)
+                  Icon(icon,size: 30,),
+                  Text(title,
+                  style: TextStyle(
+                    fontSize: 15
+                  ),
+                  )
                 ],
               )
             ],
