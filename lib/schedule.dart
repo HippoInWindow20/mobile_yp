@@ -12,16 +12,38 @@ import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
+var selSeg = "main";
 
-Future<List> calResult = Future.value([]);
+String trimStr (String ori, int Start, int End){
+  var oriLength = ori.length;
+  return ori.substring(Start,oriLength - End);
+}
 
+Future<List<ScheduleItem>> calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [])]);
 
+class ScheduleItem {
+  final String year;
+  final String month;
+  final String day;
+  final String dayOfWeek;
+  final List details;
 
-Future<List> getCal () async {
+  ScheduleItem({
+    required this.year,
+    required this.month,
+    required this.day,
+    required this.dayOfWeek,
+    required this.details
+  });
+}
+Future<List<ScheduleItem>> getCal () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/gr2.aspx');
   var response = await http.post(url,body: {});
   var document = parse(response.body);
   var TDs = document.getElementsByTagName("td");
+  // for (var x = 0;x < TDs.length; x++){
+  //   print(TDs[x].innerHtml);
+  // }
   viewstateGeneratorCal = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidationCal = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
   viewStateCal = document.getElementById("__VIEWSTATE")?.attributes['value'];
@@ -46,7 +68,42 @@ Future<List> getCal () async {
       "DLW":"近日行事"
     },
   );
-  return [response.body];
+
+  List<ScheduleItem> newObj = [];
+  for (var h = 12;h < TDs.length; h = h + 12){
+      //decide day of week
+      var newDayOfWeek = "";
+      if (trimStr(TDs[h + 3].innerHtml,44,7).contains("FF0001") || trimStr(TDs[h + 3].innerHtml,44,7).contains("0001FF")){
+        newDayOfWeek = trimStr(TDs[h + 3].innerHtml,66,14);
+      }else{
+        newDayOfWeek = trimStr(TDs[h + 3].innerHtml,44,7);
+      }
+      List<String> detailArr = [];
+      if (selSeg == "main"){
+        detailArr = trimStr(TDs[h + 4].innerHtml,44,7).split("。");
+      }else{
+        detailArr = trimStr(TDs[h + 10].innerHtml,44,7).split("。");
+      }
+      //A really repetitive way to remove nbsp
+      List<String> newDetail = [];
+      for (var y = 0;y < detailArr.length;y++){
+        if (detailArr[y].contains("nbsp")){
+          newDetail.add("");
+        }else{
+          newDetail.add(detailArr[y]);
+        }
+      }
+      newObj.add(
+          ScheduleItem(
+              year: trimStr(TDs[h].innerHtml,44,7),
+              month: trimStr(TDs[h + 1].innerHtml,44,7),
+              day: trimStr(TDs[h + 2].innerHtml,44,7),
+              dayOfWeek: newDayOfWeek,
+              details: newDetail
+          )
+      );
+  }
+  return newObj;
 }
 
 class Schedule extends StatefulWidget {
@@ -159,7 +216,7 @@ class ScheduleState extends State {
                 onSelected: (int value) {
                   switch (value){
                     case 1:
-                      calResult = Future.value([]);
+                      calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [])]);
                       setState(() {
 
                       });
@@ -192,27 +249,90 @@ class ScheduleState extends State {
             ],
           ),
           SliverToBoxAdapter(
-            child: FutureBuilder<List>(
+            child: Padding(
+                padding: EdgeInsets.all(10),
+              child: SegmentedButton(
+                segments: [
+                  ButtonSegment(
+                      icon: Icon(Icons.schedule_outlined),
+                      label: Text("主要行事"),
+                      value: "main"
+                  ),
+                  ButtonSegment(
+                      icon: Icon(Icons.quiz_outlined),
+                      label: Text("考試"),
+                      value: "test"
+                  ),
+                ],
+                selected: {selSeg},
+                onSelectionChanged: (value) {
+                  setState(() {
+                    selSeg = value.first.toString();
+                    calResult = getCal();
+                  });
+                },
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: FutureBuilder<List<ScheduleItem>>(
               future: calResult,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Column(
                     children:
-                      [
-                        Text(snapshot.data?[0])
-                    // SwipeRefresh.material(
-                      //   shrinkWrap: true,
-                      //   stateStream: _stream,
-                      //   onRefresh: _refresh,
-                      //   padding: const EdgeInsets.symmetric(vertical: 10),
-                      //   children: List.generate(snapshot.data!.length, (index) =>
-                      //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                      //   ),
-                      // ),
-                      // List.generate(snapshot.data!.length, (index) =>
-                      //     ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                      // )
-                    ],
+
+                      List.generate(snapshot.data!.length, (index) =>
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 4,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          snapshot.data![index].month+ "/" + snapshot.data![index].day,
+                                        style: TextStyle(
+                                          fontSize: 20
+                                        ),
+                                      ),
+                                      Text(
+                                          snapshot.data![index].dayOfWeek,
+                                        style: TextStyle(
+                                            fontSize: 20
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ),
+                              Container(
+                                width: (MediaQuery.of(context).size.width / 4) * 3,
+                                child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: List.generate(snapshot.data![index].details.length, (index2) =>
+                                        Text(
+                                          snapshot.data![index].details[index2],
+                                          textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                            fontSize: 20
+                                        ),
+                                        )
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                      )
+                    ,
                   );
                 } else if (snapshot.hasError) {
                   return ErrorCard(errorCode: snapshot.error.toString());
@@ -235,7 +355,7 @@ class ScheduleState extends State {
           showDialog(
               context: context, builder: (context) {
                 return Dialog(
-                  child: FutureBuilder<List>(
+                  child: FutureBuilder<List<ScheduleItem>>(
                     future: calResult,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -243,7 +363,7 @@ class ScheduleState extends State {
                           child: Padding(
                               padding: EdgeInsets.all(25),
                             child: Text(
-                                snapshot.data?[0]
+                                snapshot.data![0].toString()
                             ),
                           ),
                         );
