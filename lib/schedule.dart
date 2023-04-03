@@ -19,7 +19,7 @@ String trimStr (String ori, int Start, int End){
   return ori.substring(Start,oriLength - End);
 }
 
-Future<List<ScheduleItem>> calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [])]);
+Future<List<ScheduleItem>> calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],examDetails: [])]);
 
 class ScheduleItem {
   final String year;
@@ -27,13 +27,15 @@ class ScheduleItem {
   final String day;
   final String dayOfWeek;
   final List details;
+  final List examDetails;
 
   ScheduleItem({
     required this.year,
     required this.month,
     required this.day,
     required this.dayOfWeek,
-    required this.details
+    required this.details,
+    required this.examDetails
   });
 }
 Future<List<ScheduleItem>> getCal () async {
@@ -79,13 +81,12 @@ Future<List<ScheduleItem>> getCal () async {
         newDayOfWeek = trimStr(TDs[h + 3].innerHtml,44,7);
       }
       List<String> detailArr = [];
-      if (selSeg == "main"){
-        detailArr = trimStr(TDs[h + 4].innerHtml,44,7).split("。");
-      }else{
-        detailArr = trimStr(TDs[h + 10].innerHtml,44,7).split("。");
-      }
+      List<String> examArr = [];
+      detailArr = trimStr(TDs[h + 4].innerHtml,44,7).split("。");
+      examArr = trimStr(TDs[h + 10].innerHtml,44,7).split("。");
       //A really repetitive way to remove nbsp
       List<String> newDetail = [];
+      List<String> newExam = [];
       for (var y = 0;y < detailArr.length;y++){
         if (detailArr[y].contains("nbsp")){
           newDetail.add("");
@@ -93,13 +94,23 @@ Future<List<ScheduleItem>> getCal () async {
           newDetail.add(detailArr[y]);
         }
       }
+      for (var z = 0;z < examArr.length;z++){
+        if (examArr[z].contains("nbsp")){
+          newExam.add("");
+        }else{
+          newExam.add(examArr[z]);
+        }
+      }
+      newDetail.removeLast();
+      newExam.removeLast();
       newObj.add(
           ScheduleItem(
               year: trimStr(TDs[h].innerHtml,44,7),
               month: trimStr(TDs[h + 1].innerHtml,44,7),
               day: trimStr(TDs[h + 2].innerHtml,44,7),
               dayOfWeek: newDayOfWeek,
-              details: newDetail
+              details: newDetail,
+              examDetails: newExam
           )
       );
   }
@@ -216,7 +227,7 @@ class ScheduleState extends State {
                 onSelected: (int value) {
                   switch (value){
                     case 1:
-                      calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [])]);
+                      calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],examDetails: [])]);
                       setState(() {
 
                       });
@@ -268,7 +279,6 @@ class ScheduleState extends State {
                 onSelectionChanged: (value) {
                   setState(() {
                     selSeg = value.first.toString();
-                    calResult = getCal();
                   });
                 },
               ),
@@ -290,40 +300,89 @@ class ScheduleState extends State {
                               Container(
                                 width: MediaQuery.of(context).size.width / 4,
                                 child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                          snapshot.data![index].month+ "/" + snapshot.data![index].day,
-                                        style: TextStyle(
-                                          fontSize: 20
-                                        ),
+                                  padding: EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                                  child: Card(
+                                    elevation: 0,
+                                    color: Theme.of(context).colorScheme.secondaryContainer,
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            snapshot.data![index].month+ "/" + snapshot.data![index].day,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                              color: Theme.of(context).colorScheme.onSecondaryContainer
+                                            ),
+                                          ),
+                                          Text(
+                                            snapshot.data![index].dayOfWeek,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                              color: Theme.of(context).colorScheme.onSecondaryContainer
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                          snapshot.data![index].dayOfWeek,
-                                        style: TextStyle(
-                                            fontSize: 20
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 )
                               ),
-                              Container(
-                                width: (MediaQuery.of(context).size.width / 4) * 3,
-                                child: Padding(
-                                    padding: EdgeInsets.all(10),
+                              Padding(
+                                  padding: EdgeInsets.only(bottom: 50),
+                                child: Container(
+                                  width: (MediaQuery.of(context).size.width / 4) * 3,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: List.generate(snapshot.data![index].details.length, (index2) =>
-                                        Text(
-                                          snapshot.data![index].details[index2],
-                                          textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                            fontSize: 20
-                                        ),
+                                    children: selSeg == "main" ? List.generate(snapshot.data![index].details.length, (index2) =>
+                                        Card(
+                                          color: Theme.of(context).colorScheme.primaryContainer,
+                                          elevation: 0,
+                                          clipBehavior: Clip.hardEdge,
+                                          child: InkWell(
+                                            onTap: () {},
+                                            child: Container(
+                                              width: (MediaQuery.of(context).size.width / 4) * 3 - 20,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Text(
+                                                  snapshot.data![index].details[index2],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Theme.of(context).colorScheme.onPrimaryContainer
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                    ) :
+                                    List.generate(snapshot.data![index].examDetails.length, (index3) =>
+                                        Card(
+                                          color: Theme.of(context).colorScheme.primaryContainer,
+                                          elevation: 0,
+                                          clipBehavior: Clip.hardEdge,
+                                          child: InkWell(
+                                            onTap: () {},
+                                            child: Container(
+                                              width: (MediaQuery.of(context).size.width / 4) * 3 - 20,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Text(
+                                                  snapshot.data![index].examDetails[index3],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Theme.of(context).colorScheme.onPrimaryContainer
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         )
                                     ),
                                   ),
@@ -350,42 +409,42 @@ class ScheduleState extends State {
           ),
         ],
         ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context, builder: (context) {
-                return Dialog(
-                  child: FutureBuilder<List<ScheduleItem>>(
-                    future: calResult,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return SingleChildScrollView(
-                          child: Padding(
-                              padding: EdgeInsets.all(25),
-                            child: Text(
-                                snapshot.data![0].toString()
-                            ),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return ErrorCard(errorCode: snapshot.error.toString());
-                      }
-
-                      // By default, show a loading spinner.
-                      return const Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: CircularProgressIndicator(),
-                          )
-                      );
-                    },
-                  ),
-                );
-          }
-          );
-        },
-        child: Icon(Icons.tips_and_updates_outlined),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     showDialog(
+      //         context: context, builder: (context) {
+      //           return Dialog(
+      //             child: FutureBuilder<List<ScheduleItem>>(
+      //               future: calResult,
+      //               builder: (context, snapshot) {
+      //                 if (snapshot.hasData) {
+      //                   return SingleChildScrollView(
+      //                     child: Padding(
+      //                         padding: EdgeInsets.all(25),
+      //                       child: Text(
+      //                           snapshot.data![0].toString()
+      //                       ),
+      //                     ),
+      //                   );
+      //                 } else if (snapshot.hasError) {
+      //                   return ErrorCard(errorCode: snapshot.error.toString());
+      //                 }
+      //
+      //                 // By default, show a loading spinner.
+      //                 return const Center(
+      //                     child: Padding(
+      //                       padding: EdgeInsets.symmetric(vertical: 10),
+      //                       child: CircularProgressIndicator(),
+      //                     )
+      //                 );
+      //               },
+      //             ),
+      //           );
+      //     }
+      //     );
+      //   },
+      //   child: Icon(Icons.tips_and_updates_outlined),
+      // ),
       );
   }
 

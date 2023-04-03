@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
 
 Future<List> content = Future.value([]);
 
@@ -34,8 +35,12 @@ Future<List> getContentOfCC (count) async {
   var innerContent = document.getElementById("Label16")?.innerHtml.split("<br>");
   innerContent![0] = innerContent[0].substring(44,innerContent[0].length);
   innerContent[innerContent.length - 1] = innerContent[innerContent.length - 1].substring(0,innerContent[innerContent.length - 1].length - 7);
+  var contentString = "";
+  for (var c = 0; c < innerContent.length; c++) {
+      contentString += innerContent[c];
+  }
   var link = document.getElementsByTagName("a")[0].innerHtml;
-  return [person,innerContent,link];
+  return [person,[contentString],link];
 }
 
 
@@ -240,9 +245,10 @@ class stateView extends State<ViewC> {
                             if (snapshot.hasData) {
                               actualContent = snapshot.data![1];
                               return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(snapshot.data![1].length, (index) =>
-                                    Text(snapshot.data![1][index].trim(),
+                                    SelectableText(snapshot.data![1][index].trim(),
                                       style: TextStyle(
                                           fontSize: 22,
                                           color: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -315,6 +321,36 @@ class stateView extends State<ViewC> {
                                         )
                                     ),
                                   ),
+                                ),
+                                TextButton(
+                                    onPressed: () async {
+                                      await Clipboard.setData(ClipboardData(text: link));
+                                      // copied successfully
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text("已複製連結至剪貼簿")
+                                          )
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Row(
+                                        children: [
+                                          Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                            child: Icon(Icons.copy_outlined,size: 30),
+                                          ),
+                                          Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                              child: Text("複製連結",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              )
+                                          )
+                                        ],
+                                      ),
+                                    )
                                 )
                               ],
                             )

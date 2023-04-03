@@ -209,7 +209,7 @@ class stateViewPrivate extends State {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  SelectableText(
                                     snapshot.data![0],
                                     style: TextStyle(
                                         fontSize: 22,
