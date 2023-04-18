@@ -152,24 +152,24 @@ class _publicCCState extends State<publicCC> {
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
             actions: [
-              IconButton(
-                style: ButtonStyle(
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
-                  iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
-                ),
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 30),
-                          child: FilterOptions(),
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.tune_outlined),
-              ),
+              // IconButton(
+              //   style: ButtonStyle(
+              //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
+              //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
+              //   ),
+              //   onPressed: () {
+              //     showModalBottomSheet<void>(
+              //       context: context,
+              //       builder: (BuildContext context) {
+              //         return Padding(
+              //             padding: EdgeInsets.only(top: 30),
+              //             child: FilterOptions(),
+              //         );
+              //       },
+              //     );
+              //   },
+              //   icon: Icon(Icons.tune_outlined),
+              // ),
               AppPopupMenu<int>(
                 padding: EdgeInsets.all(20),
                 menuItems:  [

@@ -83,7 +83,7 @@ Future<List<ScheduleItem>> getCal () async {
       List<String> detailArr = [];
       List<String> examArr = [];
       detailArr = trimStr(TDs[h + 4].innerHtml,44,7).split("。");
-      examArr = trimStr(TDs[h + 10].innerHtml,44,7).split("。");
+      examArr = [trimStr(TDs[h + 10].innerHtml,44,7)];
       //A really repetitive way to remove nbsp
       List<String> newDetail = [];
       List<String> newExam = [];
@@ -96,13 +96,11 @@ Future<List<ScheduleItem>> getCal () async {
       }
       for (var z = 0;z < examArr.length;z++){
         if (examArr[z].contains("nbsp")){
-          newExam.add("");
         }else{
           newExam.add(examArr[z]);
         }
       }
       newDetail.removeLast();
-      newExam.removeLast();
       newObj.add(
           ScheduleItem(
               year: trimStr(TDs[h].innerHtml,44,7),
@@ -182,24 +180,24 @@ class ScheduleState extends State {
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
             actions: [
-              IconButton(
-                style: ButtonStyle(
-                  padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
-                  iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
-                ),
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 30),
-                          child: FilterOptionsSc(),
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.tune_outlined),
-              ),
+              // IconButton(
+              //   style: ButtonStyle(
+              //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
+              //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
+              //   ),
+              //   onPressed: () {
+              //     showModalBottomSheet<void>(
+              //       context: context,
+              //       builder: (BuildContext context) {
+              //         return Padding(
+              //             padding: EdgeInsets.only(top: 30),
+              //             child: FilterOptionsSc(),
+              //         );
+              //       },
+              //     );
+              //   },
+              //   icon: Icon(Icons.tune_outlined),
+              // ),
               AppPopupMenu<int>(
                 padding: EdgeInsets.all(20),
                 menuItems:  [
@@ -373,7 +371,7 @@ class ScheduleState extends State {
                                               child: Padding(
                                                 padding: EdgeInsets.all(10),
                                                 child: Text(
-                                                  snapshot.data![index].examDetails[index3],
+                                                    "第" + trimStr(snapshot.data![index].examDetails[index3], 0, snapshot.data![index].examDetails[index3].toString().length - 1)+"節："+trimStr(snapshot.data![index].examDetails[index3], 1, 0),
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                       fontSize: 20,

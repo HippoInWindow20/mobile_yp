@@ -48,75 +48,249 @@ Future<Widget> personalCC (String chkCode, BuildContext context,Function display
   }else if (response.body.contains("驗證碼錯誤")) {
     showDialog(context: context, builder: (context){
       return Dialog(
+        backgroundColor: Theme.of(context).colorScheme.errorContainer,
         child: Padding(
-            padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           child: Wrap(
             children: [
               Column(
                 children: [
-                  Text("驗證碼錯誤"),
-                  TextButton(
-                      onPressed: () {
-                        setState();
-                        Navigator.pop(context);
-                      },
-                      child: Text("重新輸入")
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.error_outline_outlined,size: 40,),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "錯誤",
+                            style: TextStyle(
+                                fontSize: 30
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "驗證碼錯誤",
+                            style: TextStyle(
+                                fontSize: 20
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: TextButton(
+                              onPressed: () {
+                                setState();
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "重試",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).colorScheme.onErrorContainer
+                                ),
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               )
             ],
-          )
-        )
+          ),
+        ),
       );
     },barrierDismissible: false);
     return displayChkCode();
   }else if (response.body.contains("密碼錯誤")){
     showDialog(context: context, builder: (context){
       return Dialog(
-          child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Wrap(
+        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Wrap(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Text("密碼錯誤"),
-                      TextButton(
-                          onPressed: () {
-                            setState();
-                            Navigator.pop(context);
-                          },
-                          child: Text("檢查設定")
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.error_outline_outlined,size: 40,),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "錯誤",
+                            style: TextStyle(
+                                fontSize: 30
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "密碼錯誤",
+                            style: TextStyle(
+                                fontSize: 20
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: TextButton(
+                              onPressed: () {
+                                setState();
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return gotoSettings(
+                                              Settings(setStateCallBack: setState,)
+                                          );
+                                        }
+                                    )
+                                );
+                              },
+                              child: Text(
+                                "檢查設定",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).colorScheme.onErrorContainer
+                                ),
+                              )
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               )
-          )
+            ],
+          ),
+        ),
       );
     },barrierDismissible: false);
     return displayChkCode();
   }else if (response.body.contains("學號錯誤")){
     showDialog(context: context, builder: (context){
       return Dialog(
-          child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Wrap(
+        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Wrap(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Text("學號錯誤"),
-                      TextButton(
-                          onPressed: () {
-                            setState();
-                            Navigator.pop(context);
-                          },
-                          child: Text("檢查設定")
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.error_outline_outlined,size: 40,),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "錯誤",
+                            style: TextStyle(
+                                fontSize: 30
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            "學號錯誤",
+                            style: TextStyle(
+                                fontSize: 20
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: TextButton(
+                              onPressed: () {
+                                setState();
+                                Navigator.pop(context);
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return gotoSettings(
+                                              Settings(setStateCallBack: setState,)
+                                          );
+                                        }
+                                    )
+                                );
+                              },
+                              child: Text(
+                                "檢查設定",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Theme.of(context).colorScheme.onErrorContainer
+                                ),
+                              )
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               )
-          )
+            ],
+          ),
+        ),
       );
     },barrierDismissible: false);
     return displayChkCode();

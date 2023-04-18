@@ -314,11 +314,11 @@ class _currentPage extends State<MainApp> {
         },
         selectedIndex: currentPage,
         destinations: <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: '首頁',
-          ),
+          // NavigationDestination(
+          //   selectedIcon: Icon(Icons.home),
+          //   icon: Icon(Icons.home_outlined),
+          //   label: '首頁',
+          // ),
           NavigationDestination(
             selectedIcon: Icon(Icons.info),
             icon: Icon(Icons.info_outlined),
@@ -343,11 +343,11 @@ class _currentPage extends State<MainApp> {
         ],
       ),
       body: <Widget>[
-        Container(
-          color: Theme.of(context).colorScheme.onPrimary,
-          alignment: Alignment.center,
-          child: Homepage(setStateCallBack: setStateFromMain),
-        ),
+        // Container(
+        //   color: Theme.of(context).colorScheme.onPrimary,
+        //   alignment: Alignment.center,
+        //   child: Homepage(setStateCallBack: setStateFromMain),
+        // ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,

@@ -80,19 +80,19 @@ class __SettingsState extends State<Settings>{
             ), tiles: [],
           ),
 
-          SettingsSection(
-            tiles: <SettingsTile>[
-              SettingsTile.navigation(
-                leading: Icon(Icons.account_circle_outlined),
-                title: Text('許晉誠',style: SettingsTitleTextStyle,),
-                description: Text("學號：11031123\n導班：2206"),
-                onPressed: (context) {
-
-                },
-              ),
-
-            ],
-          ),
+          // SettingsSection(
+          //   tiles: <SettingsTile>[
+          //     SettingsTile.navigation(
+          //       leading: Icon(Icons.account_circle_outlined),
+          //       title: Text('Username',style: SettingsTitleTextStyle,),
+          //       description: Text("學號：12345678\n導班：1234"),
+          //       onPressed: (context) {
+          //
+          //       },
+          //     ),
+          //
+          //   ],
+          // ),
 
           SettingsSection(
             title: Text("一般",
@@ -148,13 +148,13 @@ class __SettingsState extends State<Settings>{
                   );
                 },
               ),
-              SettingsTile.navigation(
-                leading: Icon(Icons.reorder_outlined),
-                title: Text('導覽列排序',style: SettingsTitleTextStyle,),
-                onPressed: (context) {
-
-                },
-              ),
+              // SettingsTile.navigation(
+              //   leading: Icon(Icons.reorder_outlined),
+              //   title: Text('導覽列排序',style: SettingsTitleTextStyle,),
+              //   onPressed: (context) {
+              //
+              //   },
+              // ),
             ],
           ),
           SettingsSection(
