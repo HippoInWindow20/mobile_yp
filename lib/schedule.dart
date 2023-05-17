@@ -10,6 +10,7 @@ import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
 var selSeg = "main";
@@ -18,8 +19,9 @@ String trimStr (String ori, int Start, int End){
   var oriLength = ori.length;
   return ori.substring(Start,oriLength - End);
 }
+int selectedGrade = 5;
 
-Future<List<ScheduleItem>> calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],examDetails: [])]);
+Future<List<ScheduleItem>> calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
 
 class ScheduleItem {
   final String year;
@@ -27,7 +29,7 @@ class ScheduleItem {
   final String day;
   final String dayOfWeek;
   final List details;
-  final List examDetails;
+  final List exam;
 
   ScheduleItem({
     required this.year,
@@ -35,9 +37,15 @@ class ScheduleItem {
     required this.day,
     required this.dayOfWeek,
     required this.details,
-    required this.examDetails
+    required this.exam,
   });
 }
+
+Future<void> saveSel (int num) async {
+  var prefs = await SharedPreferences.getInstance();
+  await prefs.setInt("savedGrade", num);
+}
+
 Future<List<ScheduleItem>> getCal () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/gr2.aspx');
   var response = await http.post(url,body: {});
@@ -81,12 +89,30 @@ Future<List<ScheduleItem>> getCal () async {
         newDayOfWeek = trimStr(TDs[h + 3].innerHtml,44,7);
       }
       List<String> detailArr = [];
-      List<String> examArr = [];
+      List<String> examArr7 = [];
+      List<String> examArr8 = [];
+      List<String> examArr9i = [];
+      List<String> examArr9o = [];
+      List<String> examArr10 = [];
+      List<String> examArr11 = [];
+      List<String> examArr12 = [];
       detailArr = trimStr(TDs[h + 4].innerHtml,44,7).split("。");
-      examArr = [trimStr(TDs[h + 10].innerHtml,44,7)];
+      examArr7 = [trimStr(TDs[h + 5].innerHtml,44,7)];
+      examArr8 = [trimStr(TDs[h + 6].innerHtml,44,7)];
+      examArr9o = [trimStr(TDs[h + 7].innerHtml,44,7)];
+      examArr9i = [trimStr(TDs[h + 8].innerHtml,44,7)];
+      examArr10 = [trimStr(TDs[h + 9].innerHtml,44,7)];
+      examArr11 = [trimStr(TDs[h + 10].innerHtml,44,7)];
+      examArr12 = [trimStr(TDs[h + 11].innerHtml,44,7)];
       //A really repetitive way to remove nbsp
       List<String> newDetail = [];
-      List<String> newExam = [];
+      List<String> newExam7 = [];
+      List<String> newExam8 = [];
+      List<String> newExam9o = [];
+      List<String> newExam9i = [];
+      List<String> newExam10 = [];
+      List<String> newExam11 = [];
+      List<String> newExam12 = [];
       for (var y = 0;y < detailArr.length;y++){
         if (detailArr[y].contains("nbsp")){
           newDetail.add("");
@@ -94,10 +120,46 @@ Future<List<ScheduleItem>> getCal () async {
           newDetail.add(detailArr[y]);
         }
       }
-      for (var z = 0;z < examArr.length;z++){
-        if (examArr[z].contains("nbsp")){
+      for (var z = 0;z < examArr7.length;z++){
+        if (examArr7[z].contains("nbsp")){
         }else{
-          newExam.add(examArr[z]);
+          newExam7.add(examArr7[z]);
+        }
+      }
+      for (var z = 0;z < examArr8.length;z++){
+        if (examArr8[z].contains("nbsp")){
+        }else{
+          newExam8.add(examArr8[z]);
+        }
+      }
+      for (var z = 0;z < examArr9o.length;z++){
+        if (examArr9o[z].contains("nbsp")){
+        }else{
+          newExam9o.add(examArr9o[z]);
+        }
+      }
+      for (var z = 0;z < examArr9i.length;z++){
+        if (examArr9i[z].contains("nbsp")){
+        }else{
+          newExam9i.add(examArr9i[z]);
+        }
+      }
+      for (var z = 0;z < examArr10.length;z++){
+        if (examArr10[z].contains("nbsp")){
+        }else{
+          newExam10.add(examArr10[z]);
+        }
+      }
+      for (var z = 0;z < examArr11.length;z++){
+        if (examArr11[z].contains("nbsp")){
+        }else{
+          newExam11.add(examArr11[z]);
+        }
+      }
+      for (var z = 0;z < examArr12.length;z++){
+        if (examArr12[z].contains("nbsp")){
+        }else{
+          newExam12.add(examArr12[z]);
         }
       }
       newDetail.removeLast();
@@ -108,10 +170,11 @@ Future<List<ScheduleItem>> getCal () async {
               day: trimStr(TDs[h + 2].innerHtml,44,7),
               dayOfWeek: newDayOfWeek,
               details: newDetail,
-              examDetails: newExam
+              exam: [newExam7,newExam8,newExam9o,newExam9i,newExam10,newExam11,newExam12],
           )
       );
   }
+  print(selectedGrade);
   return newObj;
 }
 
@@ -170,12 +233,11 @@ class ScheduleState extends State {
             pinned: false,
             snap: true,
             floating: true,
-            toolbarHeight: 100,
+            toolbarHeight: 85,
             title: Text(
               "行事曆",
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground,
-                fontSize: 40
+                fontSize: 30
               ),
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
@@ -198,25 +260,25 @@ class ScheduleState extends State {
               //   },
               //   icon: Icon(Icons.tune_outlined),
               // ),
+              IconButton(
+                  onPressed: () {
+                    calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
+                    setState(() {
+
+                    });
+                    calResult = getCal();
+                  },
+                  icon: Icon(Icons.refresh_outlined)
+              ),
               AppPopupMenu<int>(
                 padding: EdgeInsets.all(20),
                 menuItems:  [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text(
-                        '重新整理',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
                   PopupMenuItem(
                     value: 2,
                     child: Text(
                         '設定',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 20
                         )
                     ),
@@ -225,7 +287,7 @@ class ScheduleState extends State {
                 onSelected: (int value) {
                   switch (value){
                     case 1:
-                      calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],examDetails: [])]);
+                      calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
                       setState(() {
 
                       });
@@ -248,12 +310,12 @@ class ScheduleState extends State {
                 },
                 tooltip: "更多選項",
                 elevation: 30,
-                icon: Icon(Icons.more_vert,size: 30,color: Theme.of(context).colorScheme.onBackground,),
+                icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurface,),
                 offset: const Offset(0, 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surface,
               )
             ],
           ),
@@ -282,6 +344,27 @@ class ScheduleState extends State {
               ),
             ),
           ),
+          if (selSeg == "test")
+            SliverToBoxAdapter(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 80,
+                  child: ListView(
+                    padding: EdgeInsets.all(15),
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    children: [
+                      ChoiceChip(label: Text("國一"), selected: selectedGrade == 0,onSelected: (selected) {setState(() {selectedGrade = (selected ? 0 : null)!;});saveSel(0);},),
+                      ChoiceChip(label: Text("國二"), selected: selectedGrade == 1,onSelected: (selected) {setState(() {selectedGrade = (selected ? 1 : null)!;});saveSel(1);},),
+                      ChoiceChip(label: Text("國三 (外)"), selected: selectedGrade == 2,onSelected: (selected) {setState(() {selectedGrade = (selected ? 2 : null)!;});saveSel(2);},),
+                      ChoiceChip(label: Text("國三 (直)"), selected: selectedGrade == 3,onSelected: (selected) {setState(() {selectedGrade = (selected ? 3 : null)!;});saveSel(3);},),
+                      ChoiceChip(label: Text("高一"), selected: selectedGrade == 4,onSelected: (selected) {setState(() {selectedGrade = (selected ? 4 : null)!;});saveSel(4);},),
+                      ChoiceChip(label: Text("高二"), selected: selectedGrade == 5,onSelected: (selected) {setState(() {selectedGrade = (selected ? 5 : null)!;});saveSel(5);},),
+                      ChoiceChip(label: Text("高三"), selected: selectedGrade == 6,onSelected: (selected) {setState(() {selectedGrade = (selected ? 6 : null)!;});saveSel(6);},),
+                    ],
+                  ),
+                )
+            ),
           SliverToBoxAdapter(
             child: FutureBuilder<List<ScheduleItem>>(
               future: calResult,
@@ -359,7 +442,7 @@ class ScheduleState extends State {
                                           ),
                                         )
                                     ) :
-                                    List.generate(snapshot.data![index].examDetails.length, (index3) =>
+                                    List.generate(snapshot.data![index].exam[selectedGrade].length, (index3) =>
                                         Card(
                                           color: Theme.of(context).colorScheme.primaryContainer,
                                           elevation: 0,
@@ -370,14 +453,24 @@ class ScheduleState extends State {
                                               width: (MediaQuery.of(context).size.width / 4) * 3 - 20,
                                               child: Padding(
                                                 padding: EdgeInsets.all(10),
-                                                child: Text(
-                                                    "第" + trimStr(snapshot.data![index].examDetails[index3], 0, snapshot.data![index].examDetails[index3].toString().length - 1)+"節："+trimStr(snapshot.data![index].examDetails[index3], 1, 0),
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      color: Theme.of(context).colorScheme.onPrimaryContainer
-                                                  ),
-                                                ),
+                                                child:
+                                                  trimStr(snapshot.data![index].exam[selectedGrade][index3], 0, snapshot.data![index].exam[selectedGrade][index3].toString().length - 1) == "段" ? Text(
+                                                    snapshot.data![index].exam[selectedGrade][index3],
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Theme.of(context).colorScheme.onPrimaryContainer
+                                                    ),
+                                                  ) : Text(
+                                                    "第" + trimStr(snapshot.data![index].exam[selectedGrade][index3], 0, snapshot.data![index].exam[selectedGrade][index3].toString().length - 1)+"節："+trimStr(snapshot.data![index].exam[selectedGrade][index3], 1, 0),
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Theme.of(context).colorScheme.onPrimaryContainer
+                                                    ),
+                                                  )
+
+                                                ,
                                               ),
                                             ),
                                           ),

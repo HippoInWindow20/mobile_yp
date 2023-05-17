@@ -76,6 +76,7 @@ Future<void> main()  async {
   final Object? savedAdminPwd = prefs.get("savedAdminPwd");
   final Object? savedClass = prefs.get("savedClass");
   final bool? savedAdminSwitch = prefs.getBool("showAdmin");
+  final int? savedGrade = prefs.getInt("savedGrade");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -121,6 +122,9 @@ Future<void> main()  async {
   }
   if (savedClass != null){
     defaultClass = savedClass.toString();
+  }
+  if (savedGrade != null){
+    selectedGrade = savedGrade;
   }
   runApp(MobileYP());
 

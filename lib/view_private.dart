@@ -106,9 +106,9 @@ class stateViewPrivate extends State {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actionsIconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.onSecondaryContainer
+          color: Theme.of(context).colorScheme.onPrimaryContainer
         ),
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           IconButton(
               onPressed: (){
@@ -146,7 +146,7 @@ class stateViewPrivate extends State {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -156,7 +156,7 @@ class stateViewPrivate extends State {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: 30,
-                              color: Theme.of(context).colorScheme.onSecondaryContainer
+                              color: Theme.of(context).colorScheme.onPrimaryContainer
                           ),
                         ),
                       ),
@@ -165,12 +165,12 @@ class stateViewPrivate extends State {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
                               Padding(padding: EdgeInsets.only(left: 15),
                                 child: Text(agency,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer
                                   ),
                                 ),
                               )
@@ -182,12 +182,12 @@ class stateViewPrivate extends State {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
                               Padding(padding: EdgeInsets.only(left: 15),
                                 child: Text(date,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer
                                   ),
                                 ),
                               )

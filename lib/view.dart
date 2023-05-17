@@ -109,9 +109,9 @@ class stateView extends State<ViewC> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actionsIconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.onSecondaryContainer
+          color: Theme.of(context).colorScheme.onPrimaryContainer
         ),
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           IconButton(
               onPressed: (){
@@ -155,7 +155,7 @@ class stateView extends State<ViewC> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -165,7 +165,7 @@ class stateView extends State<ViewC> {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: 30,
-                              color: Theme.of(context).colorScheme.onSecondaryContainer
+                              color: Theme.of(context).colorScheme.onPrimaryContainer
                           ),
                         ),
                       ),
@@ -174,12 +174,12 @@ class stateView extends State<ViewC> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
                               Padding(padding: EdgeInsets.only(left: 15),
                                 child: Text(agency,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer
                                   ),
                                 ),
                               )
@@ -191,12 +191,12 @@ class stateView extends State<ViewC> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
                               Padding(padding: EdgeInsets.only(left: 15),
                                 child: Text(date,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onSecondaryContainer
+                                      color: Theme.of(context).colorScheme.onPrimaryContainer
                                   ),
                                 ),
                               )
@@ -208,7 +208,7 @@ class stateView extends State<ViewC> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onSecondaryContainer),
+                              Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
                               Padding(padding: EdgeInsets.only(left: 15),
                                 child: FutureBuilder<List>(
                                   future: content,
@@ -217,7 +217,7 @@ class stateView extends State<ViewC> {
                                       return Text(snapshot.data![0],
                                         style: TextStyle(
                                           fontSize: 22,
-                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                          color: Theme.of(context).colorScheme.onPrimaryContainer,
                                         ),
                                       );
                                     } else if (snapshot.hasError) {

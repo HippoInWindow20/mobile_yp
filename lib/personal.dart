@@ -155,72 +155,72 @@ class editPersonalState extends State<editPersonal> {
                 ),
               ),
             ),
-            SizedBox(
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                child: TextFormField(
-                  controller: SerialController,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                  ),
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.key_outlined),
-                      hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
-                      labelText: '身分證字號',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      )
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: BDController,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                  ),
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.calendar_month_outlined),
-                      hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
-                      labelText: '生日',
-                      hintText: "範例：20060101",
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      )
-                  ),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+            //     child: TextFormField(
+            //       controller: SerialController,
+            //       style: TextStyle(
+            //           color: Theme.of(context).colorScheme.onBackground
+            //       ),
+            //       decoration: InputDecoration(
+            //           prefixIcon: Icon(Icons.key_outlined),
+            //           hintStyle: TextStyle(
+            //               color: Theme.of(context).colorScheme.onBackground
+            //           ),
+            //           labelStyle: TextStyle(
+            //               color: Theme.of(context).colorScheme.onBackground
+            //           ),
+            //           focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            //           labelText: '身分證字號',
+            //           enabledBorder: OutlineInputBorder(
+            //               borderSide: BorderSide(
+            //                   color: Theme.of(context).colorScheme.onBackground
+            //               )
+            //           ),
+            //           border: OutlineInputBorder(
+            //               borderSide: BorderSide(
+            //                   color: Theme.of(context).colorScheme.onBackground
+            //               )
+            //           )
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   child: Container(
+            //     padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+            //     child: TextFormField(
+            //       keyboardType: TextInputType.number,
+            //       controller: BDController,
+            //       style: TextStyle(
+            //           color: Theme.of(context).colorScheme.onBackground
+            //       ),
+            //       decoration: InputDecoration(
+            //           prefixIcon: Icon(Icons.calendar_month_outlined),
+            //           hintStyle: TextStyle(
+            //               color: Theme.of(context).colorScheme.onBackground
+            //           ),
+            //           labelStyle: TextStyle(
+            //               color: Theme.of(context).colorScheme.onBackground
+            //           ),
+            //           focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            //           labelText: '生日',
+            //           hintText: "範例：20060101",
+            //           enabledBorder: OutlineInputBorder(
+            //               borderSide: BorderSide(
+            //                   color: Theme.of(context).colorScheme.onBackground
+            //               )
+            //           ),
+            //           border: OutlineInputBorder(
+            //               borderSide: BorderSide(
+            //                   color: Theme.of(context).colorScheme.onBackground
+            //               )
+            //           )
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),

@@ -67,5 +67,6 @@ scrim: Color(0xFF000000),
     surfaceTint: Color(0xFFD0BCFF),
     outlineVariant: Color(0xFF49454F),
     scrim: Color(0xFF000000),
+
   )
 ];

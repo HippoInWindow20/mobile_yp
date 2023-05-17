@@ -409,35 +409,37 @@ class _OnlineCCState extends State<OnlineCC> {
             pinned: false,
             snap: true,
             floating: true,
-            toolbarHeight: 100,
+            toolbarHeight: 85,
             title: Text(
               "網路聯絡簿",
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground,
-                  fontSize: 40
+                  fontSize: 30
               ),
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
             actions: [
+              IconButton(
+                  onPressed: () {
+                    personalResult = Future.value(Text(""));
+                    setState(() {
+
+                    });
+                    if (OnlineCCStep == "validation")
+                      personalResult = displayChkCode();
+                    else
+                      personalResult = returnCC();
+                  },
+                  icon: Icon(Icons.refresh_outlined)
+              ),
               AppPopupMenu<int>(
                 padding: EdgeInsets.all(20),
                 menuItems:  [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text(
-                      '重新整理',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20
-                      ),
-                    ),
-                  ),
                   PopupMenuItem(
                     value: 2,
                     child: Text(
                         '設定',
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 20
                         )
                     ),
@@ -472,13 +474,15 @@ class _OnlineCCState extends State<OnlineCC> {
                 },
                 tooltip: "更多選項",
                 elevation: 30,
-                icon: Icon(Icons.more_vert,size: 30,color: Theme.of(context).colorScheme.onBackground,),
+                icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurfaceVariant,),
                 offset: const Offset(0, 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                color: Theme.of(context).colorScheme.surfaceVariant,
-              )
+                color: Theme.of(context).colorScheme.surface,
+              ),
+
+
             ],
           ),
           SliverToBoxAdapter(
