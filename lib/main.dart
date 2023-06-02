@@ -37,23 +37,7 @@ Map<int, Color> color =
   900:Color.fromRGBO(50,107,0, 1),
 };
 
-String? eventValidation = "";
-String? viewstateGenerator = "";
-String? viewState = "";
 String? ASPCookie = "";
-String? ASPCookie2 = "";
-String? eventValidation2 = "";
-String? viewstateGenerator2 = "";
-String? viewState2 = "";
-String? eventValidation3 = "";
-String? viewstateGenerator3 = "";
-String? viewState3 = "";
-String? eventValidationUpload = "";
-String? viewstateGeneratorUpload = "";
-String? viewStateUpload = "";
-String? eventValidationUploadReal = "";
-String? viewstateGeneratorUploadReal = "";
-String? viewStateUploadReal = "";
 String? eventValidationCal = "";
 String? viewstateGeneratorCal = "";
 String? viewStateCal = "";

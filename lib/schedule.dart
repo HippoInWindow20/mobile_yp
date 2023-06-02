@@ -1,12 +1,10 @@
 
 import 'dart:async';
-import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/settings.dart';
-import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';

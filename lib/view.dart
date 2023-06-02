@@ -21,9 +21,6 @@ Future<List> getContentOfCC (count) async {
         "__EVENTTARGET": "GridView1",
         "__EVENTARGUMENT":"count\$" + count.toString(),
         "__LASTFOCUS":"",
-        "__VIEWSTATE":viewState,
-        "__VIEWSTATEGENERATOR":viewstateGenerator,
-        "__EVENTVALIDATION":eventValidation,
         "DL1":"不分",
         "DL2":"不分",
         "DL3":"全部",
@@ -51,25 +48,32 @@ class ViewC extends StatefulWidget {
     required this.agency,
     required this.date,
     required this.count,
+    required this.url
   });
   final String title;
   final String agency;
   final String date;
   final int count;
+  final String url;
   State<StatefulWidget> createState() {
-    return stateView(title: title, agency: agency, date: date, count: count);
+    return stateView(title: title, agency: agency, date: date, count: count,url: url);
   }
 }
 
 
 class stateView extends State<ViewC> {
   stateView({
-    required this.title,required this.agency,required this.date, required this.count,
+    required this.title,
+    required this.agency,
+    required this.date,
+    required this.count,
+    required this.url
   });
   final String title;
   final String agency;
   final String date;
   final int count;
+  final String url;
 
   var actualContent = ["null"];
   var link = "null";

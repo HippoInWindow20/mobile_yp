@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
@@ -11,23 +12,8 @@ import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
-class PublicItem {
-  final String title;
-  final String agency;
-  final String date;
-  final String url;
-  final int count;
-  PublicItem({
-    required this.title,
-    required this.agency,
-    required this.date,
-    required this.url,
-    required this.count
-  });
-}
 
-
-Future<List<PublicItem>> result = Future.value([]);
+Future<List> result = Future.value([]);
 
 String cookieGenerator (int length){
   var ListChar = "abcdefghijklmnopqrstuvwxyz012345";
@@ -40,28 +26,65 @@ String cookieGenerator (int length){
 }
 
 
-Future<List<PublicItem>> getCC () async {
-  var url = Uri.https('www.yphs.tp.edu.tw', 'category/news/news1/');
-  var response = await http.get(url);
+Future<List> getCC () async {
+  var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
+  var response = await http.post(url,body: {});
   var document = parse(response.body);
-  var TDs = document.getElementsByClassName("nt_table")[0].children[1].children;
-  int newsCount = TDs.length;
+  var TDs = document.getElementsByTagName("td");
+  viewstateGenerator = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+  eventValidation = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
+  viewState = document.getElementById("__VIEWSTATE")?.attributes['value'];
+
+  http.post(
+    url,
+    headers: {
+      "Content-Type":"application/x-www-form-urlencoded",
+      "cookie":ASPCookie!
+    },
+    body: {
+      "__EVENTTARGET": "GridView1",
+      "__EVENTARGUMENT":"count\$0",
+      "__LASTFOCUS":"",
+      "__VIEWSTATE":viewState,
+      "__VIEWSTATEGENERATOR":viewstateGenerator,
+      "__EVENTVALIDATION":eventValidation,
+      "DL1":"不分",
+      "DL2":"不分",
+      "DL3":"全部",
+    },
+  );
   List titles = [];
   List agencies = [];
   List dates = [];
-  List<PublicItem> result = [];
-  List urls = [];
-  for (var i = 0; i < newsCount;i++){
-    titles.add(TDs[i].children[1].children[0].innerHtml);
-    dates.add(TDs[i].children[0].innerHtml);
-    agencies.add(TDs[i].children[3].innerHtml);
-    urls.add(TDs[i].children[1].children[0].attributes['href'].toString());
+  for (var i in TDs) {
+    if (i.outerHtml.toString().contains('width="75"')){
+      var tmp = i.innerHtml;
+      var str = tmp.substring(44,(tmp.length - 7));
+      agencies.add(str);
+    }
   }
-  for (var j = 0; j < newsCount;j++){
-    result.add(PublicItem(title: titles[j], agency: agencies[j], date: dates[j], url: urls[j],count: j));
+
+
+
+  var As = document.getElementsByTagName("a");
+  for (var j in As) {
+    var tmp = j.innerHtml;
+    var str = tmp.substring(22,(tmp.length - 7));
+    titles.add(str);
+  }
+
+  var SPANs = document.getElementsByTagName("span");
+  for (var k in SPANs) {
+    if (k.children.length == 0){
+      dates.add(k.innerHtml);
+    }
+  }
+  dates.removeAt(dates.length - 1);
+  var result = <dynamic>[];
+  for (var y = 0; y < dates.length;y++){
+    result.add([titles[y],agencies[y],dates[y],y]);
   }
   return result;
-
 }
 
 class publicCC extends StatefulWidget {
@@ -206,7 +229,7 @@ class _publicCCState extends State<publicCC> {
             ],
           ),
           SliverToBoxAdapter(
-            child: FutureBuilder<List<PublicItem>>(
+            child: FutureBuilder<List>(
               future: result,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -222,7 +245,7 @@ class _publicCCState extends State<publicCC> {
                       //   ),
                       // ),
                       List.generate(snapshot.data!.length, (index) =>
-                          ListCard(title: snapshot.data![index].title, agency: snapshot.data![index].agency, date: snapshot.data![index].date, count: snapshot.data![index].count,url: snapshot.data![index].url,)
+                          ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
                       )
                     // ],
                   );
@@ -310,18 +333,12 @@ class FilterOptions extends StatelessWidget {
 
 class ListCard extends StatelessWidget {
   const ListCard({
-    Key? key,
-    required this.title,
-    required this.agency,
-    required this.date,
-    required this.count,
-    required this.url
+    Key? key, required this.title, required this.agency, required this.date, required this.count,
   }) : super(key: key);
   final String title;
   final String agency;
   final String date;
   final int count;
-  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -337,7 +354,7 @@ class ListCard extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 content = getContentOfCC(count);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,url: url,);}));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,);}));
 
               },
               child: Column(

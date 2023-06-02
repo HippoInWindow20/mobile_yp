@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/upload.dart';
 
 import 'admin_list.dart';

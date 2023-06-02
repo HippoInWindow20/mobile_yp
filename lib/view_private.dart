@@ -10,6 +10,11 @@ import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'online_cc.dart';
+
+String? eventValidation3 = "";
+String? viewstateGenerator3 = "";
+String? viewState3 = "";
 Future<List> contentPrivate = Future.value([]);
 
 Future<List> getContentOfOnlineCC (count) async {

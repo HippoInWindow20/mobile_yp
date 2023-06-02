@@ -13,6 +13,9 @@ import 'package:mobile_yp/upload.dart';
 import 'edit.dart';
 
 
+String? eventValidationUpload = "";
+String? viewstateGeneratorUpload = "";
+String? viewStateUpload = "";
 
 Future<Widget> uploadResult = Future.value(Text(""));
 

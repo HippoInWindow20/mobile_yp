@@ -8,7 +8,9 @@ import 'admin_list.dart';
 String DateCC = DateTime.now().year.toString()+ "/" + DateTime.now().month.toString()+ "/" + DateTime.now().day.toString() + "網路聯絡簿";
 String?  newViewState = "";
 String?  newEventValiation = "";
-
+String? eventValidationUploadReal = "";
+String? viewstateGeneratorUploadReal = "";
+String? viewStateUploadReal = "";
 Future<String> enterUploadMode () async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tua-1.aspx');
   var response = await http.post(

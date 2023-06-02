@@ -1,10 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:mobile_yp/themes/green.dart';
-import 'package:mobile_yp/online_cc.dart';
-import 'package:mobile_yp/public_cc.dart';
-import 'package:mobile_yp/settings.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String defaultNumber = "";
