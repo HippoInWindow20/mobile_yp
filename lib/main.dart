@@ -22,7 +22,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'admin.dart';
 import 'home.dart';
 
-
 Map<int, Color> color =
 {
   50:Color.fromRGBO(50,107,0, .1),

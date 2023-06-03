@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mobile_yp/schedule.dart';
 import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/view.dart';
 import 'package:http/http.dart' as http;
@@ -17,12 +18,14 @@ class PublicItem {
   final String date;
   final String url;
   final int count;
+  final List tags;
   PublicItem({
     required this.title,
     required this.agency,
     required this.date,
     required this.url,
-    required this.count
+    required this.count,
+    required this.tags
   });
 }
 
@@ -51,14 +54,30 @@ Future<List<PublicItem>> getCC () async {
   List dates = [];
   List<PublicItem> result = [];
   List urls = [];
+  List tags = [];
   for (var i = 0; i < newsCount;i++){
-    titles.add(TDs[i].children[1].children[0].innerHtml);
+    List currentTags = [];
+    int tagCount = 0;
+    if (TDs[i].children[1].getElementsByClassName("sticky_text").length == 1){
+      currentTags.add("置頂");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_1").length == 1){
+      currentTags.add("公告");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_2").length == 1){
+      currentTags.add("轉知");
+      tagCount+=2;
+    }
+    titles.add(trimStr(TDs[i].children[1].children[0].text, tagCount, 0));
     dates.add(TDs[i].children[0].innerHtml);
     agencies.add(TDs[i].children[3].innerHtml);
     urls.add(TDs[i].children[1].children[0].attributes['href'].toString());
+    tags.add(currentTags);
   }
   for (var j = 0; j < newsCount;j++){
-    result.add(PublicItem(title: titles[j], agency: agencies[j], date: dates[j], url: urls[j],count: j));
+    result.add(PublicItem(title: titles[j], agency: agencies[j], date: dates[j], url: urls[j],count: j,tags: tags[j]));
   }
   return result;
 
@@ -336,7 +355,7 @@ class ListCard extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: InkWell(
               onTap: () {
-                content = getContentOfCC(count);
+                content = getContentOfCC(url);
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,url: url,);}));
 
               },

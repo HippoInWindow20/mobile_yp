@@ -9,35 +9,52 @@ import 'package:flutter/services.dart';
 
 Future<List> content = Future.value([]);
 
-Future<List> getContentOfCC (count) async {
-  var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
-  var response = await http.post(
-    url,
-    headers: {
-    "Content-Type":"application/x-www-form-urlencoded",
-    "cookie":ASPCookie!
-  },
-      body: {
-        "__EVENTTARGET": "GridView1",
-        "__EVENTARGUMENT":"count\$" + count.toString(),
-        "__LASTFOCUS":"",
-        "DL1":"不分",
-        "DL2":"不分",
-        "DL3":"全部",
-      },
-  );
+Future<List> getContentOfCC (String link) async {
+  // var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
+  // var response = await http.post(
+  //   url,
+  //   headers: {
+  //   "Content-Type":"application/x-www-form-urlencoded",
+  //   "cookie":ASPCookie!
+  // },
+  //     body: {
+  //       "__EVENTTARGET": "GridView1",
+  //       "__EVENTARGUMENT":"count\$" + count.toString(),
+  //       "__LASTFOCUS":"",
+  //       "DL1":"不分",
+  //       "DL2":"不分",
+  //       "DL3":"全部",
+  //     },
+  // );
+  // var document = parse(response.body);
+  // var person = document.getElementById("Label14")?.innerHtml;
+  // person = person?.substring(44,person.length - 7);
+  // var innerContent = document.getElementById("Label16")?.innerHtml.split("<br>");
+  // innerContent![0] = innerContent[0].substring(44,innerContent[0].length);
+  // innerContent[innerContent.length - 1] = innerContent[innerContent.length - 1].substring(0,innerContent[innerContent.length - 1].length - 7);
+  // var contentString = "";
+  // for (var c = 0; c < innerContent.length; c++) {
+  //     contentString += innerContent[c];
+  // }
+  // var link = document.getElementsByTagName("a")[0].innerHtml;
+  // return [person,[contentString],link];
+  var uri = Uri.parse(link);
+  var response = await http.get(uri);
   var document = parse(response.body);
-  var person = document.getElementById("Label14")?.innerHtml;
-  person = person?.substring(44,person.length - 7);
-  var innerContent = document.getElementById("Label16")?.innerHtml.split("<br>");
-  innerContent![0] = innerContent[0].substring(44,innerContent[0].length);
-  innerContent[innerContent.length - 1] = innerContent[innerContent.length - 1].substring(0,innerContent[innerContent.length - 1].length - 7);
-  var contentString = "";
-  for (var c = 0; c < innerContent.length; c++) {
-      contentString += innerContent[c];
+  var person = "deprecated";
+  var content = document.getElementsByClassName("content")[0].children[0].innerHtml;
+  content = content.replaceAll("<br>", "\n");
+  content = content.replaceAll(" <br> ", "\n");
+  content = content.replaceAll(" <br>", "\n");
+  content = content.replaceAll("<br> ", "\n");
+
+  var linkExists = document.getElementsByClassName("modal_download");
+  String? linkAttach = "";
+  if (linkExists.length != 0){
+    linkAttach = linkExists[0].children[0].attributes['href'].toString();
   }
-  var link = document.getElementsByTagName("a")[0].innerHtml;
-  return [person,[contentString],link];
+  return [person,[content],linkAttach];
+
 }
 
 
@@ -119,7 +136,7 @@ class stateView extends State<ViewC> {
         actions: [
           IconButton(
               onPressed: (){
-                content = getContentOfCC(count);
+                content = getContentOfCC(url);
                 setState(() {
 
                 });
