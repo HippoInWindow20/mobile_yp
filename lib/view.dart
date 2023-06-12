@@ -10,38 +10,9 @@ import 'package:flutter/services.dart';
 Future<List> content = Future.value([]);
 
 Future<List> getContentOfCC (String link) async {
-  // var url = Uri.https('lds.yphs.tp.edu.tw', 'yphs/bu2.aspx');
-  // var response = await http.post(
-  //   url,
-  //   headers: {
-  //   "Content-Type":"application/x-www-form-urlencoded",
-  //   "cookie":ASPCookie!
-  // },
-  //     body: {
-  //       "__EVENTTARGET": "GridView1",
-  //       "__EVENTARGUMENT":"count\$" + count.toString(),
-  //       "__LASTFOCUS":"",
-  //       "DL1":"不分",
-  //       "DL2":"不分",
-  //       "DL3":"全部",
-  //     },
-  // );
-  // var document = parse(response.body);
-  // var person = document.getElementById("Label14")?.innerHtml;
-  // person = person?.substring(44,person.length - 7);
-  // var innerContent = document.getElementById("Label16")?.innerHtml.split("<br>");
-  // innerContent![0] = innerContent[0].substring(44,innerContent[0].length);
-  // innerContent[innerContent.length - 1] = innerContent[innerContent.length - 1].substring(0,innerContent[innerContent.length - 1].length - 7);
-  // var contentString = "";
-  // for (var c = 0; c < innerContent.length; c++) {
-  //     contentString += innerContent[c];
-  // }
-  // var link = document.getElementsByTagName("a")[0].innerHtml;
-  // return [person,[contentString],link];
   var uri = Uri.parse(link);
   var response = await http.get(uri);
   var document = parse(response.body);
-  var person = "deprecated";
   var content = document.getElementsByClassName("content")[0].children[0].innerHtml;
   content = content.replaceAll("<br>", "\n");
   content = content.replaceAll(" <br> ", "\n");
@@ -53,8 +24,21 @@ Future<List> getContentOfCC (String link) async {
   if (linkExists.length != 0){
     linkAttach = linkExists[0].children[0].attributes['href'].toString();
   }
-  return [person,[content],linkAttach];
+  return [[content],linkAttach];
 
+}
+
+int isInSaved(String title) {
+  var isSaved = false;
+  int i = 0;
+  int result = -1;
+  while (isSaved == false && i < savedContent.length){
+    if (savedContent[i][0].toString() == title){
+      isSaved = true;
+    }
+    i++;
+  }
+  return isSaved == true ? i - 1 : result;
 }
 
 
@@ -134,6 +118,28 @@ class stateView extends State<ViewC> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
+          IconButton(
+              onPressed: (){
+                var query = isInSaved(title);
+                if (query == -1){
+                  savedContent.add([title,actualContent,link]);
+                }else{
+                  savedContent.removeAt(query);
+                }
+                setState(() {
+
+                });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: Text(savedContent.toString()),
+                      );
+                    }
+                );
+              },
+              icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
+          ),
           IconButton(
               onPressed: (){
                 content = getContentOfCC(url);
@@ -224,35 +230,6 @@ class stateView extends State<ViewC> {
                             ],
                           )
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(left:20,bottom: 15),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(Icons.person_outlined,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
-                              Padding(padding: EdgeInsets.only(left: 15),
-                                child: FutureBuilder<List>(
-                                  future: content,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(snapshot.data![0],
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                        ),
-                                      );
-                                    } else if (snapshot.hasError) {
-                                      return Text("");
-                                    }
-
-                                    // By default, show a loading spinner.
-                                    return Text("");
-                                  },
-                                ),
-                              )
-                            ],
-                          )
-                      ),
                     ],
                   ),
                 ),
@@ -264,12 +241,12 @@ class stateView extends State<ViewC> {
                           future: content,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              actualContent = snapshot.data![1];
+                              actualContent = snapshot.data![0];
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: List.generate(snapshot.data![1].length, (index) =>
-                                    SelectableText(snapshot.data![1][index].trim(),
+                                children: List.generate(snapshot.data![0].length, (index) =>
+                                    SelectableText(snapshot.data![0][index].trim(),
                                       style: TextStyle(
                                           fontSize: 22,
                                           color: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -299,8 +276,8 @@ class stateView extends State<ViewC> {
                   future: content,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data![2].length != 1){
-                        link = snapshot.data![2];
+                      if (snapshot.data![1].length != 1){
+                        link = snapshot.data![1];
                         return Padding(
                             padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
                             child: Column(
@@ -315,7 +292,7 @@ class stateView extends State<ViewC> {
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 15),
                                   child: Tooltip(
-                                    message: snapshot.data![2],
+                                    message: snapshot.data![1],
                                     child: ElevatedButton(
                                         clipBehavior: Clip.hardEdge,
                                         onPressed: () {
@@ -392,6 +369,20 @@ class stateView extends State<ViewC> {
           ),
         ),
 
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.language_outlined)
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.copy_outlined)
+            )
+          ],
+        ),
       ),
     );
   }

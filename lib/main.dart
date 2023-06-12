@@ -41,6 +41,7 @@ String? eventValidationCal = "";
 String? viewstateGeneratorCal = "";
 String? viewStateCal = "";
 String OnlineCCStep = "validation";
+List savedContent = [];
 
 
 

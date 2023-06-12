@@ -70,6 +70,26 @@ Future<List<PublicItem>> getCC () async {
       currentTags.add("轉知");
       tagCount+=2;
     }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_3").length == 1){
+      currentTags.add("檢定");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_4").length == 1){
+      currentTags.add("狂賀");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_5").length == 1){
+      currentTags.add("競賽");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_6").length == 1){
+      currentTags.add("課程");
+      tagCount+=2;
+    }
+    if (TDs[i].children[1].getElementsByClassName("file_type news_type_7").length == 1){
+      currentTags.add("重要");
+      tagCount+=2;
+    }
     titles.add(trimStr(TDs[i].children[1].children[0].text, tagCount, 0));
     dates.add(TDs[i].children[0].innerHtml);
     agencies.add(TDs[i].children[3].innerHtml);
