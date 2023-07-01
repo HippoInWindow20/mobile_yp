@@ -6,6 +6,7 @@ import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 Future<List> content = Future.value([]);
 
@@ -16,11 +17,11 @@ Future<List> getContentOfCC (String link) async {
   var contentTry = document.getElementsByClassName("content")[0];
   var content = "";
   if (contentTry.children.length != 0){
-    content = contentTry.children[0].innerHtml;
-    content = content.replaceAll("<br>", "\n");
-    content = content.replaceAll(" <br> ", "\n");
-    content = content.replaceAll(" <br>", "\n");
-    content = content.replaceAll("<br> ", "\n");
+    for (var i = 0;i < contentTry.children.length;i++){
+      content += contentTry.children[i].outerHtml;
+    }
+    content = content.replaceAll("<label>", "<strong>");
+    content = content.replaceAll("</label>", "</strong>");
   }else{
 
   }
@@ -129,6 +130,7 @@ class stateView extends State<ViewC> {
                 var query = isInSaved(title);
                 if (query == -1){
                   savedContent.add([title,actualContent,link]);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content: Text("已新增至收藏")
@@ -136,6 +138,7 @@ class stateView extends State<ViewC> {
                   );
                 }else{
                   savedContent.removeAt(query);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content: Text("已從收藏移除")
@@ -263,14 +266,31 @@ class stateView extends State<ViewC> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(snapshot.data![0].length, (index) =>
-                                    SelectableText(snapshot.data![0][index].trim(),
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                          letterSpacing: 2,
-                                          height: 1.7
+                                    // SelectableText(snapshot.data![0][index].trim(),
+                                    //   style: TextStyle(
+                                    //       fontSize: 22,
+                                    //       color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                    //       letterSpacing: 2,
+                                    //       height: 1.7
+                                    //   ),
+                                    // )
+                                  Html(
+                                    onLinkTap: (String? link, str, element ) {
+                                      _launchURL(context, link);
+                                    },
+                                    style:{
+                                      "span": Style(
+                                        letterSpacing: 2,
+                                        fontSize: FontSize(22)
                                       ),
-                                    )                          ),
+                                      "p": Style(
+                                          letterSpacing: 2,
+                                          fontSize: FontSize(22)
+                                      ),
+                                    },
+                                    data: snapshot.data![0][index].trim(),
+                                  )
+                                ),
                               );
                             } else if (snapshot.hasError) {
                               actualContent = ["null"];
@@ -293,7 +313,7 @@ class stateView extends State<ViewC> {
                   future: content,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data![1].length != 1){
+                      if (snapshot.data![1].length != 0){
                         link = snapshot.data![1];
                         return Padding(
                             padding: EdgeInsets.only(left:20,bottom: 15,right: 20),

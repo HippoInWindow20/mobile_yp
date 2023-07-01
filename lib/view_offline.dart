@@ -1,76 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_yp/main.dart';
 import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:mobile_yp/view.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 
-import 'online_cc.dart';
+Future<List> content = Future.value([]);
 
-String? eventValidation3 = "";
-String? viewstateGenerator3 = "";
-String? viewState3 = "";
-Future<List> contentPrivate = Future.value([]);
 
-Future<List> getContentOfOnlineCC (count) async {
-  count = (count + 2).toString();
-  if (count.length < 2){
-    count = "0" + count;
-  }
-  var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2-1.aspx');
-  var response = await http.post(
-    url,
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded",
-      "cookie":ASPCookie2!
-    },
-    body: {
-      "__EVENTTARGET": "",
-      "__EVENTARGUMENT":"",
-      "__VIEWSTATE":viewState3,
-      "__VIEWSTATEGENERATOR":viewstateGenerator3,
-      "__EVENTVALIDATION":eventValidation3,
-      "GridViewS\$ctl"+count+"\$but_vf1":"詳細內容"
-    },
-  );
-  var document = parse(response.body);
-  var innerContent = document.getElementById("Lab_content")?.innerHtml;
-  var LinkCollection = document.getElementsByTagName("a");
-  String? link = "";
-  if (LinkCollection.length == 1){
-    link = LinkCollection[0].attributes['href'];
-  }
-  return [innerContent,link];
-}
 
-class ViewPrivate extends StatefulWidget {
+class OfflineView extends StatefulWidget {
   @override
-  ViewPrivate({
+  OfflineView({
     required this.title,
     required this.agency,
     required this.date,
     required this.count,
+    required this.link,
+    required this.content
   });
   final String title;
   final String agency;
   final String date;
   final int count;
+  final String link;
+  final List content;
   State<StatefulWidget> createState() {
-    return stateViewPrivate(title: title, agency: agency, date: date, count: count);
+    return stateOfflineView(title: title, agency: agency, date: date, count: count,link: link,content: content);
   }
 }
 
-class stateViewPrivate extends State {
-  stateViewPrivate({
-    Key? key, required this.title,required this.agency,required this.date, required this.count,
+
+class stateOfflineView extends State<OfflineView> {
+  stateOfflineView({
+    required this.title,
+    required this.agency,
+    required this.date,
+    required this.count,
+    required this.content,
+    required this.link,
   });
   final String title;
   final String agency;
   final String date;
   final int count;
-
-  var actualContent = "null";
-  var link = "null";
+  final List content;
+  final String link;
 
   void _launchURL(BuildContext context,link) async {
     try {
@@ -112,26 +91,50 @@ class stateViewPrivate extends State {
         actions: [
           IconButton(
               onPressed: (){
-                contentPrivate = getContentOfOnlineCC(count);
+                var query = isInSaved(title);
+                if (query == -1){
+                  savedContent.add([title,content,link]);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已新增至收藏")
+                      )
+                  );
+                }else{
+                  savedContent.removeAt(query);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已從收藏移除")
+                      )
+                  );
+                }
                 setState(() {
 
                 });
+
               },
-              icon: Icon(Icons.refresh_outlined)
+              icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
           ),
           IconButton(
               onPressed: (){
-                if (actualContent != "null" && link != "null"){
-                  var newContent = "主旨：" + title + "\n\n"+actualContent + "\n\n連結： " + link;
+                if (content.toString().contains("null") == false && link.contains("null") == false){
+                  var newContent = "主旨：" + title + "\n\n";
+                  for (var x = 0;x < content.length;x++){
+                    newContent += content[x] + "\n";
+                  }
+                  newContent += "\n\n連結： " + link;
                   Share.share(newContent,subject: title);
-                }else if (actualContent != "null" && link == "null"){
-                  var newContent = "主旨：" + title + "\n\n"+actualContent;
+                }else if (content.toString().contains("null") == false && link.contains("null") == true){
+                  var newContent = "主旨：" + title + "\n\n";
+                  for (var x = 0;x < content.length;x++){
+                    newContent += content[x] + "\n";
+                  }
                   Share.share(newContent,subject: title);
                 }else {
                   showDialog(context: context, builder: (context){
-                    return ErrorDesc(errordesc: "沒有可分享的內容");
-                  }
-                  );
+                    return ErrorDesc(errordesc: "沒有分享的內容",);
+                  });
                 }
               },
               icon: Icon(Icons.share_outlined)
@@ -201,109 +204,122 @@ class stateViewPrivate extends State {
                 Padding(
                     padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
                     child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
-                        child: FutureBuilder<List>(
-                          future: contentPrivate,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              actualContent = snapshot.data![0];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SelectableText(
-                                    snapshot.data![0],
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                        letterSpacing: 2,
-                                        height: 1.7
-                                    ),
-                                  )
-                                ],
-                              );
-                            } else if (snapshot.hasError) {
-                              actualContent = "null";
-                              link = "null";
-                              return ErrorCard(errorCode: snapshot.error.toString());
-                            }
-
-                            // By default, show a loading spinner.
-                            return Center(
-                                child: CircularProgressIndicator()
-                            );
+                        child: Html(
+                          onLinkTap: (String? link, str, element ) {
+                            _launchURL(context, link);
                           },
+                          style:{
+                            "span": Style(
+                                letterSpacing: 2,
+                                fontSize: FontSize(22)
+                            ),
+                            "p": Style(
+                                letterSpacing: 2,
+                                fontSize: FontSize(22)
+                            ),
+                          },
+                          data: content[0].trim(),
                         )
                     )
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
 
 
-                FutureBuilder<List>(
-                  future: contentPrivate,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data![1].length > 1){
-                        link = snapshot.data![1];
-                        return Padding(
-                            padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("連結",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      color: Theme.of(context).colorScheme.primary,
-                                      fontWeight: FontWeight.bold
+            Padding(
+                padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("連結",
+                      style: TextStyle(
+                          fontSize: 22,
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 15),
+                      child: Tooltip(
+                        message: link,
+                        child: ElevatedButton(
+                            clipBehavior: Clip.hardEdge,
+                            onPressed: () {
+                              _launchURL(context, link);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Row(
+                                children: [
+                                  Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: Icon(Icons.language_outlined,size: 30),
                                   ),
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 15),
-                                  child: Tooltip(
-                                    message: snapshot.data![1],
-                                    child: ElevatedButton(
-                                        clipBehavior: Clip.hardEdge,
-                                        onPressed: () {
-                                          _launchURL(context, snapshot.data![1]);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(right: 10),
-                                          child: Row(
-                                            children: [
-                                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                                child: Icon(Icons.language_outlined,size: 30),
-                                              ),
-                                              Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                                                  child: Text("訪問連結",
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight: FontWeight.normal,
-                                                    ),
-                                                  )
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                    ),
-                                  ),
-                                )
-                              ],
+                                  Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                      child: Text("訪問連結",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      )
+                                  )
+                                ],
+                              ),
                             )
-                        );
-                      }else{
-                        return Padding(padding: EdgeInsets.only());
-                      }
-                    } else if (snapshot.hasError) {
-                      return Text("");
-                    }
-                    // By default, show a loading spinner.
-                    return Text("");
-                  },
-                ),
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          await Clipboard.setData(ClipboardData(text: link));
+                          // copied successfully
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text("已複製連結至剪貼簿")
+                              )
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Row(
+                            children: [
+                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Icon(Icons.copy_outlined,size: 30),
+                              ),
+                              Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                  child: Text("複製連結",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  )
+                              )
+                            ],
+                          ),
+                        )
+                    )
+                  ],
+                )
+              ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 50)),
               ],
             ),
           ),
         ),
 
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.language_outlined)
+            ),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.copy_outlined)
+            )
+          ],
+        ),
       ),
     );
   }
@@ -321,23 +337,23 @@ class ErrorDesc extends StatelessWidget {
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.errorContainer,
       child: Padding(
-        padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
         child: Wrap(
           children: [
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Icon(Icons.error_outline_outlined,size: 40,),
                       Padding(
-                        padding: EdgeInsets.only(left: 10),
+                          padding: EdgeInsets.only(left: 10),
                         child: Text(
                           "錯誤",
                           style: TextStyle(
-                              fontSize: 30
+                            fontSize: 30
                           ),
                         ),
                       )
@@ -373,10 +389,10 @@ class ErrorDesc extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             child: Text(
-                              "確定",
+                                "確定",
                               style: TextStyle(
-                                  fontSize: 20,
-                                  color: Theme.of(context).colorScheme.onErrorContainer
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onErrorContainer
                               ),
                             )
                         ),

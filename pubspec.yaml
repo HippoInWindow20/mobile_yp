@@ -48,6 +48,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.2.16
   share_plus: ^7.0.2
+  flutter_html: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:

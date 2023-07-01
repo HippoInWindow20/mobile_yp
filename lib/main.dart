@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 import 'package:mobile_yp/admin_list.dart';
 import 'package:mobile_yp/personal.dart';
 import "package:mobile_yp/public_cc.dart";
+import 'package:mobile_yp/saved.dart';
 import 'package:mobile_yp/schedule.dart';
 import "package:mobile_yp/settings.dart";
 import "package:mobile_yp/online_cc.dart";
@@ -20,7 +21,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'admin.dart';
-import 'home.dart';
+// import 'home.dart';
 
 Map<int, Color> color =
 {
@@ -43,7 +44,7 @@ String? viewStateCal = "";
 String OnlineCCStep = "validation";
 List savedContent = [];
 
-
+List<String> TitlesList = ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"];
 
 Future<void> main()  async {
   ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
@@ -294,7 +295,7 @@ class _currentPage extends State<MainApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Title Text, to be done"),
+        title: Text(TitlesList[currentPage]),
       ),
       drawer: NavigationDrawer(
         selectedIndex: currentPage,
@@ -307,12 +308,17 @@ class _currentPage extends State<MainApp> {
         children: [
           Container(
             height: 150,
-            color: Colors.amberAccent,
+            color: Theme.of(context).colorScheme.primary,
           ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.info),
             icon: Icon(Icons.info_outlined),
             label: Text('公告欄'),
+          ),
+          NavigationDrawerDestination(
+            selectedIcon: Icon(Icons.star),
+            icon: Icon(Icons.star_border_outlined),
+            label: Text('收藏'),
           ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.announcement),
@@ -347,6 +353,11 @@ class _currentPage extends State<MainApp> {
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: publicCC(setStateCallBack: setStateFromMain,),
+        ),
+        Container(
+          color: Theme.of(context).colorScheme.onPrimary,
+          alignment: Alignment.center,
+          child: savedCC(setStateCallBack: setStateFromMain,),
         ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,

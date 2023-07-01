@@ -4,7 +4,6 @@ import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_yp/main.dart';
-import 'package:mobile_yp/settings.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:animations/animations.dart';
@@ -319,7 +318,7 @@ class ScheduleState extends State {
           ),
           SliverToBoxAdapter(
             child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(15),
               child: SegmentedButton(
                 segments: [
                   ButtonSegment(
@@ -352,12 +351,30 @@ class ScheduleState extends State {
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     children: [
-                      ChoiceChip(label: Text("國一"), selected: selectedGrade == 0,onSelected: (selected) {setState(() {selectedGrade = (selected ? 0 : null)!;});saveSel(0);},),
-                      ChoiceChip(label: Text("國二"), selected: selectedGrade == 1,onSelected: (selected) {setState(() {selectedGrade = (selected ? 1 : null)!;});saveSel(1);},),
-                      ChoiceChip(label: Text("國三 (外)"), selected: selectedGrade == 2,onSelected: (selected) {setState(() {selectedGrade = (selected ? 2 : null)!;});saveSel(2);},),
-                      ChoiceChip(label: Text("國三 (直)"), selected: selectedGrade == 3,onSelected: (selected) {setState(() {selectedGrade = (selected ? 3 : null)!;});saveSel(3);},),
-                      ChoiceChip(label: Text("高一"), selected: selectedGrade == 4,onSelected: (selected) {setState(() {selectedGrade = (selected ? 4 : null)!;});saveSel(4);},),
-                      ChoiceChip(label: Text("高二"), selected: selectedGrade == 5,onSelected: (selected) {setState(() {selectedGrade = (selected ? 5 : null)!;});saveSel(5);},),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("國一"), selected: selectedGrade == 0,onSelected: (selected) {setState(() {selectedGrade = (selected ? 0 : null)!;});saveSel(0);},),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("國二"), selected: selectedGrade == 1,onSelected: (selected) {setState(() {selectedGrade = (selected ? 1 : null)!;});saveSel(1);},),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("國三 (外)"), selected: selectedGrade == 2,onSelected: (selected) {setState(() {selectedGrade = (selected ? 2 : null)!;});saveSel(2);},),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("國三 (直)"), selected: selectedGrade == 3,onSelected: (selected) {setState(() {selectedGrade = (selected ? 3 : null)!;});saveSel(3);},),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("高一"), selected: selectedGrade == 4,onSelected: (selected) {setState(() {selectedGrade = (selected ? 4 : null)!;});saveSel(4);},),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: ChoiceChip(label: Text("高二"), selected: selectedGrade == 5,onSelected: (selected) {setState(() {selectedGrade = (selected ? 5 : null)!;});saveSel(5);},),
+                      ),
                       ChoiceChip(label: Text("高三"), selected: selectedGrade == 6,onSelected: (selected) {setState(() {selectedGrade = (selected ? 6 : null)!;});saveSel(6);},),
                     ],
                   ),

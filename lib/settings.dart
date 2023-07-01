@@ -55,24 +55,12 @@ class __SettingsState extends State<Settings>{
     );
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        toolbarHeight: 60,
-        backgroundColor: Theme.of(context).colorScheme.background,
-      ),
       body:SettingsList(
        lightTheme:SettingsThemeData(
             settingsSectionBackground: Theme.of(context).colorScheme.background,
             settingsListBackground: Theme.of(context).colorScheme.background
         ) ,
         sections: [
-          SettingsSection(
-            title: Text("設定",
-              style: TextStyle(
-                  fontSize: 40,
-                  color: Theme.of(context).colorScheme.onBackground
-              ),
-            ), tiles: [],
-          ),
 
           // SettingsSection(
           //   tiles: <SettingsTile>[
