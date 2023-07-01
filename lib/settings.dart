@@ -56,10 +56,6 @@ class __SettingsState extends State<Settings>{
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         toolbarHeight: 60,
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
@@ -72,7 +68,7 @@ class __SettingsState extends State<Settings>{
           SettingsSection(
             title: Text("設定",
               style: TextStyle(
-                  fontSize: 50,
+                  fontSize: 40,
                   color: Theme.of(context).colorScheme.onBackground
               ),
             ), tiles: [],
@@ -204,7 +200,7 @@ class __SettingsState extends State<Settings>{
                 leading: Icon(Icons.info_outlined),
                 title: Text('關於應用程式',style: SettingsTitleTextStyle,),
                 description: Text(
-                  "版本 1.1",
+                  "版本 1.2",
                   style: SettingsSubtitleTextStyle,
                 ),
                 onPressed: (context) {

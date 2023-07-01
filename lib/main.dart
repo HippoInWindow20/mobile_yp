@@ -293,41 +293,48 @@ class _currentPage extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+      appBar: AppBar(
+        title: Text("Title Text, to be done"),
+      ),
+      drawer: NavigationDrawer(
+        selectedIndex: currentPage,
         onDestinationSelected: (int index) {
           setState(() {
             currentPage = index;
           });
+          Navigator.of(context).pop();
         },
-        selectedIndex: currentPage,
-        destinations: <Widget>[
-          // NavigationDestination(
-          //   selectedIcon: Icon(Icons.home),
-          //   icon: Icon(Icons.home_outlined),
-          //   label: '首頁',
-          // ),
-          NavigationDestination(
+        children: [
+          Container(
+            height: 150,
+            color: Colors.amberAccent,
+          ),
+          NavigationDrawerDestination(
             selectedIcon: Icon(Icons.info),
             icon: Icon(Icons.info_outlined),
-            label: '公告欄',
+            label: Text('公告欄'),
           ),
-          NavigationDestination(
+          NavigationDrawerDestination(
             selectedIcon: Icon(Icons.announcement),
             icon: Icon(Icons.announcement_outlined),
-            label: '網路聯絡簿',
+            label: Text('網路聯絡簿'),
           ),
-          NavigationDestination(
+          NavigationDrawerDestination(
             selectedIcon: Icon(Icons.calendar_month),
             icon: Icon(Icons.calendar_month_outlined),
-            label: '行事曆',
+            label: Text('行事曆'),
           ),
           if (adminSwitch == true)
-            NavigationDestination(
+            NavigationDrawerDestination(
               selectedIcon: Icon(Icons.upload),
               icon: Icon(Icons.upload_outlined),
-              label: '聯絡簿上傳',
-            )
+              label: Text('聯絡簿上傳'),
+            ),
+          NavigationDrawerDestination(
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
+            label: Text('設定'),
+          ),
         ],
       ),
       body: <Widget>[
@@ -355,7 +362,12 @@ class _currentPage extends State<MainApp> {
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: UploadCC(setStateCallBack: setStateFromMain,),
-        )
+        ),
+        Container(
+          color: Theme.of(context).colorScheme.onPrimary,
+          alignment: Alignment.center,
+          child: Settings(setStateCallBack: setStateFromMain,),
+        ),
       ][currentPage],
     );
   }

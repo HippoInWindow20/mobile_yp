@@ -13,11 +13,17 @@ Future<List> getContentOfCC (String link) async {
   var uri = Uri.parse(link);
   var response = await http.get(uri);
   var document = parse(response.body);
-  var content = document.getElementsByClassName("content")[0].children[0].innerHtml;
-  content = content.replaceAll("<br>", "\n");
-  content = content.replaceAll(" <br> ", "\n");
-  content = content.replaceAll(" <br>", "\n");
-  content = content.replaceAll("<br> ", "\n");
+  var contentTry = document.getElementsByClassName("content")[0];
+  var content = "";
+  if (contentTry.children.length != 0){
+    content = contentTry.children[0].innerHtml;
+    content = content.replaceAll("<br>", "\n");
+    content = content.replaceAll(" <br> ", "\n");
+    content = content.replaceAll(" <br>", "\n");
+    content = content.replaceAll("<br> ", "\n");
+  }else{
+
+  }
 
   var linkExists = document.getElementsByClassName("modal_download");
   String? linkAttach = "";
@@ -123,20 +129,31 @@ class stateView extends State<ViewC> {
                 var query = isInSaved(title);
                 if (query == -1){
                   savedContent.add([title,actualContent,link]);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已新增至收藏")
+                      )
+                  );
                 }else{
                   savedContent.removeAt(query);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已從收藏移除")
+                      )
+                  );
                 }
                 setState(() {
 
                 });
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        child: Text(savedContent.toString()),
-                      );
-                    }
-                );
+                // showDialog(
+                //     context: context,
+                //     builder: (context) {
+                //       return Dialog(
+                //         child: Text(savedContent.toString()),
+                //       );
+                //     }
+                // );
+
               },
               icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
           ),
@@ -296,7 +313,7 @@ class stateView extends State<ViewC> {
                                     child: ElevatedButton(
                                         clipBehavior: Clip.hardEdge,
                                         onPressed: () {
-                                          _launchURL(context, snapshot.data![2]);
+                                          _launchURL(context, snapshot.data![1]);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.only(right: 10),

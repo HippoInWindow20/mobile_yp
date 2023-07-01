@@ -428,56 +428,56 @@ class _OnlineCCState extends State<OnlineCC> {
                   },
                   icon: Icon(Icons.refresh_outlined)
               ),
-              AppPopupMenu<int>(
-                padding: EdgeInsets.all(20),
-                menuItems:  [
-                  PopupMenuItem(
-                    value: 2,
-                    child: Text(
-                        '設定',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 20
-                        )
-                    ),
-                  ),
-                ],
-                onSelected: (int value) {
-                  switch (value){
-                    case 1:
-                      personalResult = Future.value(Text(""));
-                      setState(() {
-
-                      });
-                      if (OnlineCCStep == "validation")
-                        personalResult = displayChkCode();
-                      else
-                        personalResult = returnCC();
-                      break;
-                    case 2:
-                      Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return gotoSettings(
-                                    Settings(setStateCallBack: setStateCallBack,)
-                                );
-                              }
-                          )
-                      );
-                      break;
-                  }
-                },
-                onCanceled: () {
-                },
-                tooltip: "更多選項",
-                elevation: 30,
-                icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurfaceVariant,),
-                offset: const Offset(0, 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              // AppPopupMenu<int>(
+              //   padding: EdgeInsets.all(20),
+              //   menuItems:  [
+              //     PopupMenuItem(
+              //       value: 2,
+              //       child: Text(
+              //           '設定',
+              //           style: TextStyle(
+              //               color: Theme.of(context).colorScheme.onSurface,
+              //               fontSize: 20
+              //           )
+              //       ),
+              //     ),
+              //   ],
+              //   onSelected: (int value) {
+              //     switch (value){
+              //       case 1:
+              //         personalResult = Future.value(Text(""));
+              //         setState(() {
+              //
+              //         });
+              //         if (OnlineCCStep == "validation")
+              //           personalResult = displayChkCode();
+              //         else
+              //           personalResult = returnCC();
+              //         break;
+              //       case 2:
+              //         Navigator.of(context).push(
+              //             MaterialPageRoute(
+              //                 builder: (context) {
+              //                   return gotoSettings(
+              //                       Settings(setStateCallBack: setStateCallBack,)
+              //                   );
+              //                 }
+              //             )
+              //         );
+              //         break;
+              //     }
+              //   },
+              //   onCanceled: () {
+              //   },
+              //   tooltip: "更多選項",
+              //   elevation: 30,
+              //   icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurfaceVariant,),
+              //   offset: const Offset(0, 20),
+              //   shape: RoundedRectangleBorder(
+              //     borderRadius: BorderRadius.circular(25),
+              //   ),
+              //   color: Theme.of(context).colorScheme.surface,
+              // ),
 
 
             ],

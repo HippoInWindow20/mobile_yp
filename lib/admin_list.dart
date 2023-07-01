@@ -141,12 +141,11 @@ class _UploadCCState extends State<UploadCC> {
             pinned: false,
             snap: true,
             floating: true,
-            toolbarHeight: 100,
+            toolbarHeight: 85,
             title: Text(
               "上傳",
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.onBackground,
-                  fontSize: 40
+                  fontSize: 30
               ),
             ),
             backgroundColor: Theme.of(context).colorScheme.background,
@@ -201,12 +200,12 @@ class _UploadCCState extends State<UploadCC> {
                 },
                 tooltip: "更多選項",
                 elevation: 30,
-                icon: Icon(Icons.more_vert,size: 30,color: Theme.of(context).colorScheme.onBackground,),
+                icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onBackground,),
                 offset: const Offset(0, 20),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surface,
               )
             ],
           ),
