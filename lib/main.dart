@@ -44,7 +44,8 @@ String? viewStateCal = "";
 String OnlineCCStep = "validation";
 List savedContent = [];
 
-List<String> TitlesList = ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"];
+List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
+
 
 Future<void> main()  async {
   ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
@@ -169,6 +170,25 @@ class __MobileYPState extends State<MobileYP>{
 }
 
 
+
+Future<File> beforeChk () async {
+  var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx'));
+  viewstateGenerator2 = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+  eventValidation2 = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
+  viewState2 = parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
+  Directory dir = await getTemporaryDirectory();
+  var getValidate = await http.get(
+      Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
+      headers: {
+        "cookie":ASPCookie2!
+      }
+  );
+  var randomNumber = cookieGenerator(8);
+  File tempfile = File(dir.path + "/${randomNumber}.png");
+  await tempfile.writeAsBytes(getValidate.bodyBytes);
+  return tempfile;
+}
+
 class MainApp extends StatefulWidget {
   const MainApp({
     Key? key,
@@ -195,22 +215,11 @@ class _currentPage extends State<MainApp> {
     calResult = getCal();
   }
 
+
+
   Future<Widget> displayChkCode () async {
-    var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx'));
-    viewstateGenerator2 = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
-    eventValidation2 = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
-    viewState2 = parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
+    var tempfile = await beforeChk();
     TextEditingController chkCodeController = TextEditingController();
-    Directory dir = await getTemporaryDirectory();
-    var getValidate = await http.get(
-        Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
-        headers: {
-          "cookie":ASPCookie2!
-        }
-    );
-    var randomNumber = cookieGenerator(8);
-    File tempfile = File(dir.path + "/${randomNumber}.png");
-    await tempfile.writeAsBytes(getValidate.bodyBytes);
     return Center(
       child: Column(
         children: [
@@ -369,11 +378,12 @@ class _currentPage extends State<MainApp> {
           alignment: Alignment.center,
           child: Schedule(setStateCallBack: setStateFromMain,),
         ),
-        Container(
-          color: Theme.of(context).colorScheme.onPrimary,
-          alignment: Alignment.center,
-          child: UploadCC(setStateCallBack: setStateFromMain,),
-        ),
+        if (adminSwitch == true)
+          Container(
+            color: Theme.of(context).colorScheme.onPrimary,
+            alignment: Alignment.center,
+            child: UploadCC(setStateCallBack: setStateFromMain,),
+          ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,

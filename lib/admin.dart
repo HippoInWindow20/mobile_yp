@@ -71,15 +71,14 @@ class __adminState extends State<adminPage>{
                 initialValue: adminSwitch,
                 onToggle: (bool value) async {
                   adminSwitch = value;
-                  if (value == false){
-                    currentPage = 0;
-                  }
+                  currentPage = 0;
                   setState(() {
 
                   });
                   setStateCallBack();
                   var prefs = await SharedPreferences.getInstance();
                   await prefs.setBool("showAdmin", adminSwitch);
+                  TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
                 },
               ),
               if (adminSwitch == true)

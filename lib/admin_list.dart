@@ -137,78 +137,19 @@ class _UploadCCState extends State<UploadCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: true,
-            floating: true,
-            toolbarHeight: 85,
-            title: Text(
-              "上傳",
-              style: TextStyle(
-                  fontSize: 30
-              ),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.background,
-            actions: [
-              AppPopupMenu<int>(
-                padding: EdgeInsets.all(20),
-                menuItems:  [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text(
-                      '重新整理',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    value: 2,
-                    child: Text(
-                        '設定',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            fontSize: 20
-                        )
-                    ),
-                  ),
-                ],
-                onSelected: (int value) {
-                  switch (value){
-                    case 1:
-                      uploadResult = Future.value(Text(""));
-                      setState(() {
-
-                      });
-                      uploadResult = retrieveAdminList(setStateCallBack);
-                      break;
-                    case 2:
-                      Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) {
-                                return gotoSettings(
-                                    Settings(setStateCallBack: setStateCallBack,)
-                                );
-                              }
-                          )
-                      );
-                      break;
-                  }
-                },
-                onCanceled: () {
-                },
-                tooltip: "更多選項",
-                elevation: 30,
-                icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onBackground,),
-                offset: const Offset(0, 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                color: Theme.of(context).colorScheme.surface,
-              )
-            ],
-          ),
+        //   SliverAppBar(
+        //     pinned: false,
+        //     snap: true,
+        //     floating: true,
+        //     toolbarHeight: 85,
+        //     title: Text(
+        //       "上傳",
+        //       style: TextStyle(
+        //           fontSize: 30
+        //       ),
+        //     ),
+        //     backgroundColor: Theme.of(context).colorScheme.background,
+        //   ),
           SliverToBoxAdapter(
             child: FutureBuilder<Widget>(
               future: uploadResult,
@@ -247,6 +188,69 @@ class _UploadCCState extends State<UploadCC> {
           Icons.add_outlined
         ),
 
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            AppPopupMenu<int>(
+              padding: EdgeInsets.all(20),
+              menuItems:  [
+                PopupMenuItem(
+                  value: 1,
+                  child: Text(
+                    '重新整理',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 20
+                    ),
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: Text(
+                      '設定',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: 20
+                      )
+                  ),
+                ),
+              ],
+              onSelected: (int value) {
+                switch (value){
+                  case 1:
+                    uploadResult = Future.value(Text(""));
+                    setState(() {
+
+                    });
+                    uploadResult = retrieveAdminList(setStateCallBack);
+                    break;
+                  case 2:
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) {
+                              return gotoSettings(
+                                  Settings(setStateCallBack: setStateCallBack,)
+                              );
+                            }
+                        )
+                    );
+                    break;
+                }
+              },
+              onCanceled: () {
+              },
+              tooltip: "更多選項",
+              elevation: 30,
+              icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onBackground,),
+              offset: const Offset(0, 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              color: Theme.of(context).colorScheme.surface,
+            )
+          ],
+        ),
       ),
     );
   }

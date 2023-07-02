@@ -178,9 +178,7 @@ Future<Widget> personalCC (String chkCode, BuildContext context,Function display
                                 Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) {
-                                          return gotoSettings(
-                                              Settings(setStateCallBack: setState,)
-                                          );
+                                          return editPersonal();
                                         }
                                     )
                                 );
@@ -264,9 +262,7 @@ Future<Widget> personalCC (String chkCode, BuildContext context,Function display
                                 Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) {
-                                          return gotoSettings(
-                                              Settings(setStateCallBack: setState,)
-                                          );
+                                          return editPersonal();
                                         }
                                     )
                                 );
@@ -402,86 +398,19 @@ class _OnlineCCState extends State<OnlineCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: true,
-            floating: true,
-            toolbarHeight: 85,
-            title: Text(
-              "網路聯絡簿",
-              style: TextStyle(
-                  fontSize: 30
-              ),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.background,
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    personalResult = Future.value(Text(""));
-                    setState(() {
-
-                    });
-                    if (OnlineCCStep == "validation")
-                      personalResult = displayChkCode();
-                    else
-                      personalResult = returnCC();
-                  },
-                  icon: Icon(Icons.refresh_outlined)
-              ),
-              // AppPopupMenu<int>(
-              //   padding: EdgeInsets.all(20),
-              //   menuItems:  [
-              //     PopupMenuItem(
-              //       value: 2,
-              //       child: Text(
-              //           '設定',
-              //           style: TextStyle(
-              //               color: Theme.of(context).colorScheme.onSurface,
-              //               fontSize: 20
-              //           )
-              //       ),
-              //     ),
-              //   ],
-              //   onSelected: (int value) {
-              //     switch (value){
-              //       case 1:
-              //         personalResult = Future.value(Text(""));
-              //         setState(() {
-              //
-              //         });
-              //         if (OnlineCCStep == "validation")
-              //           personalResult = displayChkCode();
-              //         else
-              //           personalResult = returnCC();
-              //         break;
-              //       case 2:
-              //         Navigator.of(context).push(
-              //             MaterialPageRoute(
-              //                 builder: (context) {
-              //                   return gotoSettings(
-              //                       Settings(setStateCallBack: setStateCallBack,)
-              //                   );
-              //                 }
-              //             )
-              //         );
-              //         break;
-              //     }
-              //   },
-              //   onCanceled: () {
-              //   },
-              //   tooltip: "更多選項",
-              //   elevation: 30,
-              //   icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurfaceVariant,),
-              //   offset: const Offset(0, 20),
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(25),
-              //   ),
-              //   color: Theme.of(context).colorScheme.surface,
-              // ),
-
-
-            ],
-          ),
+          // SliverAppBar(
+          //   pinned: false,
+          //   snap: true,
+          //   floating: true,
+          //   toolbarHeight: 85,
+          //   title: Text(
+          //     "網路聯絡簿",
+          //     style: TextStyle(
+          //         fontSize: 30
+          //     ),
+          //   ),
+          //   backgroundColor: Theme.of(context).colorScheme.background,
+          // ),
           SliverToBoxAdapter(
             child: FutureBuilder<Widget>(
               future: personalResult,
@@ -502,6 +431,25 @@ class _OnlineCCState extends State<OnlineCC> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  personalResult = Future.value(Text(""));
+                  setState(() {
+
+                  });
+                  if (OnlineCCStep == "validation")
+                    personalResult = displayChkCode();
+                  else
+                    personalResult = returnCC();
+                },
+                icon: Icon(Icons.refresh_outlined)
+            ),
+          ],
+        ),
       ),
     );
   }

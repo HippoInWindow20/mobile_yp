@@ -61,47 +61,19 @@ class _savedCCState extends State<savedCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: true,
-            floating: true,
-            toolbarHeight: 85,
-            title: Text(
-              "收藏",
-              style: TextStyle(
-                fontSize: 30
-              ),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.background,
-            actions: [
-              // IconButton(
-              //   style: ButtonStyle(
-              //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
-              //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
-              //   ),
-              //   onPressed: () {
-              //     showModalBottomSheet<void>(
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return Padding(
-              //             padding: EdgeInsets.only(top: 30),
-              //             child: FilterOptions(),
-              //         );
-              //       },
-              //     );
-              //   },
-              //   icon: Icon(Icons.tune_outlined),
-              // ),
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-
-                    });
-                  },
-                  icon: Icon(Icons.refresh_outlined)
-              ),
-            ],
-          ),
+          // SliverAppBar(
+          //   pinned: false,
+          //   snap: true,
+          //   floating: true,
+          //   toolbarHeight: 85,
+          //   title: Text(
+          //     "收藏",
+          //     style: TextStyle(
+          //       fontSize: 30
+          //     ),
+          //   ),
+          //   backgroundColor: Theme.of(context).colorScheme.background,
+          // ),
           SliverToBoxAdapter(
             child: FutureBuilder<List<SavedItem>>(
               future: savedResult,
@@ -139,6 +111,38 @@ class _savedCCState extends State<savedCC> {
           ),
         ],
         ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            // IconButton(
+            //   style: ButtonStyle(
+            //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
+            //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
+            //   ),
+            //   onPressed: () {
+            //     showModalBottomSheet<void>(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         return Padding(
+            //             padding: EdgeInsets.only(top: 30),
+            //             child: FilterOptions(),
+            //         );
+            //       },
+            //     );
+            //   },
+            //   icon: Icon(Icons.tune_outlined),
+            // ),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+
+                  });
+                },
+                icon: Icon(Icons.refresh_outlined)
+            ),
+          ],
+        ),
+      ),
       );
   }
 

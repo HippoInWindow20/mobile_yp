@@ -226,96 +226,19 @@ class ScheduleState extends State {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: true,
-            floating: true,
-            toolbarHeight: 85,
-            title: Text(
-              "行事曆",
-              style: TextStyle(
-                fontSize: 30
-              ),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.background,
-            actions: [
-              // IconButton(
-              //   style: ButtonStyle(
-              //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
-              //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
-              //   ),
-              //   onPressed: () {
-              //     showModalBottomSheet<void>(
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return Padding(
-              //             padding: EdgeInsets.only(top: 30),
-              //             child: FilterOptionsSc(),
-              //         );
-              //       },
-              //     );
-              //   },
-              //   icon: Icon(Icons.tune_outlined),
-              // ),
-              IconButton(
-                  onPressed: () {
-                    calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
-                    setState(() {
-
-                    });
-                    calResult = getCal();
-                  },
-                  icon: Icon(Icons.refresh_outlined)
-              ),
-              // AppPopupMenu<int>(
-              //   padding: EdgeInsets.all(20),
-              //   menuItems:  [
-              //     PopupMenuItem(
-              //       value: 2,
-              //       child: Text(
-              //           '設定',
-              //           style: TextStyle(
-              //               color: Theme.of(context).colorScheme.onSurface,
-              //               fontSize: 20
-              //           )
-              //       ),
-              //     ),
-              //   ],
-              //   onSelected: (int value) {
-              //     switch (value){
-              //       case 1:
-              //         calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
-              //         setState(() {
-              //
-              //         });
-              //         calResult = getCal();
-              //         break;
-              //       case 2:
-              //         Navigator.of(context).push(
-              //             MaterialPageRoute(
-              //                 builder: (context) {
-              //                   return gotoSettings(
-              //                       Settings(setStateCallBack: setStateCallBack,)
-              //                   );
-              //                 }
-              //             )
-              //         );
-              //         break;
-              //     }
-              //   },
-              //   onCanceled: () {
-              //   },
-              //   tooltip: "更多選項",
-              //   elevation: 30,
-              //   icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onSurface,),
-              //   offset: const Offset(0, 20),
-              //   shape: RoundedRectangleBorder(
-              //     borderRadius: BorderRadius.circular(25),
-              //   ),
-              //   color: Theme.of(context).colorScheme.surface,
-              // )
-            ],
-          ),
+          // SliverAppBar(
+          //   pinned: false,
+          //   snap: true,
+          //   floating: true,
+          //   toolbarHeight: 85,
+          //   title: Text(
+          //     "行事曆",
+          //     style: TextStyle(
+          //       fontSize: 30
+          //     ),
+          //   ),
+          //   backgroundColor: Theme.of(context).colorScheme.background,
+          // ),
           SliverToBoxAdapter(
             child: Padding(
                 padding: EdgeInsets.all(15),
@@ -551,6 +474,40 @@ class ScheduleState extends State {
       //   },
       //   child: Icon(Icons.tips_and_updates_outlined),
       // ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            // IconButton(
+            //   style: ButtonStyle(
+            //     padding: MaterialStatePropertyAll(EdgeInsets.all(20)),
+            //     iconColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.onBackground,)
+            //   ),
+            //   onPressed: () {
+            //     showModalBottomSheet<void>(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         return Padding(
+            //             padding: EdgeInsets.only(top: 30),
+            //             child: FilterOptionsSc(),
+            //         );
+            //       },
+            //     );
+            //   },
+            //   icon: Icon(Icons.tune_outlined),
+            // ),
+            IconButton(
+                onPressed: () {
+                  calResult = Future.value([ScheduleItem(year: "0",month: "0",day: "0",dayOfWeek: "0",details: [],exam: [])]);
+                  setState(() {
+
+                  });
+                  calResult = getCal();
+                },
+                icon: Icon(Icons.refresh_outlined)
+            ),
+          ],
+        ),
+      ),
       );
   }
 
