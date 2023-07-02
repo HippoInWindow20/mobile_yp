@@ -43,6 +43,7 @@ String? viewstateGeneratorCal = "";
 String? viewStateCal = "";
 String OnlineCCStep = "validation";
 List savedContent = [];
+List savedCCContent = [];
 
 List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
 

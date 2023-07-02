@@ -154,19 +154,6 @@ class _publicCCState extends State<publicCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   pinned: false,
-          //   snap: true,
-          //   floating: true,
-          //   toolbarHeight: 85,
-          //   title: Text(
-          //     "公告欄",
-          //     style: TextStyle(
-          //       fontSize: 30
-          //     ),
-          //   ),
-          //   backgroundColor: Theme.of(context).colorScheme.background,
-          // ),
           SliverToBoxAdapter(
             child: FutureBuilder<List<PublicItem>>(
               future: result,

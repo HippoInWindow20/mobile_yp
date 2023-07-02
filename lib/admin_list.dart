@@ -137,19 +137,6 @@ class _UploadCCState extends State<UploadCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-        //   SliverAppBar(
-        //     pinned: false,
-        //     snap: true,
-        //     floating: true,
-        //     toolbarHeight: 85,
-        //     title: Text(
-        //       "上傳",
-        //       style: TextStyle(
-        //           fontSize: 30
-        //       ),
-        //     ),
-        //     backgroundColor: Theme.of(context).colorScheme.background,
-        //   ),
           SliverToBoxAdapter(
             child: FutureBuilder<Widget>(
               future: uploadResult,

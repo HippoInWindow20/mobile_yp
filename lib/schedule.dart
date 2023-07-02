@@ -226,19 +226,6 @@ class ScheduleState extends State {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   pinned: false,
-          //   snap: true,
-          //   floating: true,
-          //   toolbarHeight: 85,
-          //   title: Text(
-          //     "行事曆",
-          //     style: TextStyle(
-          //       fontSize: 30
-          //     ),
-          //   ),
-          //   backgroundColor: Theme.of(context).colorScheme.background,
-          // ),
           SliverToBoxAdapter(
             child: Padding(
                 padding: EdgeInsets.all(15),

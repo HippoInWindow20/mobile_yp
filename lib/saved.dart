@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mobile_yp/public_cc.dart';
+import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/view_offline.dart';
 import 'package:swipe_refresh/swipe_refresh.dart';
 
@@ -24,8 +24,7 @@ class SavedItem {
   });
 }
 
-
-Future<List<SavedItem>> savedResult = Future.value([]);
+int selectedSaved = 0;
 
 class savedCC extends StatefulWidget {
   savedCC({
@@ -40,6 +39,20 @@ class savedCC extends StatefulWidget {
   }
 }
 
+List<List<SavedItem>> formatSaved () {
+  List<SavedItem> formattedSaved = [];
+  List<SavedItem> formattedCC = [];
+  for (var i = 0;i < savedContent.length;i++){
+    formattedSaved.add(SavedItem(title: savedContent[i][0], agency: savedContent[i][1], date: savedContent[i][2], link: savedContent[i][4], count: i, content: savedContent[i][3]));
+  }
+  for (var j = 0;j < savedCCContent.length;j++){
+    formattedCC.add(SavedItem(title: savedCCContent[j][0], agency: savedCCContent[j][1], date: savedCCContent[j][2], link: savedCCContent[j][4], count: j, content: [savedCCContent[j][3]]));
+  }
+  print([formattedSaved,formattedCC]);
+  return [formattedSaved,formattedCC];
+}
+
+List<List<SavedItem>> savedResult = formatSaved();
 
 class _savedCCState extends State<savedCC> {
   @override
@@ -61,53 +74,39 @@ class _savedCCState extends State<savedCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   pinned: false,
-          //   snap: true,
-          //   floating: true,
-          //   toolbarHeight: 85,
-          //   title: Text(
-          //     "收藏",
-          //     style: TextStyle(
-          //       fontSize: 30
-          //     ),
-          //   ),
-          //   backgroundColor: Theme.of(context).colorScheme.background,
-          // ),
           SliverToBoxAdapter(
-            child: FutureBuilder<List<SavedItem>>(
-              future: savedResult,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    children:
-                      // [SwipeRefresh.material(
-                      //   shrinkWrap: true,
-                      //   stateStream: _stream,
-                      //   onRefresh: _refresh,
-                      //   padding: const EdgeInsets.symmetric(vertical: 10),
-                      //   children: List.generate(snapshot.data!.length, (index) =>
-                      //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                      //   ),
-                      // ),
-                      List.generate(snapshot.data!.length, (index) =>
-                          OfflineCard(title: snapshot.data![index].title, agency: snapshot.data![index].agency, date: snapshot.data![index].date, count: snapshot.data![index].count,content: snapshot.data![index].content,link: snapshot.data![index].link,)
-                      )
-                    // ],
-                  );
-                } else if (snapshot.hasError) {
-                  return ErrorCard(errorCode: snapshot.error.toString());
-                }
+            child: Padding(
+                padding: EdgeInsets.all(10),
+              child: SegmentedButton(
+                segments: [
+                  ButtonSegment(value: 0,label: Text("公告欄"),icon: Icon(Icons.info_outline)),
+                  ButtonSegment(value: 1,label: Text("網路聯絡簿"),icon: Icon(Icons.announcement_outlined))
+                ],
+                selected: {selectedSaved},
+                onSelectionChanged: (value) {
+                  selectedSaved = int.parse(value.first.toString());
+                  setState(() {
 
-                // By default, show a loading spinner.
-                return const Center(
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: CircularProgressIndicator(),
-                    )
-                );
-              },
-            ),
+                  });
+                },
+              ),
+            )
+          ),
+          SliverToBoxAdapter(
+            child: ListView(
+              shrinkWrap: true,
+              children: List.generate(savedResult[selectedSaved].length, (index) =>
+                  OfflineCard(
+                      title: savedResult[selectedSaved][index].title,
+                      agency: savedResult[selectedSaved][index].agency,
+                      date: savedResult[selectedSaved][index].date,
+                      count: savedResult[selectedSaved][index].count,
+                      content: savedResult[selectedSaved][index].content,
+                      link: savedResult[selectedSaved][index].link,
+                    type: selectedSaved,
+                  )
+              ),
+            )
           ),
         ],
         ),
@@ -134,6 +133,7 @@ class _savedCCState extends State<savedCC> {
             // ),
             IconButton(
                 onPressed: () {
+                  savedResult = formatSaved();
                   setState(() {
 
                   });
@@ -156,7 +156,8 @@ class OfflineCard extends StatelessWidget {
     required this.date,
     required this.count,
     required this.content,
-    required this.link
+    required this.link,
+    required this.type
   }) : super(key: key);
   final String title;
   final String agency;
@@ -164,6 +165,7 @@ class OfflineCard extends StatelessWidget {
   final int count;
   final List content;
   final String link;
+  final int type;
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +180,21 @@ class OfflineCard extends StatelessWidget {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return OfflineView(title: title,agency: agency,date: date,count: count,content: content,link: link);}));
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) {
+                          return OfflineView(
+                            title: title,
+                            agency: agency,
+                            date: date,
+                            count: count,
+                            content: content,
+                            link: link,
+                            type: selectedSaved,
+                        );
+                      }
+                    )
+                );
 
               },
               child: Column(

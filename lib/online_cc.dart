@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_yp/main.dart';
 import 'package:mobile_yp/personal.dart';
-import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
@@ -398,19 +397,6 @@ class _OnlineCCState extends State<OnlineCC> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   pinned: false,
-          //   snap: true,
-          //   floating: true,
-          //   toolbarHeight: 85,
-          //   title: Text(
-          //     "網路聯絡簿",
-          //     style: TextStyle(
-          //         fontSize: 30
-          //     ),
-          //   ),
-          //   backgroundColor: Theme.of(context).colorScheme.background,
-          // ),
           SliverToBoxAdapter(
             child: FutureBuilder<Widget>(
               future: personalResult,

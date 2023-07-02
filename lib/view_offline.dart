@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_yp/main.dart';
-import "package:mobile_yp/public_cc.dart";
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
-import 'package:mobile_yp/view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -21,7 +16,8 @@ class OfflineView extends StatefulWidget {
     required this.date,
     required this.count,
     required this.link,
-    required this.content
+    required this.content,
+    required this.type
   });
   final String title;
   final String agency;
@@ -29,8 +25,9 @@ class OfflineView extends StatefulWidget {
   final int count;
   final String link;
   final List content;
+  final int type;
   State<StatefulWidget> createState() {
-    return stateOfflineView(title: title, agency: agency, date: date, count: count,link: link,content: content);
+    return stateOfflineView(title: title, agency: agency, date: date, count: count,link: link,content: content,type: type);
   }
 }
 
@@ -43,6 +40,7 @@ class stateOfflineView extends State<OfflineView> {
     required this.count,
     required this.content,
     required this.link,
+    required this.type
   });
   final String title;
   final String agency;
@@ -50,6 +48,7 @@ class stateOfflineView extends State<OfflineView> {
   final int count;
   final List content;
   final String link;
+  final int type;
 
   void _launchURL(BuildContext context,link) async {
     try {
@@ -89,33 +88,33 @@ class stateOfflineView extends State<OfflineView> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
-          IconButton(
-              onPressed: (){
-                var query = isInSaved(title);
-                if (query == -1){
-                  savedContent.add([title,content,link]);
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("已新增至收藏")
-                      )
-                  );
-                }else{
-                  savedContent.removeAt(query);
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("已從收藏移除")
-                      )
-                  );
-                }
-                setState(() {
-
-                });
-
-              },
-              icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
-          ),
+          // IconButton(
+          //     onPressed: (){
+          //       var query = isInSaved(title);
+          //       if (query == -1){
+          //         savedContent.add([title,content,link]);
+          //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          //         ScaffoldMessenger.of(context).showSnackBar(
+          //             SnackBar(
+          //                 content: Text("已新增至收藏")
+          //             )
+          //         );
+          //       }else{
+          //         savedContent.removeAt(query);
+          //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          //         ScaffoldMessenger.of(context).showSnackBar(
+          //             SnackBar(
+          //                 content: Text("已從收藏移除")
+          //             )
+          //         );
+          //       }
+          //       setState(() {
+          //
+          //       });
+          //
+          //     },
+          //     icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
+          // ),
           IconButton(
               onPressed: (){
                 if (content.toString().contains("null") == false && link.contains("null") == false){
@@ -204,7 +203,7 @@ class stateOfflineView extends State<OfflineView> {
                 Padding(
                     padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
                     child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
-                        child: Html(
+                        child: type == 0 ? Html(
                           onLinkTap: (String? link, str, element ) {
                             _launchURL(context, link);
                           },
@@ -219,6 +218,20 @@ class stateOfflineView extends State<OfflineView> {
                             ),
                           },
                           data: content[0].trim(),
+                        ) :
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SelectableText(
+                              content[0].trim(),
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                  letterSpacing: 2,
+                                  height: 1.7
+                              ),
+                            )
+                          ],
                         )
                     )
                 ),

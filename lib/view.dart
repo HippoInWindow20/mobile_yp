@@ -129,7 +129,7 @@ class stateView extends State<ViewC> {
               onPressed: (){
                 var query = isInSaved(title);
                 if (query == -1){
-                  savedContent.add([title,actualContent,link]);
+                  savedContent.add([title,agency,date,actualContent,link]);
                   ScaffoldMessenger.of(context).removeCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -148,15 +148,6 @@ class stateView extends State<ViewC> {
                 setState(() {
 
                 });
-                // showDialog(
-                //     context: context,
-                //     builder: (context) {
-                //       return Dialog(
-                //         child: Text(savedContent.toString()),
-                //       );
-                //     }
-                // );
-
               },
               icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
           ),

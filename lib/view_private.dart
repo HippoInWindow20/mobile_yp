@@ -5,12 +5,26 @@ import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'main.dart';
 import 'online_cc.dart';
 
 String? eventValidation3 = "";
 String? viewstateGenerator3 = "";
 String? viewState3 = "";
 Future<List> contentPrivate = Future.value([]);
+
+int isInSavedCC(String title) {
+  var isSaved = false;
+  int i = 0;
+  int result = -1;
+  while (isSaved == false && i < savedCCContent.length){
+    if (savedCCContent[i][0].toString() == title){
+      isSaved = true;
+    }
+    i++;
+  }
+  return isSaved == true ? i - 1 : result;
+}
 
 Future<List> getContentOfOnlineCC (count) async {
   count = (count + 2).toString();
@@ -110,6 +124,32 @@ class stateViewPrivate extends State {
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
+          IconButton(
+              onPressed: (){
+                var query = isInSavedCC(title);
+                if (query == -1){
+                  savedCCContent.add([title,agency,date,actualContent,link]);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已新增至收藏")
+                      )
+                  );
+                }else{
+                  savedCCContent.removeAt(query);
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("已從收藏移除")
+                      )
+                  );
+                }
+                setState(() {
+
+                });
+              },
+              icon: isInSavedCC(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
+          ),
           IconButton(
               onPressed: (){
                 contentPrivate = getContentOfOnlineCC(count);
