@@ -3,6 +3,7 @@ import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:mobile_yp/saved.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'main.dart';
@@ -144,6 +145,7 @@ class stateViewPrivate extends State {
                       )
                   );
                 }
+                savedResult = formatSaved();
                 setState(() {
 
                 });

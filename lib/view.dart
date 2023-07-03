@@ -4,9 +4,11 @@ import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:mobile_yp/saved.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List> content = Future.value([]);
 
@@ -126,7 +128,7 @@ class stateView extends State<ViewC> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           IconButton(
-              onPressed: (){
+              onPressed: () async {
                 var query = isInSaved(title);
                 if (query == -1){
                   savedContent.add([title,agency,date,actualContent,link]);
@@ -145,6 +147,9 @@ class stateView extends State<ViewC> {
                       )
                   );
                 }
+                // var prefs = await SharedPreferences.getInstance();
+                // await prefs.setStringList("savedContent", savedContent);
+                savedResult = formatSaved();
                 setState(() {
 
                 });

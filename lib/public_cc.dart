@@ -160,20 +160,52 @@ class _publicCCState extends State<publicCC> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Column(
-                    children:
-                      // [SwipeRefresh.material(
-                      //   shrinkWrap: true,
-                      //   stateStream: _stream,
-                      //   onRefresh: _refresh,
-                      //   padding: const EdgeInsets.symmetric(vertical: 10),
-                      //   children: List.generate(snapshot.data!.length, (index) =>
-                      //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                      //   ),
-                      // ),
-                      List.generate(snapshot.data!.length, (index) =>
-                          ListCard(title: snapshot.data![index].title, agency: snapshot.data![index].agency, date: snapshot.data![index].date, count: snapshot.data![index].count,url: snapshot.data![index].url,)
-                      )
-                    // ],
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (ShowPinned == true){
+                            ShowPinned = false;
+                          }else{
+                            ShowPinned = true;
+                          }
+                          setState(() {
+
+                          });
+                        },
+                        child: Padding(
+                            padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              ShowPinned == true ? Icon(Icons.expand_more,size: 40) : Icon(Icons.expand_less,size: 40),
+                              Text("置頂公告",style: TextStyle(fontSize: 20),)
+                            ],
+                          ),
+                        )
+                      ),
+                      Column(
+                        children:
+                        // [SwipeRefresh.material(
+                        //   shrinkWrap: true,
+                        //   stateStream: _stream,
+                        //   onRefresh: _refresh,
+                        //   padding: const EdgeInsets.symmetric(vertical: 10),
+                        //   children: List.generate(snapshot.data!.length, (index) =>
+                        //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                        //   ),
+                        // ),
+                        List.generate(snapshot.data!.length, (index) =>
+                            ListCard(
+                              title: snapshot.data![index].title,
+                              agency: snapshot.data![index].agency,
+                              date: snapshot.data![index].date,
+                              count: snapshot.data![index].count,
+                              url: snapshot.data![index].url,
+                              tags: snapshot.data![index].tags,
+                            )
+                        )
+                      // ],
+                    )
+                    ],
                   );
                 } else if (snapshot.hasError) {
                   return ErrorCard(errorCode: snapshot.error.toString());
@@ -298,96 +330,119 @@ class ListCard extends StatelessWidget {
     required this.agency,
     required this.date,
     required this.count,
-    required this.url
+    required this.url,
+    required this.tags
   }) : super(key: key);
   final String title;
   final String agency;
   final String date;
   final int count;
   final String url;
+  final List tags;
 
   @override
   Widget build(BuildContext context) {
     return
-      Hero(
-        tag: "main" + count.toString(),
-        child: Card(
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-            elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceVariant,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: InkWell(
-              onTap: () {
-                content = getContentOfCC(url);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,url: url,);}));
+      Visibility(
+        visible: (tags.contains("置頂") == true) ? ShowPinned : true,
+          child: Hero(
+            tag: "main" + count.toString(),
+            child: Card(
+                clipBehavior: Clip.hardEdge,
+                margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+                elevation: 0,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                child: InkWell(
+                  // onLongPress: () {
+                  //   showDialog(
+                  //       context: context,
+                  //       builder: (context){
+                  //         return Dialog(
+                  //           child: Text(tags.toString() + tags.contains("置頂").toString()),
+                  //         );
+                  //       }
+                  //       );
+                  // },
+                  onTap: () {
+                    content = getContentOfCC(url);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,url: url,);}));
 
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(title,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                        padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
                         child: Align(
                           alignment: Alignment.topLeft,
-                          child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20,right: 10),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(agency,
+                          child: Text(title,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              fontSize: 16,
+                              fontSize: 20,
                             ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(date,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              fontSize: 16,
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
                             ),
                           ),
-                        ),
-                      )
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20,right: 10),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(agency,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(date,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                            if(tags.contains("置頂") == true)
+                              Padding(
+                                padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child:Icon(Icons.push_pin,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                                ),
+                              ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            )
-        ),
+                )
+            ),
 
+          )
       );
   }
 }

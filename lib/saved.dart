@@ -13,7 +13,7 @@ class SavedItem {
   final String date;
   final String link;
   final int count;
-  final List content;
+  final List<String> content;
   SavedItem({
     required this.title,
     required this.agency,

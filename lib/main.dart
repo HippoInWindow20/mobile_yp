@@ -42,8 +42,8 @@ String? eventValidationCal = "";
 String? viewstateGeneratorCal = "";
 String? viewStateCal = "";
 String OnlineCCStep = "validation";
-List savedContent = [];
-List savedCCContent = [];
+List<List> savedContent = [];
+List<List> savedCCContent = [];
 
 List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
 
@@ -64,6 +64,8 @@ Future<void> main()  async {
   final Object? savedClass = prefs.get("savedClass");
   final bool? savedAdminSwitch = prefs.getBool("showAdmin");
   final int? savedGrade = prefs.getInt("savedGrade");
+  // final List<String>? prefsSavedContent = prefs.getStringList("savedContent");
+  // final List<String>? prefsSavedCCContent = prefs.getStringList("savedCCContent");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -113,6 +115,12 @@ Future<void> main()  async {
   if (savedGrade != null){
     selectedGrade = savedGrade;
   }
+  // if (prefsSavedContent != null){
+  //   savedContent = prefsSavedContent;
+  // }
+  // if (prefsSavedCCContent != null){
+  //   savedCCContent = prefsSavedCCContent;
+  // }
   runApp(MobileYP());
 
 }
@@ -318,7 +326,8 @@ class _currentPage extends State<MainApp> {
         children: [
           Container(
             height: 150,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onPrimary,
+            margin: EdgeInsets.only(bottom: 10),
           ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.info),

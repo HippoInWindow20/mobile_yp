@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
+import 'package:mobile_yp/saved.dart';
+import 'package:mobile_yp/view.dart';
+import 'package:mobile_yp/view_private.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
+
+import 'main.dart';
 
 Future<List> content = Future.value([]);
 
@@ -88,33 +93,55 @@ class stateOfflineView extends State<OfflineView> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
-          // IconButton(
-          //     onPressed: (){
-          //       var query = isInSaved(title);
-          //       if (query == -1){
-          //         savedContent.add([title,content,link]);
-          //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          //         ScaffoldMessenger.of(context).showSnackBar(
-          //             SnackBar(
-          //                 content: Text("已新增至收藏")
-          //             )
-          //         );
-          //       }else{
-          //         savedContent.removeAt(query);
-          //         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          //         ScaffoldMessenger.of(context).showSnackBar(
-          //             SnackBar(
-          //                 content: Text("已從收藏移除")
-          //             )
-          //         );
-          //       }
-          //       setState(() {
-          //
-          //       });
-          //
-          //     },
-          //     icon: isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
-          // ),
+          IconButton(
+              onPressed: (){
+                if (type == 0){
+                  var query = isInSaved(title);
+                  if (query == -1){
+                    savedContent.add([title,content,link]);
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("已新增至收藏")
+                        )
+                    );
+                  }else{
+                    savedContent.removeAt(query);
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("已從收藏移除")
+                        )
+                    );
+                  }
+                }else{
+                  var query = isInSavedCC(title);
+                  if (query == -1){
+                    savedCCContent.add([title,content,link]);
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("已新增至收藏")
+                        )
+                    );
+                  }else{
+                    savedCCContent.removeAt(query);
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("已從收藏移除")
+                        )
+                    );
+                  }
+                }
+                savedResult = formatSaved();
+                setState(() {
+
+                });
+
+              },
+              icon: type == 0 ? (isInSaved(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)) : (isInSavedCC(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border))
+          ),
           IconButton(
               onPressed: (){
                 if (content.toString().contains("null") == false && link.contains("null") == false){
@@ -237,82 +264,82 @@ class stateOfflineView extends State<OfflineView> {
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
 
-
-            Padding(
-                padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("連結",
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 15),
-                      child: Tooltip(
-                        message: link,
-                        child: ElevatedButton(
-                            clipBehavior: Clip.hardEdge,
-                            onPressed: () {
-                              _launchURL(context, link);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Row(
-                                children: [
-                                  Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Icon(Icons.language_outlined,size: 30),
-                                  ),
-                                  Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                                      child: Text("訪問連結",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      )
-                                  )
-                                ],
-                              ),
-                            )
+            if (link != "null")
+              Padding(
+                  padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text("連結",
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold
                         ),
                       ),
-                    ),
-                    TextButton(
-                        onPressed: () async {
-                          await Clipboard.setData(ClipboardData(text: link));
-                          // copied successfully
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text("已複製連結至剪貼簿")
-                              )
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(right: 10),
-                          child: Row(
-                            children: [
-                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Icon(Icons.copy_outlined,size: 30),
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                                  child: Text("複製連結",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.normal,
+                      Padding(padding: EdgeInsets.only(top: 15),
+                        child: Tooltip(
+                          message: link,
+                          child: ElevatedButton(
+                              clipBehavior: Clip.hardEdge,
+                              onPressed: () {
+                                _launchURL(context, link);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Row(
+                                  children: [
+                                    Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                      child: Icon(Icons.language_outlined,size: 30),
                                     ),
-                                  )
+                                    Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                        child: Text("訪問連結",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        )
+                                    )
+                                  ],
+                                ),
                               )
-                            ],
                           ),
-                        )
-                    )
-                  ],
-                )
-              ),
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            await Clipboard.setData(ClipboardData(text: link));
+                            // copied successfully
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text("已複製連結至剪貼簿")
+                                )
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Row(
+                              children: [
+                                Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Icon(Icons.copy_outlined,size: 30),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
+                                    child: Text("複製連結",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    )
+                                )
+                              ],
+                            ),
+                          )
+                      )
+                    ],
+                  )
+                ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 50)),
               ],
             ),
