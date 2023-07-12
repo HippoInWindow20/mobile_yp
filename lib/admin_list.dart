@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_yp/admin.dart';
 import 'package:mobile_yp/main.dart';
-import 'package:mobile_yp/settings.dart';
 import 'package:mobile_yp/public_cc.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
@@ -179,63 +178,16 @@ class _UploadCCState extends State<UploadCC> {
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
-            AppPopupMenu<int>(
-              padding: EdgeInsets.all(20),
-              menuItems:  [
-                PopupMenuItem(
-                  value: 1,
-                  child: Text(
-                    '重新整理',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: 20
-                    ),
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text(
-                      '設定',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20
-                      )
-                  ),
-                ),
-              ],
-              onSelected: (int value) {
-                switch (value){
-                  case 1:
-                    uploadResult = Future.value(Text(""));
-                    setState(() {
+            IconButton(
+                onPressed: () {
+                  uploadResult = Future.value(Text(""));
+                  setState(() {
 
-                    });
-                    uploadResult = retrieveAdminList(setStateCallBack);
-                    break;
-                  case 2:
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) {
-                              return gotoSettings(
-                                  Settings(setStateCallBack: setStateCallBack,)
-                              );
-                            }
-                        )
-                    );
-                    break;
-                }
-              },
-              onCanceled: () {
-              },
-              tooltip: "更多選項",
-              elevation: 30,
-              icon: Icon(Icons.more_vert,color: Theme.of(context).colorScheme.onBackground,),
-              offset: const Offset(0, 20),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
-              ),
-              color: Theme.of(context).colorScheme.surface,
-            )
+                  });
+                  uploadResult = retrieveAdminList(setStateCallBack);
+                },
+                icon: Icon(Icons.refresh_outlined)
+            ),
           ],
         ),
       ),

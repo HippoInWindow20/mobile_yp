@@ -22,8 +22,12 @@ Future<List> getContentOfCC (String link) async {
     for (var i = 0;i < contentTry.children.length;i++){
       content += contentTry.children[i].outerHtml;
     }
+    content = "<p>" + content + "</p>";
+    content = content.replaceAll("color: #000000", "");
     content = content.replaceAll("<label>", "<strong>");
     content = content.replaceAll("</label>", "</strong>");
+    content = content.replaceAll("<div>", "<p>");
+    content = content.replaceAll("</div>", "</p>");
   }else{
 
   }

@@ -60,7 +60,7 @@ Future<String> submitUpload (title,content,link) async {
   if (response.statusCode == 200){
     return "success";
   }else{
-    return "failed";
+    return response.statusCode.toString();
   }
 }
 
@@ -111,12 +111,82 @@ class stateUploadPage extends State {
                   Navigator.pop(context);
                   showDialog(context: context, builder: (context){
                     return Dialog(
+                      backgroundColor: Theme.of(context).colorScheme.errorContainer,
                       child: Padding(
                         padding: EdgeInsets.all(20),
-                        child: Text("error"),
+                        child: Wrap(
+                          children: [
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(Icons.error_outline_outlined,size: 40,),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "錯誤",
+                                          style: TextStyle(
+                                              fontSize: 30
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Text(
+                                          "錯誤代碼： "+ result2,
+                                          style: TextStyle(
+                                              fontSize: 20
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              setState(() {
+
+                                              });
+                                            },
+                                            child: Text(
+                                              "確定",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Theme.of(context).colorScheme.onErrorContainer
+                                              ),
+                                            )
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     );
-                  });
+                  }
+                  );
                 }
               },
               icon: Icon(Icons.save_outlined))
