@@ -188,7 +188,7 @@ class __SettingsState extends State<Settings>{
                 leading: Icon(Icons.info_outlined),
                 title: Text('關於應用程式',style: SettingsTitleTextStyle,),
                 description: Text(
-                  "版本 1.2",
+                  "版本 1.2.0",
                   style: SettingsSubtitleTextStyle,
                 ),
                 onPressed: (context) {

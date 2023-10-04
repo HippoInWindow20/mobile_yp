@@ -26,7 +26,7 @@ Future<List> getContentOfCC (String link) async {
     content = content.replaceAll("color: #000000", "");
     content = content.replaceAll("<label>", "<strong>");
     content = content.replaceAll("</label>", "</strong>");
-    content = content.replaceAll("<div>", "<p>");
+    content = content.replaceAll("<div", "<p");
     content = content.replaceAll("</div>", "</p>");
   }else{
 
