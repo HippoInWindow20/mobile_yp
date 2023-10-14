@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_html_table/flutter_html_table.dart';
 
 Future<List> content = Future.value([]);
 
@@ -131,6 +132,12 @@ class stateView extends State<ViewC> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
+          IconButton(
+              onPressed: () {
+                _launchURL(context, url);
+              },
+              icon: Icon(Icons.open_in_browser)
+          ),
           IconButton(
               onPressed: () async {
                 var query = isInSaved(title);
@@ -263,35 +270,53 @@ class stateView extends State<ViewC> {
                             if (snapshot.hasData) {
                               actualContent = snapshot.data![0];
                               return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: List.generate(snapshot.data![0].length, (index) =>
-                                    // SelectableText(snapshot.data![0][index].trim(),
-                                    //   style: TextStyle(
-                                    //       fontSize: 22,
-                                    //       color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                    //       letterSpacing: 2,
-                                    //       height: 1.7
-                                    //   ),
-                                    // )
-                                  Html(
-                                    onLinkTap: (String? link, str, element ) {
-                                      _launchURL(context, link);
-                                    },
-                                    style:{
-                                      "span": Style(
-                                        letterSpacing: 2,
-                                        fontSize: FontSize(22)
-                                      ),
-                                      "p": Style(
-                                          letterSpacing: 2,
-                                          fontSize: FontSize(22)
-                                      ),
-                                    },
-                                    data: snapshot.data![0][index].trim(),
-                                  )
-                                ),
-                              );
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(snapshot.data![0].length, (index) =>
+                                      SelectionArea(
+                                          child: Html(
+                                            shrinkWrap: true,
+                                            onLinkTap: (String? link, str, element ) {
+                                              _launchURL(context, link);
+                                            },
+                                            style:{
+                                              "span": Style(
+                                                  letterSpacing: 2,
+                                                  fontSize: FontSize(22),
+                                                  textOverflow: TextOverflow.clip
+                                              ),
+                                              "u": Style(
+                                                  textOverflow: TextOverflow.clip
+                                              ),
+                                              "strong": Style(
+                                                  letterSpacing: 2,
+                                                  fontSize: FontSize(22),
+                                                  textOverflow: TextOverflow.clip
+                                              ),
+                                              "p": Style(
+                                                  letterSpacing: 2,
+                                                  fontSize: FontSize(22),
+                                                  textOverflow: TextOverflow.clip
+
+                                              ),
+                                              "td":Style(
+                                                  border: Border.fromBorderSide(BorderSide(color: Color(0xFFFFFFFF))),
+                                                  padding: HtmlPaddings(
+                                                    left: HtmlPadding(5),
+                                                    right: HtmlPadding(5),
+                                                    top: HtmlPadding(5),
+                                                    bottom: HtmlPadding(5),
+                                                  )
+                                              ),
+                                            },
+                                            data: snapshot.data![0][index].trim(),
+                                            extensions: [
+                                              TableHtmlExtension(),
+                                            ],
+                                          )
+                                      )
+                                  ),
+                                );
                             } else if (snapshot.hasError) {
                               actualContent = ["null"];
                               link = "null";

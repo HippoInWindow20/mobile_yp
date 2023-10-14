@@ -324,10 +324,9 @@ class _currentPage extends State<MainApp> {
           Navigator.of(context).pop();
         },
         children: [
-          Container(
-            height: 150,
-            color: Theme.of(context).colorScheme.onPrimary,
-            margin: EdgeInsets.only(bottom: 10),
+          UserAccountsDrawerHeader(
+              accountName: Text("測試用戶",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              accountEmail: Text("testaccount@yphs.tp.edu.tw",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
           ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.info),

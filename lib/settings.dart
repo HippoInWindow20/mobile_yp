@@ -130,13 +130,17 @@ class __SettingsState extends State<Settings>{
                   );
                 },
               ),
-              // SettingsTile.navigation(
-              //   leading: Icon(Icons.reorder_outlined),
-              //   title: Text('導覽列排序',style: SettingsTitleTextStyle,),
-              //   onPressed: (context) {
-              //
-              //   },
-              // ),
+              SettingsTile.navigation(
+                leading: Icon(Icons.format_size_outlined),
+                title: Text('字體大小',style: SettingsTitleTextStyle,),
+                value: Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text("系統預設",style: SettingsSubtitleTextStyle,),
+                ),
+                onPressed: (context) {
+
+                },
+              ),
             ],
           ),
           SettingsSection(
@@ -188,11 +192,15 @@ class __SettingsState extends State<Settings>{
                 leading: Icon(Icons.info_outlined),
                 title: Text('關於應用程式',style: SettingsTitleTextStyle,),
                 description: Text(
-                  "版本 1.2.0",
+                  "版本 1.2.1",
                   style: SettingsSubtitleTextStyle,
                 ),
                 onPressed: (context) {
-                  showAboutDialog(context: context);
+                  showAboutDialog(
+                      context: context,
+                    applicationVersion: "1.2.1",
+                    applicationLegalese: "The school's IT team has changed the majority of the layout, making it a fucking pain the ass to code."
+                  );
                 },
               ),
 
