@@ -19,7 +19,7 @@ That's the energy I gained when building this app, is to just mke it good. No un
 
 # Installation
 
-1. Install the Flutter  ([Official documentation](https://docs.flutter.dev/get-started/install))
+1. Install the Flutter (Beta version is required)  ([Official documentation](https://docs.flutter.dev/get-started/install))
 2. Run package get command
 ```console
 $ flutter pub get
