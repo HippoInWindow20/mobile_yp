@@ -134,6 +134,56 @@ class stateView extends State<ViewC> {
         actions: [
           IconButton(
               onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: FutureBuilder(
+                              future: content,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return CustomScrollView(
+                                    shrinkWrap: true,
+                                    slivers: [
+                                      SliverToBoxAdapter(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 20),
+                                          child: Text("顯示原始碼",
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SliverToBoxAdapter(
+                                        child: Text(snapshot.data.toString()),
+                                      ),
+                                      SliverToBoxAdapter(
+                                        child: TextButton(
+                                          child: Text("關閉"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                }else{
+                                  return Text("");
+                                }
+                              }
+                          ),
+                        ),
+                      );
+                    }
+                );
+              },
+              icon: Icon(Icons.code)
+          ),
+          IconButton(
+              onPressed: () {
                 _launchURL(context, url);
               },
               icon: Icon(Icons.open_in_browser)
@@ -262,8 +312,8 @@ class stateView extends State<ViewC> {
                 ),
 
                 Padding(
-                    padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
-                    child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
+                    padding: EdgeInsets.only(left:10,right: 10),
+                    child: Padding(padding: EdgeInsets.only(left:5,right: 5),
                         child: FutureBuilder<List>(
                           future: content,
                           builder: (context, snapshot) {
@@ -312,6 +362,15 @@ class stateView extends State<ViewC> {
                                             data: snapshot.data![0][index].trim(),
                                             extensions: [
                                               TableHtmlExtension(),
+                                              TagWrapExtension(
+                                                  tagsToWrap: {"table"},
+                                                  builder: (child) {
+                                                    return SingleChildScrollView(
+                                                      child: child,
+                                                      scrollDirection: Axis.horizontal,
+                                                    );
+                                                  }
+                                              )
                                             ],
                                           )
                                       )
