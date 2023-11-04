@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 Future<List> content = Future.value([]);
 
@@ -27,8 +28,8 @@ Future<List> getContentOfCC (String link) async {
     content = content.replaceAll("color: #000000", "");
     content = content.replaceAll("<label>", "<strong>");
     content = content.replaceAll("</label>", "</strong>");
-    content = content.replaceAll("<div", "<p");
-    content = content.replaceAll("</div>", "</p>");
+    // content = content.replaceAll("<div", "<p");
+    // content = content.replaceAll("</div>", "</p>");
   }else{
 
   }
@@ -313,69 +314,86 @@ class stateView extends State<ViewC> {
 
                 Padding(
                     padding: EdgeInsets.only(left:10,right: 10),
-                    child: Padding(padding: EdgeInsets.only(left:5,right: 5),
+                    child: Padding(padding: EdgeInsets.only(left:5,right: 5,top: 15),
                         child: FutureBuilder<List>(
                           future: content,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               actualContent = snapshot.data![0];
-                              return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(snapshot.data![0].length, (index) =>
-                                      SelectionArea(
-                                          child: Html(
-                                            shrinkWrap: true,
-                                            onLinkTap: (String? link, str, element ) {
-                                              _launchURL(context, link);
-                                            },
-                                            style:{
-                                              "span": Style(
-                                                  letterSpacing: 2,
-                                                  fontSize: FontSize(22),
-                                                  textOverflow: TextOverflow.clip
-                                              ),
-                                              "u": Style(
-                                                  textOverflow: TextOverflow.clip
-                                              ),
-                                              "strong": Style(
-                                                  letterSpacing: 2,
-                                                  fontSize: FontSize(22),
-                                                  textOverflow: TextOverflow.clip
-                                              ),
-                                              "p": Style(
-                                                  letterSpacing: 2,
-                                                  fontSize: FontSize(22),
-                                                  textOverflow: TextOverflow.clip
-
-                                              ),
-                                              "td":Style(
-                                                  border: Border.fromBorderSide(BorderSide(color: Color(0xFFFFFFFF))),
-                                                  padding: HtmlPaddings(
-                                                    left: HtmlPadding(5),
-                                                    right: HtmlPadding(5),
-                                                    top: HtmlPadding(5),
-                                                    bottom: HtmlPadding(5),
-                                                  )
-                                              ),
-                                            },
-                                            data: snapshot.data![0][index].trim(),
-                                            extensions: [
-                                              TableHtmlExtension(),
-                                              TagWrapExtension(
-                                                  tagsToWrap: {"table"},
-                                                  builder: (child) {
-                                                    return SingleChildScrollView(
-                                                      child: child,
-                                                      scrollDirection: Axis.horizontal,
-                                                    );
-                                                  }
-                                              )
-                                            ],
-                                          )
-                                      )
-                                  ),
-                                );
+                              return SelectionArea(
+                                  // child: Html(
+                                  //   shrinkWrap: true,
+                                  //   onLinkTap: (String? link, str, element ) {
+                                  //     _launchURL(context, link);
+                                  //   },
+                                  //   style:{
+                                  //     "span": Style(
+                                  //         letterSpacing: 2,
+                                  //         fontSize: FontSize(22),
+                                  //         textOverflow: TextOverflow.clip
+                                  //     ),
+                                  //     "u": Style(
+                                  //         textOverflow: TextOverflow.clip
+                                  //     ),
+                                  //     "strong": Style(
+                                  //         letterSpacing: 2,
+                                  //         fontSize: FontSize(22),
+                                  //         textOverflow: TextOverflow.clip
+                                  //     ),
+                                  //     "p": Style(
+                                  //         letterSpacing: 2,
+                                  //         fontSize: FontSize(22),
+                                  //         textOverflow: TextOverflow.clip
+                                  //
+                                  //     ),
+                                  //     "td":Style(
+                                  //         border: Border.fromBorderSide(BorderSide(color: Color(0xFFFFFFFF))),
+                                  //         padding: HtmlPaddings(
+                                  //           left: HtmlPadding(5),
+                                  //           right: HtmlPadding(5),
+                                  //           top: HtmlPadding(5),
+                                  //           bottom: HtmlPadding(5),
+                                  //         ),
+                                  //       width: Width.auto()
+                                  //     ),
+                                  //   },
+                                  //   data: snapshot.data![0][0].trim(),
+                                  //   extensions: [
+                                  //     TableHtmlExtension(),
+                                  //     TagWrapExtension(
+                                  //         tagsToWrap: {"table"},
+                                  //         builder: (child) {
+                                  //           return SingleChildScrollView(
+                                  //             child: child,
+                                  //             scrollDirection: Axis.horizontal,
+                                  //           );
+                                  //         }
+                                  //     )
+                                  //   ],
+                                  // )
+                                child: HtmlWidget(
+                                    snapshot.data![0][0].trim(),
+                                  customStylesBuilder: (element) {
+                                      // if (element.classes.contains("modal_content")){
+                                      //   return {'display':'none'};
+                                      // }
+                                      // if (element.classes.contains("modal_list")){
+                                      //   return {'display':'none'};
+                                      // }
+                                      // var x = element.getElementsByTagName("noscript");
+                                      // for (var y = 0;y < x.length;y++){
+                                      //   return {'display':'none'};
+                                      // }
+                                  },
+                                  onTapImage: (image){
+                                      _launchURL(context, image.sources);
+                                  },
+                                  onTapUrl: (url) {
+                                      _launchURL(context, url);
+                                      return true;
+                                  },
+                                ),
+                              );
                             } else if (snapshot.hasError) {
                               actualContent = ["null"];
                               link = "null";
