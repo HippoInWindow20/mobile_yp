@@ -192,13 +192,13 @@ class __SettingsState extends State<Settings>{
                 leading: Icon(Icons.info_outlined),
                 title: Text('關於應用程式',style: SettingsTitleTextStyle,),
                 description: Text(
-                  "版本 1.2.1",
+                  "版本 1.3",
                   style: SettingsSubtitleTextStyle,
                 ),
                 onPressed: (context) {
                   showAboutDialog(
                       context: context,
-                    applicationVersion: "1.2.1",
+                    applicationVersion: "1.3",
                     applicationLegalese: "The school's IT team has changed the majority of the layout, making it a fucking pain the ass to code."
                   );
                 },

@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -42,11 +43,32 @@ class savedCC extends StatefulWidget {
 List<List<SavedItem>> formatSaved () {
   List<SavedItem> formattedSaved = [];
   List<SavedItem> formattedCC = [];
-  for (var i = 0;i < savedContent.length;i++){
-    formattedSaved.add(SavedItem(title: savedContent[i][0], agency: savedContent[i][1], date: savedContent[i][2], link: savedContent[i][4], count: i, content: savedContent[i][3]));
+  var savedJSON = jsonDecode(savedContent) as Map<String, dynamic>;
+  print(savedJSON.toString());
+  var savedCCJSON = jsonDecode(savedCCContent) as Map<String, dynamic>;
+  for (var i = 0;i < savedJSON.length;i++){
+    formattedSaved.add(
+        SavedItem(
+            title: savedJSON['items'][i]['title'],
+            agency: savedJSON['items'][i]['agency'],
+            date: savedJSON['items'][i]['date'],
+            link: savedJSON['items'][i]['link'],
+            count: i,
+            content: savedJSON['items'][i]['actualContent']
+        )
+    );
   }
-  for (var j = 0;j < savedCCContent.length;j++){
-    formattedCC.add(SavedItem(title: savedCCContent[j][0], agency: savedCCContent[j][1], date: savedCCContent[j][2], link: savedCCContent[j][4], count: j, content: [savedCCContent[j][3]]));
+  for (var j = 0;j < savedCCJSON.length;j++){
+    formattedSaved.add(
+        SavedItem(
+            title: savedCCJSON['items'][j]['title'],
+            agency: savedCCJSON['items'][j]['agency'],
+            date: savedCCJSON['items'][j]['date'],
+            link: savedCCJSON['items'][j]['link'],
+            count: j,
+            content: savedCCJSON['items'][j]['actualContent']
+        )
+    );
   }
   print([formattedSaved,formattedCC]);
   return [formattedSaved,formattedCC];

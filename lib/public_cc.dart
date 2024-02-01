@@ -366,7 +366,18 @@ class ListCard extends StatelessWidget {
                   // },
                   onTap: () {
                     content = getContentOfCC(url);
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewC(title: title,agency: agency,date: date,count: count,url: url,);}));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return ViewC(
+                            title: title,
+                            agency: agency,
+                            date: date,
+                            count: count,
+                            url: url,
+                            tags: tags,
+                          );
+                        })
+                    );
 
                   },
                   child: Column(

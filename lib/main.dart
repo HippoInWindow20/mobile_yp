@@ -42,8 +42,32 @@ String? eventValidationCal = "";
 String? viewstateGeneratorCal = "";
 String? viewStateCal = "";
 String OnlineCCStep = "validation";
-List<List> savedContent = [];
-List<List> savedCCContent = [];
+String savedContent = r'''{"items":[]}''';
+List<String> savedContentManual = [];
+String savedCCContent = r'''{"items":[]}''';
+List<String> savedCCContentManual = [];
+
+// class CCTemplate {
+//   final String title;
+//   final String agency;
+//   final String date;
+//   final String actualContent;
+//
+//   CCTemplate(this.title, this.agency, this.date, this.actualContent);
+//
+//   CCTemplate.fromJson(Map<String, dynamic> json, int number)
+//       : title = json[number]['title'] as String,
+//         agency = json[number]['agency'] as String,
+//         date = json[number]['date'] as String,
+//         actualContent = json['actualContent'] as String;
+//
+//   Map<String, dynamic> toJson() => {
+//     'title': title,
+//     'agency': agency,
+//     'date':date,
+//     'actualContent':actualContent
+//   };
+// }
 
 List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
 
@@ -64,8 +88,8 @@ Future<void> main()  async {
   final Object? savedClass = prefs.get("savedClass");
   final bool? savedAdminSwitch = prefs.getBool("showAdmin");
   final int? savedGrade = prefs.getInt("savedGrade");
-  // final List<String>? prefsSavedContent = prefs.getStringList("savedContent");
-  // final List<String>? prefsSavedCCContent = prefs.getStringList("savedCCContent");
+  final Object? prefsSavedContent = prefs.get("savedContent");
+  final Object? prefsSavedCCContent = prefs.get("savedCCContent");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -115,12 +139,12 @@ Future<void> main()  async {
   if (savedGrade != null){
     selectedGrade = savedGrade;
   }
-  // if (prefsSavedContent != null){
-  //   savedContent = prefsSavedContent;
-  // }
-  // if (prefsSavedCCContent != null){
-  //   savedCCContent = prefsSavedCCContent;
-  // }
+  if (prefsSavedContent != null){
+    savedContent = prefsSavedContent.toString();
+  }
+  if (prefsSavedCCContent != null){
+    savedCCContent = prefsSavedCCContent.toString();
+  }
   runApp(MobileYP());
 
 }
@@ -333,21 +357,21 @@ class _currentPage extends State<MainApp> {
             icon: Icon(Icons.info_outlined),
             label: Text('公告欄'),
           ),
-          NavigationDrawerDestination(
-            selectedIcon: Icon(Icons.star),
-            icon: Icon(Icons.star_border_outlined),
-            label: Text('收藏'),
-          ),
+          // NavigationDrawerDestination(
+          //   selectedIcon: Icon(Icons.star),
+          //   icon: Icon(Icons.star_border_outlined),
+          //   label: Text('收藏'),
+          // ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.announcement),
             icon: Icon(Icons.announcement_outlined),
             label: Text('網路聯絡簿'),
           ),
-          NavigationDrawerDestination(
-            selectedIcon: Icon(Icons.calendar_month),
-            icon: Icon(Icons.calendar_month_outlined),
-            label: Text('行事曆'),
-          ),
+          // NavigationDrawerDestination(
+          //   selectedIcon: Icon(Icons.calendar_month),
+          //   icon: Icon(Icons.calendar_month_outlined),
+          //   label: Text('行事曆'),
+          // ),
           if (adminSwitch == true)
             NavigationDrawerDestination(
               selectedIcon: Icon(Icons.upload),
@@ -372,21 +396,21 @@ class _currentPage extends State<MainApp> {
           alignment: Alignment.center,
           child: publicCC(setStateCallBack: setStateFromMain,),
         ),
-        Container(
-          color: Theme.of(context).colorScheme.onPrimary,
-          alignment: Alignment.center,
-          child: savedCC(setStateCallBack: setStateFromMain,),
-        ),
+        // Container(
+        //   color: Theme.of(context).colorScheme.onPrimary,
+        //   alignment: Alignment.center,
+        //   child: savedCC(setStateCallBack: setStateFromMain,),
+        // ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
           child: OnlineCC(setStateCallBack: setStateFromMain,displayChkCode: displayChkCode,),
         ),
-        Container(
-          color: Theme.of(context).colorScheme.onPrimary,
-          alignment: Alignment.center,
-          child: Schedule(setStateCallBack: setStateFromMain,),
-        ),
+        // Container(
+        //   color: Theme.of(context).colorScheme.onPrimary,
+        //   alignment: Alignment.center,
+        //   child: Schedule(setStateCallBack: setStateFromMain,),
+        // ),
         if (adminSwitch == true)
           Container(
             color: Theme.of(context).colorScheme.onPrimary,
