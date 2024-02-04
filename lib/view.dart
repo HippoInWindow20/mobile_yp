@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mobile_yp/external_links.dart';
 import 'package:mobile_yp/main.dart';
 import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
@@ -38,11 +39,21 @@ Future<List> getContentOfCC (String link) async {
   }
 
   var linkExists = document.getElementsByClassName("modal_download");
-  String? linkAttach = "";
+  List? linkAttach = [];
   if (linkExists.length != 0){
-    linkAttach = linkExists[0].children[0].attributes['href'].toString();
+    for (var k = 0;k < linkExists.length; k++){
+      linkAttach.add(linkExists[k].children[0].attributes['href'].toString());
+    }
   }
-  return [[content],linkAttach];
+
+  var extExists = document.getElementsByClassName("url_link blue");
+  List? ext = [];
+  if (extExists.length != 0){
+    for (var m = 0;m < extExists.length; m++){
+      ext.add(extExists[m].attributes['href'].toString());
+    }
+  }
+  return [[content],linkAttach, ext];
 
 }
 
@@ -99,7 +110,7 @@ class stateView extends State<ViewC> {
   final List tags;
 
   var actualContent = ["null"];
-  var link = "null";
+  List links = ["null"];
 
 
   void _launchURL(BuildContext context,link) async {
@@ -241,14 +252,17 @@ class stateView extends State<ViewC> {
           ),
           IconButton(
               onPressed: (){
-                if (actualContent.toString().contains("null") == false && link.contains("null") == false){
+                if (actualContent.toString().contains("null") == false && links[0].contains("null") == false){
                   var newContent = "主旨：" + title + "\n\n";
                   for (var x = 0;x < actualContent.length;x++){
                     newContent += actualContent[x] + "\n";
                   }
-                  newContent += "\n\n連結： " + link;
+                  newContent += "\n\n連結： \n";
+                  for (var x = 0; x < links.length; x++){
+                    newContent += links[x].toString() + "\n";
+                  }
                   Share.share(newContent,subject: title);
-                }else if (actualContent.toString().contains("null") == false && link.contains("null") == true){
+                }else if (actualContent.toString().contains("null") == false && links[0].contains("null") == true){
                   var newContent = "主旨：" + title + "\n\n";
                   for (var x = 0;x < actualContent.length;x++){
                     newContent += actualContent[x] + "\n";
@@ -395,7 +409,7 @@ class stateView extends State<ViewC> {
                               );
                             } else if (snapshot.hasError) {
                               actualContent = ["null"];
-                              link = "null";
+                              links = ["null"];
                               return ErrorCard(errorCode: snapshot.error.toString());
                             }
 
@@ -407,100 +421,6 @@ class stateView extends State<ViewC> {
                         )
                     )
                 ),
-                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-
-
-                // FutureBuilder<List>(
-                //   future: content,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.hasData) {
-                //       if (snapshot.data![1].length != 0){
-                //         link = snapshot.data![1];
-                //         return Padding(
-                //             padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
-                //             child: Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: <Widget>[
-                //                 Text("連結",
-                //                   style: TextStyle(
-                //                       fontSize: 22,
-                //                       color: Theme.of(context).colorScheme.primary,
-                //                       fontWeight: FontWeight.bold
-                //                   ),
-                //                 ),
-                //                 Padding(padding: EdgeInsets.only(top: 15),
-                //                   child: Tooltip(
-                //                     message: snapshot.data![1],
-                //                     child: ElevatedButton(
-                //                         clipBehavior: Clip.hardEdge,
-                //                         onPressed: () {
-                //                           _launchURL(context, snapshot.data![1]);
-                //                         },
-                //                         child: Container(
-                //                           padding: EdgeInsets.only(right: 10),
-                //                           child: Row(
-                //                             children: [
-                //                               Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                //                                 child: Icon(Icons.language_outlined,size: 30),
-                //                               ),
-                //                               Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                //                                   child: Text("訪問連結",
-                //                                     overflow: TextOverflow.ellipsis,
-                //                                     style: TextStyle(
-                //                                         fontSize: 25,
-                //                                         fontWeight: FontWeight.normal,
-                //                                     ),
-                //                                   )
-                //                               )
-                //                             ],
-                //                           ),
-                //                         )
-                //                     ),
-                //                   ),
-                //                 ),
-                //                 TextButton(
-                //                     onPressed: () async {
-                //                       await Clipboard.setData(ClipboardData(text: link));
-                //                       // copied successfully
-                //                       ScaffoldMessenger.of(context).showSnackBar(
-                //                           SnackBar(
-                //                               content: Text("已複製連結至剪貼簿")
-                //                           )
-                //                       );
-                //                     },
-                //                     child: Container(
-                //                       padding: EdgeInsets.only(right: 10),
-                //                       child: Row(
-                //                         children: [
-                //                           Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                //                             child: Icon(Icons.copy_outlined,size: 30),
-                //                           ),
-                //                           Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                //                               child: Text("複製連結",
-                //                                 overflow: TextOverflow.ellipsis,
-                //                                 style: TextStyle(
-                //                                   fontSize: 25,
-                //                                   fontWeight: FontWeight.normal,
-                //                                 ),
-                //                               )
-                //                           )
-                //                         ],
-                //                       ),
-                //                     )
-                //                 )
-                //               ],
-                //             )
-                //         );
-                //       }else{
-                //         return Padding(padding: EdgeInsets.only());
-                //       }
-                //     } else if (snapshot.hasError) {
-                //       return Text("");
-                //     }
-                //     // By default, show a loading spinner.
-                //     return Text("");
-                //   },
-                // ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 50)),
               ],
             ),
@@ -512,32 +432,168 @@ class stateView extends State<ViewC> {
         future: content,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data![1].length != 0){
-              link = snapshot.data![1];
+            //snapshot.data![2] == ext
+            if (snapshot.data![1].length != 0 &&  snapshot.data![2].length != 0){
+              links = snapshot.data![1];
+              var exts = snapshot.data![2];
+
+              return BottomAppBar(
+                child: Row(
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: IconButton(
+                            onPressed: () {
+                              // _launchURL(context, links);
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) {
+                                        return gotoSettings(
+                                            LinksOpen()
+                                        );
+                                      }
+                                  )
+                              );
+                            },
+                            icon: Row(
+                              children: [
+                                Icon(Icons.file_open_outlined),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text("附件",
+                                    style: TextStyle(
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        fontSize: 22
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                        ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          // _launchURL(context, links);
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return gotoSettings(
+                                        LinksOpen()
+                                    );
+                                  }
+                              )
+                          );
+                        },
+                        icon: Row(
+                          children: [
+                            Icon(Icons.public_outlined),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text("連結",
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    fontSize: 22
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                    ),
+                  //   IconButton(
+                  //     onPressed: () async {
+                  //       // await Clipboard.setData(ClipboardData(text: links));
+                  //       // ScaffoldMessenger.of(context).showSnackBar(
+                  //       //     SnackBar(
+                  //       //         content: Text("已複製連結至剪貼簿")
+                  //       //     )
+                  //       // );
+                  //     },
+                  //     icon: Icon(Icons.copy_outlined)
+                  // )
+                  ],
+                ),
+              );
+            }
+            else if (snapshot.data![1].length == 0 &&  snapshot.data![2].length != 0){
+              var exts = snapshot.data![2];
+
+              return BottomAppBar(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          // _launchURL(context, links);
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return gotoSettings(
+                                        LinksOpen()
+                                    );
+                                  }
+                              )
+                          );
+                        },
+                        icon: Row(
+                          children: [
+                            Icon(Icons.file_open_outlined),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text("附件",
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    fontSize: 22
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                    ),
+                  ],
+                ),
+              );
+            }
+            else if (snapshot.data![1].length != 0 &&  snapshot.data![2].length == 0){
+              links = snapshot.data![1];
+
               return BottomAppBar(
                 child: Row(
                   children: [
                     IconButton(
                         onPressed: () {
-                          _launchURL(context, snapshot.data![1]);
+                          // _launchURL(context, links);
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) {
+                                    return gotoSettings(
+                                        LinksOpen()
+                                    );
+                                  }
+                              )
+                          );
                         },
-                        icon: Icon(Icons.public_outlined)
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        await Clipboard.setData(ClipboardData(text: link));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text("已複製連結至剪貼簿")
+                        icon: Row(
+                          children: [
+                            Icon(Icons.public_outlined),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text("連結",
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    fontSize: 22
+                                ),
+                              ),
                             )
-                        );
-                      },
-                      icon: Icon(Icons.copy_outlined)
-                  )
+                          ],
+                        )
+                    ),
                   ],
                 ),
               );
-            }else{
+            }
+            else{
               return Padding(padding: EdgeInsets.only());
             }
           } else if (snapshot.hasError) {

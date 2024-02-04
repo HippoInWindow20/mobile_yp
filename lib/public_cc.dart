@@ -438,16 +438,46 @@ class ListCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                            if(tags.contains("置頂") == true)
-                              Padding(
-                                padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child:Icon(Icons.push_pin,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                                ),
-                              ),
+                            // if(tags.contains("置頂") == true)
+                            //   Padding(
+                            //     padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                            //     child: Align(
+                            //       alignment: Alignment.topLeft,
+                            //       child:Icon(Icons.push_pin,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                            //     ),
+                            //   ),
+
                         ],
                       ),
+                      if (tags.length != 0)
+                        Padding(
+                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 5),
+                                  child: Icon(
+                                    Icons.sell_outlined,
+                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                  ),),
+                                Row(
+                                  children: List.generate(
+                                      tags.length, (index) =>
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                        child: Text(
+                                          "#"+tags[index],
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                ),
+                              ],
+                            )
+                        )
                     ],
                   ),
                 )

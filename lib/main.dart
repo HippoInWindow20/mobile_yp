@@ -69,7 +69,8 @@ List<String> savedCCContentManual = [];
 //   };
 // }
 
-List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
+// List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
+List<String> TitlesList = adminSwitch ? ["公告欄","網路聯絡簿","聯絡簿上傳","設定"] : ["公告欄","網路聯絡簿","設定"];
 
 
 Future<void> main()  async {
