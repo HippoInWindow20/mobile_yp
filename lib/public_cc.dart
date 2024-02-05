@@ -354,16 +354,6 @@ class ListCard extends StatelessWidget {
                 color: Theme.of(context).colorScheme.surfaceVariant,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 child: InkWell(
-                  // onLongPress: () {
-                  //   showDialog(
-                  //       context: context,
-                  //       builder: (context){
-                  //         return Dialog(
-                  //           child: Text(tags.toString() + tags.contains("置頂").toString()),
-                  //         );
-                  //       }
-                  //       );
-                  // },
                   onTap: () {
                     content = getContentOfCC(url);
                     Navigator.of(context).push(
@@ -438,14 +428,6 @@ class ListCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                            // if(tags.contains("置頂") == true)
-                            //   Padding(
-                            //     padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                            //     child: Align(
-                            //       alignment: Alignment.topLeft,
-                            //       child:Icon(Icons.push_pin,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                            //     ),
-                            //   ),
 
                         ],
                       ),

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:mobile_yp/text_size.dart';
 import 'package:mobile_yp/themes/blue.dart';
 import 'package:mobile_yp/themes/green.dart';
 import 'package:mobile_yp/main.dart';
@@ -135,10 +136,16 @@ class __SettingsState extends State<Settings>{
                 title: Text('字體大小',style: SettingsTitleTextStyle,),
                 value: Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Text("系統預設",style: SettingsSubtitleTextStyle,),
+                  child: Text(TextScaling.round().toString(),style: SettingsSubtitleTextStyle,),
                 ),
                 onPressed: (context) {
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) {
+                            return TextSize(setStateFunc: setStateCallBack,);
+                          }
+                      )
+                  );
                 },
               ),
             ],

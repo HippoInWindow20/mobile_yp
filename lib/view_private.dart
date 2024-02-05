@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import "package:mobile_yp/public_cc.dart";
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:mobile_yp/saved.dart';
+import 'package:mobile_yp/text_size.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -248,7 +250,7 @@ class stateViewPrivate extends State {
 
                 Padding(
                     padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
-                    child: Padding(padding: EdgeInsets.only(top: 15,left:10,right: 10),
+                    child: Padding(padding: EdgeInsets.only(left:10,right: 10),
                         child: FutureBuilder<List>(
                           future: contentPrivate,
                           builder: (context, snapshot) {
@@ -260,7 +262,7 @@ class stateViewPrivate extends State {
                                   SelectableText(
                                     snapshot.data![0],
                                     style: TextStyle(
-                                        fontSize: 22,
+                                        fontSize: TextScaling,
                                         color: Theme.of(context).colorScheme.onSecondaryContainer,
                                         letterSpacing: 2,
                                         height: 1.7
@@ -284,75 +286,77 @@ class stateViewPrivate extends State {
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
 
-
-                FutureBuilder<List>(
-                  future: contentPrivate,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data![1].length > 1){
-                        link = snapshot.data![1];
-                        return Padding(
-                            padding: EdgeInsets.only(left:20,bottom: 15,right: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("連結",
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      color: Theme.of(context).colorScheme.primary,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsets.only(top: 15),
-                                  child: Tooltip(
-                                    message: snapshot.data![1],
-                                    child: ElevatedButton(
-                                        clipBehavior: Clip.hardEdge,
-                                        onPressed: () {
-                                          _launchURL(context, snapshot.data![1]);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(right: 10),
-                                          child: Row(
-                                            children: [
-                                              Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                                child: Icon(Icons.language_outlined,size: 30),
-                                              ),
-                                              Padding(padding: EdgeInsets.only(left: 10,top: 10,bottom: 10),
-                                                  child: Text("訪問連結",
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 25,
-                                                        fontWeight: FontWeight.normal,
-                                                    ),
-                                                  )
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                        );
-                      }else{
-                        return Padding(padding: EdgeInsets.only());
-                      }
-                    } else if (snapshot.hasError) {
-                      return Text("");
-                    }
-                    // By default, show a loading spinner.
-                    return Text("");
-                  },
-                ),
-                Padding(padding: EdgeInsets.symmetric(vertical: 50)),
               ],
             ),
           ),
         ),
 
       ),
+      bottomNavigationBar:
+        FutureBuilder<List>(
+          future: contentPrivate,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data![1].length > 1){
+                link = snapshot.data![1];
+                return BottomAppBar(
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: TextButton(
+                            onPressed: () {
+                              _launchURL(context, snapshot.data![1]);
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.open_in_new_outlined),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    "開啟連結",
+                                    style: TextStyle(
+                                        fontSize: 22),
+                                  ),
+                                )
+                              ],
+                            )),
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            await Clipboard.setData(ClipboardData(text: snapshot.data![1]));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                content: Text(
+                                    "已複製連結至剪貼簿")));
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.copy_outlined),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text(
+                                  "複製連結",
+                                  style: TextStyle(
+                                      fontSize: 22),
+                                ),
+                              )
+                            ],
+                          )),
+                    ],
+                  ),
+                );
+              }else{
+                return Padding(padding: EdgeInsets.only());
+              }
+            } else if (snapshot.hasError) {
+              return Text("");
+            }
+            // By default, show a loading spinner.
+            return Text("");
+          },
+        ),
     );
   }
 }

@@ -19,7 +19,7 @@ String? viewStateUpload = "";
 Future<Widget> uploadResult = Future.value(Text(""));
 
 
-Future<Widget> retrieveAdminList (Function setState) async {
+Future<Widget> retrieveAdminList (Function setState, BuildContext context) async {
   var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tua.aspx'));
   viewstateGeneratorUpload = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
   eventValidationUpload = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
@@ -45,7 +45,31 @@ Future<Widget> retrieveAdminList (Function setState) async {
   if (response.body.contains("Object moved")) {
     return returnUploadCC(setState);
   }else {
-    return Text(response.body);
+    return Padding(
+        padding: EdgeInsets.all(10),
+      child: Card(
+        child: Column(
+          children: [
+            Padding(padding: EdgeInsets.only(top: 20)),
+            Icon(Icons.error_outline_outlined,size: 50,),
+            Text("資料錯誤",style: TextStyle(fontSize: 30),),
+            Text("請檢查設定",style: TextStyle(fontSize: 30),),
+            // TextButton(
+            //     style: ButtonStyle(
+            //         elevation: MaterialStatePropertyAll(2)
+            //     ),
+            //     onPressed: () {
+            //       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            //         return editAdmin();
+            //       }));
+            //     },
+            //     child: Text("檢查設定",style: TextStyle(fontSize: 30),)
+            // ),
+            Padding(padding: EdgeInsets.only(top: 20)),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -184,7 +208,7 @@ class _UploadCCState extends State<UploadCC> {
                   setState(() {
 
                   });
-                  uploadResult = retrieveAdminList(setStateCallBack);
+                  uploadResult = retrieveAdminList(setStateCallBack,context);
                 },
                 icon: Icon(Icons.refresh_outlined)
             ),
@@ -325,7 +349,7 @@ class ListCardUpload extends StatelessWidget {
                                                             }
                                                         );
                                                       }
-                                                      uploadResult = retrieveAdminList(setState);
+                                                      uploadResult = retrieveAdminList(setState,context);
                                                       MobileYP.of(context).setStateFunc();
                                                     },
                                                     child: Padding(

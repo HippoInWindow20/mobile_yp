@@ -73,7 +73,7 @@ class stateEditPage extends State {
                   setState(() {
 
                   });
-                  uploadResult = retrieveAdminList(setStateFunc);
+                  uploadResult = retrieveAdminList(setStateFunc,context);
                   Navigator.pop(context);
                 }else{
                   Navigator.pop(context);

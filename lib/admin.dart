@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,89 +16,112 @@ class adminPage extends StatefulWidget {
   adminPage({
     required this.setStateCallBack,
   });
+
   final Function setStateCallBack;
+
   State<StatefulWidget> createState() {
     return __adminState(setStateCallBack: setStateCallBack);
   }
 }
 
-class __adminState extends State<adminPage>{
+class __adminState extends State<adminPage> {
   @override
   __adminState({
     required this.setStateCallBack,
   });
+
   final Function setStateCallBack;
+
   Widget build(BuildContext context) {
     TextStyle SettingsTitleTextStyle = TextStyle(
-        fontSize: 25,
-        color: Theme.of(context).colorScheme.onBackground
-    );
+        fontSize: 25, color: Theme.of(context).colorScheme.onBackground);
+    TextStyle SettingsTitleTextStyleDisabled =
+        TextStyle(fontSize: 25, color: Theme.of(context).colorScheme.outline);
     TextStyle SettingsSubtitleTextStyle = TextStyle(
       fontSize: 15,
       color: Theme.of(context).colorScheme.onSecondaryContainer,
-
     );
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onBackground),
           onPressed: () => Navigator.of(context).pop(),
         ),
         toolbarHeight: 60,
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
-      body:SettingsList(
-       lightTheme:SettingsThemeData(
+      body: SettingsList(
+        lightTheme: SettingsThemeData(
             settingsSectionBackground: Theme.of(context).colorScheme.background,
-            settingsListBackground: Theme.of(context).colorScheme.background
-        ) ,
+            settingsListBackground: Theme.of(context).colorScheme.background),
         sections: [
           SettingsSection(
-            title: Text("資訊股長設定",
+            title: Text(
+              "資訊股長設定",
               style: TextStyle(
                   fontSize: 50,
-                  color: Theme.of(context).colorScheme.onBackground
-              ),
-            ), tiles: [],
+                  color: Theme.of(context).colorScheme.onBackground),
+            ),
+            tiles: [],
           ),
           SettingsSection(
             tiles: <SettingsTile>[
               SettingsTile.switchTile(
-                title: Text('資訊股長上傳',style: SettingsTitleTextStyle,),
-                description: Text('顯示上傳選項',style: SettingsSubtitleTextStyle),
+                title: Text(
+                  '資訊股長上傳',
+                  style: SettingsTitleTextStyle,
+                ),
+                description: Text('顯示上傳選項', style: SettingsSubtitleTextStyle),
                 initialValue: adminSwitch,
                 onToggle: (bool value) async {
                   adminSwitch = value;
                   currentPage = 0;
-                  setState(() {
-
-                  });
+                  setState(() {});
                   setStateCallBack();
                   var prefs = await SharedPreferences.getInstance();
                   await prefs.setBool("showAdmin", adminSwitch);
-                  TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
+                  // TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
+                  TitlesList = adminSwitch
+                      ? ["公告欄", "網路聯絡簿", "聯絡簿上傳", "設定"]
+                      : ["公告欄", "網路聯絡簿", "設定"];
                 },
               ),
               if (adminSwitch == true)
                 SettingsTile.navigation(
-                  title: Text('設定帳號密碼',style: SettingsTitleTextStyle,),
+                  enabled: true,
+                  title: Text(
+                    '設定帳號密碼',
+                    style: SettingsTitleTextStyle,
+                  ),
                   onPressed: (context) {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
                       return editAdmin();
-                    }
-                    )
-                    );
+                    }));
+                  },
+                ),
+              if (adminSwitch == false)
+                SettingsTile.navigation(
+                  enabled: false,
+                  title: Text(
+                    '設定帳號密碼',
+                    style: SettingsTitleTextStyleDisabled,
+                  ),
+                  onPressed: (context) {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return editAdmin();
+                    }));
                   },
                 )
-
             ],
           ),
         ],
       ),
     );
   }
-
 }
 
 class editAdmin extends StatefulWidget {
@@ -110,7 +132,6 @@ class editAdmin extends StatefulWidget {
 }
 
 class editAdminState extends State<editAdmin> {
-
   final AccountController = TextEditingController(text: defaultAccount);
   final AdminPwdController = TextEditingController(text: defaultAdminPwd);
   final ClassController = TextEditingController(text: defaultClass);
@@ -127,56 +148,50 @@ class editAdminState extends State<editAdmin> {
         child: Wrap(
           children: [
             Padding(
-                padding: EdgeInsets.only(left: 20),
-              child: Text("修改帳號密碼",
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                "修改帳號密碼",
                 style: TextStyle(
                     fontSize: 50,
-                    color: Theme.of(context).colorScheme.onBackground
-                ),
+                    color: Theme.of(context).colorScheme.onBackground),
               ),
             ),
             SizedBox(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
                 child: TextFormField(
                   controller: AccountController,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground
-                  ),
+                      color: Theme.of(context).colorScheme.onBackground),
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person_outlined),
-                    hintText: "上傳帳號",
-                    hintStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                   ),
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                    ),
-                    focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
-                    labelText: '帳號',
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onBackground
-                        )
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onBackground
-                        )
-                    )
-                  ),
+                      prefixIcon: Icon(Icons.person_outlined),
+                      hintText: "上傳帳號",
+                      hintStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground),
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground),
+                      focusColor:
+                          Theme.of(context).colorScheme.onTertiaryContainer,
+                      labelText: '帳號',
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).colorScheme.onBackground)),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).colorScheme.onBackground))),
                 ),
               ),
             ),
             SizedBox(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
                 child: TextFormField(
                   controller: AdminPwdController,
                   obscureText: obscureAdmin,
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                  ),
+                      color: Theme.of(context).colorScheme.onBackground),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
@@ -187,119 +202,113 @@ class editAdminState extends State<editAdmin> {
                             if (obscureAdmin == true) {
                               obscureAdmin = false;
                               eye2 = Icons.visibility_off_outlined;
-                            }else {
+                            } else {
                               obscureAdmin = true;
                               eye2 = Icons.visibility_outlined;
                             }
                           });
-                        },),
+                        },
+                      ),
                       hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
+                          color: Theme.of(context).colorScheme.onBackground),
                       labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                          color: Theme.of(context).colorScheme.onBackground),
+                      focusColor:
+                          Theme.of(context).colorScheme.onTertiaryContainer,
                       labelText: '密碼',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      ),
+                              color:
+                                  Theme.of(context).colorScheme.onBackground)),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      )
-                  ),
+                              color:
+                                  Theme.of(context).colorScheme.onBackground))),
                 ),
               ),
             ),
             SizedBox(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
                 child: TextFormField(
                   keyboardType: TextInputType.number,
                   controller: ClassController,
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground
-                  ),
+                      color: Theme.of(context).colorScheme.onBackground),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.sensor_door_outlined),
                       hintStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
+                          color: Theme.of(context).colorScheme.onBackground),
                       labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onBackground
-                      ),
-                      focusColor: Theme.of(context).colorScheme.onTertiaryContainer,
+                          color: Theme.of(context).colorScheme.onBackground),
+                      focusColor:
+                          Theme.of(context).colorScheme.onTertiaryContainer,
                       labelText: '導班',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      ),
+                              color:
+                                  Theme.of(context).colorScheme.onBackground)),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onBackground
-                          )
-                      )
-                  ),
+                              color:
+                                  Theme.of(context).colorScheme.onBackground))),
                 ),
               ),
             ),
             SizedBox(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-
                   style: ButtonStyle(
                     fixedSize: MaterialStatePropertyAll(
-                        Size(
-                            (MediaQuery.of(context).size.width / 2 - 32),50
-                        ),
+                      Size((MediaQuery.of(context).size.width / 2 - 32), 50),
                     ),
-                    backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
                     elevation: MaterialStatePropertyAll(0),
-
                   ),
-                  child: Text("取消",style: TextStyle(fontSize: 20),),
+                  child: Text(
+                    "取消",
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
             ),
             SizedBox(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 16.0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16),
                 child: ElevatedButton(
                   onPressed: () async {
                     defaultAccount = AccountController.text;
                     defaultAdminPwd = AdminPwdController.text;
                     defaultClass = ClassController.text;
                     var prefs = await SharedPreferences.getInstance();
-                    await prefs.setString("savedAccount", AccountController.text);
-                    await prefs.setString("savedAdminPwd", AdminPwdController.text);
+                    await prefs.setString(
+                        "savedAccount", AccountController.text);
+                    await prefs.setString(
+                        "savedAdminPwd", AdminPwdController.text);
                     await prefs.setString("savedClass", ClassController.text);
                     Navigator.of(context).pop();
                   },
-                  child: Text("儲存",style: TextStyle(fontSize: 20),),
+                  child: Text(
+                    "儲存",
+                    style: TextStyle(fontSize: 20),
+                  ),
                   style: ButtonStyle(
                       fixedSize: MaterialStatePropertyAll(
-                        Size(
-                            (MediaQuery.of(context).size.width / 2 - 32),50
-                        ),
+                        Size((MediaQuery.of(context).size.width / 2 - 32), 50),
                       ),
-                      backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                      elevation: MaterialStatePropertyAll(0)
-                  ),
+                      backgroundColor:
+                          MaterialStatePropertyAll(Colors.transparent),
+                      elevation: MaterialStatePropertyAll(0)),
                 ),
               ),
             ),
           ],
         ),
-
       ),
     );
   }

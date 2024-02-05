@@ -9,6 +9,7 @@ import 'package:mobile_yp/saved.dart';
 import 'package:mobile_yp/schedule.dart';
 import "package:mobile_yp/settings.dart";
 import "package:mobile_yp/online_cc.dart";
+import 'package:mobile_yp/text_size.dart';
 import 'package:mobile_yp/themes/blue.dart';
 import 'package:mobile_yp/themes/green.dart';
 import 'package:mobile_yp/themes/orange.dart';
@@ -91,6 +92,7 @@ Future<void> main()  async {
   final int? savedGrade = prefs.getInt("savedGrade");
   final Object? prefsSavedContent = prefs.get("savedContent");
   final Object? prefsSavedCCContent = prefs.get("savedCCContent");
+  final int? savedTextSize = prefs.getInt("savedTextSize");
   if (savedTheme != null){
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
@@ -145,6 +147,9 @@ Future<void> main()  async {
   }
   if (prefsSavedCCContent != null){
     savedCCContent = prefsSavedCCContent.toString();
+  }
+  if (savedTextSize != null){
+    TextScaling = savedTextSize.toDouble();
   }
   runApp(MobileYP());
 
@@ -245,7 +250,7 @@ class _currentPage extends State<MainApp> {
     super.initState();
     result = getCC();
     personalResult = displayChkCode();
-    uploadResult = retrieveAdminList(setStateFunc);
+    uploadResult = retrieveAdminList(setStateFunc,context);
     calResult = getCal();
   }
 
