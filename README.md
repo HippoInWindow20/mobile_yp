@@ -1,6 +1,6 @@
 # Mobile YP. 行動延平
 
-#UPDATE 20240922: I'm at a loss right now.
+# UPDATE 20240922: I'm at a loss right now.
 
 All points for this app's existence have been lost.
 I tried to justify it over time, but the current status quo has failed me significantly.
