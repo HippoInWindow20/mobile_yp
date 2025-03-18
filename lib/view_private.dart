@@ -21,8 +21,8 @@ int isInSavedCC(String title) {
   var isSaved = false;
   int i = 0;
   int result = -1;
-  while (isSaved == false && i < savedCCContentManual.length){
-    if (savedCCContentManual[i].toString().contains(title)){
+  while (isSaved == false && i < savedCCContentManual.length) {
+    if (savedCCContentManual[i].toString().contains(title)) {
       isSaved = true;
     }
     i++;
@@ -30,35 +30,35 @@ int isInSavedCC(String title) {
   return isSaved == true ? i - 1 : result;
 }
 
-Future<List> getContentOfOnlineCC (count) async {
+Future<List> getContentOfOnlineCC(count) async {
   count = (count + 2).toString();
-  if (count.length < 2){
+  if (count.length < 2) {
     count = "0" + count;
   }
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2-1.aspx');
   var response = await http.post(
     url,
     headers: {
-      "Content-Type":"application/x-www-form-urlencoded",
-      "cookie":ASPCookie2!
+      "Content-Type": "application/x-www-form-urlencoded",
+      "cookie": ASPCookie2!
     },
     body: {
       "__EVENTTARGET": "",
-      "__EVENTARGUMENT":"",
-      "__VIEWSTATE":viewState3,
-      "__VIEWSTATEGENERATOR":viewstateGenerator3,
-      "__EVENTVALIDATION":eventValidation3,
-      "GridViewS\$ctl"+count+"\$but_vf1":"詳細內容"
+      "__EVENTARGUMENT": "",
+      "__VIEWSTATE": viewState3,
+      "__VIEWSTATEGENERATOR": viewstateGenerator3,
+      "__EVENTVALIDATION": eventValidation3,
+      "GridViewS\$ctl" + count + "\$but_vf1": "詳細內容"
     },
   );
   var document = parse(response.body);
   var innerContent = document.getElementById("Lab_content")?.innerHtml;
   var LinkCollection = document.getElementsByTagName("a");
   String? link = "";
-  if (LinkCollection.length == 1){
+  if (LinkCollection.length == 1) {
     link = LinkCollection[0].attributes['href'];
   }
-  return [innerContent,link];
+  return [innerContent, link];
 }
 
 class ViewPrivate extends StatefulWidget {
@@ -74,13 +74,18 @@ class ViewPrivate extends StatefulWidget {
   final String date;
   final int count;
   State<StatefulWidget> createState() {
-    return stateViewPrivate(title: title, agency: agency, date: date, count: count);
+    return stateViewPrivate(
+        title: title, agency: agency, date: date, count: count);
   }
 }
 
 class stateViewPrivate extends State {
   stateViewPrivate({
-    Key? key, required this.title,required this.agency,required this.date, required this.count,
+    Key? key,
+    required this.title,
+    required this.agency,
+    required this.date,
+    required this.count,
   });
   final String title;
   final String agency;
@@ -90,18 +95,24 @@ class stateViewPrivate extends State {
   var actualContent = "null";
   var link = "null";
 
-  void _launchURL(BuildContext context,link) async {
+  void _launchURL(BuildContext context, link) async {
     try {
-      await launch(
+      await launchUrl(
         link,
-        customTabsOption: CustomTabsOption(
-          toolbarColor: Theme.of(context).primaryColor,
-          enableDefaultShare: true,
-          enableUrlBarHiding: true,
-          showPageTitle: true,
-          animation: CustomTabsSystemAnimation.slideIn(),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes:
+              CustomTabsColorSchemes(colorScheme: CustomTabsColorScheme.system),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+          animations: CustomTabsAnimations(
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          ),
         ),
-        safariVCOption: SafariViewControllerOption(
+        safariVCOptions: SafariViewControllerOptions(
           preferredBarTintColor: Theme.of(context).primaryColor,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,
@@ -120,12 +131,12 @@ class stateViewPrivate extends State {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back,
+              color: Theme.of(context).colorScheme.onBackground),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actionsIconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.onPrimaryContainer
-        ),
+            color: Theme.of(context).colorScheme.onPrimaryContainer),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         actions: [
           // IconButton(
@@ -161,31 +172,33 @@ class stateViewPrivate extends State {
           //     icon: isInSavedCC(title) != -1 ? Icon(Icons.star) : Icon(Icons.star_border)
           // ),
           IconButton(
-              onPressed: (){
+              onPressed: () {
                 contentPrivate = getContentOfOnlineCC(count);
-                setState(() {
-
-                });
+                setState(() {});
               },
-              icon: Icon(Icons.refresh_outlined)
-          ),
+              icon: Icon(Icons.refresh_outlined)),
           IconButton(
-              onPressed: (){
-                if (actualContent != "null" && link != "null"){
-                  var newContent = "主旨：" + title + "\n\n"+actualContent + "\n\n連結： " + link;
-                  Share.share(newContent,subject: title);
-                }else if (actualContent != "null" && link == "null"){
-                  var newContent = "主旨：" + title + "\n\n"+actualContent;
-                  Share.share(newContent,subject: title);
-                }else {
-                  showDialog(context: context, builder: (context){
-                    return ErrorDesc(errordesc: "沒有可分享的內容");
-                  }
-                  );
+              onPressed: () {
+                if (actualContent != "null" && link != "null") {
+                  var newContent = "主旨：" +
+                      title +
+                      "\n\n" +
+                      actualContent +
+                      "\n\n連結： " +
+                      link;
+                  Share.share(newContent, subject: title);
+                } else if (actualContent != "null" && link == "null") {
+                  var newContent = "主旨：" + title + "\n\n" + actualContent;
+                  Share.share(newContent, subject: title);
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ErrorDesc(errordesc: "沒有可分享的內容");
+                      });
                 }
               },
-              icon: Icon(Icons.share_outlined)
-          ),
+              icon: Icon(Icons.share_outlined)),
         ],
       ),
       body: Hero(
@@ -202,55 +215,69 @@ class stateViewPrivate extends State {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(20),
-                        child: Text(title,
+                        child: Text(
+                          title,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: 30,
-                              color: Theme.of(context).colorScheme.onPrimaryContainer
-                          ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer),
                         ),
                       ),
                       Padding(
-                          padding: EdgeInsets.only(left:20,bottom: 15),
+                          padding: EdgeInsets.only(left: 20, bottom: 15),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.apartment,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
-                              Padding(padding: EdgeInsets.only(left: 15),
-                                child: Text(agency,
+                              Icon(Icons.apartment,
+                                  size: 30,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer),
+                              Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: Text(
+                                  agency,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onPrimaryContainer
-                                  ),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer),
                                 ),
                               )
                             ],
-                          )
-                      ),
+                          )),
                       Padding(
-                          padding: EdgeInsets.only(left:20,bottom: 15),
+                          padding: EdgeInsets.only(left: 20, bottom: 15),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(Icons.calendar_month_outlined,size: 30,color: Theme.of(context).colorScheme.onPrimaryContainer),
-                              Padding(padding: EdgeInsets.only(left: 15),
-                                child: Text(date,
+                              Icon(Icons.calendar_month_outlined,
+                                  size: 30,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer),
+                              Padding(
+                                padding: EdgeInsets.only(left: 15),
+                                child: Text(
+                                  date,
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: Theme.of(context).colorScheme.onPrimaryContainer
-                                  ),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer),
                                 ),
                               )
                             ],
-                          )
-                      ),
+                          )),
                     ],
                   ),
                 ),
-
                 Padding(
-                    padding: EdgeInsets.only(left:10,bottom: 15,right: 10),
-                    child: Padding(padding: EdgeInsets.only(left:10,right: 10),
+                    padding: EdgeInsets.only(left: 10, bottom: 15, right: 10),
+                    child: Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
                         child: FutureBuilder<List>(
                           future: contentPrivate,
                           builder: (context, snapshot) {
@@ -263,100 +290,94 @@ class stateViewPrivate extends State {
                                     snapshot.data![0],
                                     style: TextStyle(
                                         fontSize: TextScaling,
-                                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondaryContainer,
                                         letterSpacing: 2,
-                                        height: 1.7
-                                    ),
+                                        height: 1.7),
                                   )
                                 ],
                               );
                             } else if (snapshot.hasError) {
                               actualContent = "null";
                               link = "null";
-                              return ErrorCard(errorCode: snapshot.error.toString());
+                              return ErrorCard(
+                                  errorCode: snapshot.error.toString());
                             }
 
                             // By default, show a loading spinner.
                             return Center(
-                                child: CircularProgressIndicator()
-                            );
+                                child:
+                                    CircularProgressIndicator(year2023: false));
                           },
-                        )
-                    )
-                ),
+                        ))),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-
               ],
             ),
           ),
         ),
-
       ),
-      bottomNavigationBar:
-        FutureBuilder<List>(
-          future: contentPrivate,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data![1].length > 1){
-                link = snapshot.data![1];
-                return BottomAppBar(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextButton(
-                            onPressed: () {
-                              _launchURL(context, snapshot.data![1]);
-                            },
-                            child: Row(
-                              children: [
-                                Icon(Icons.open_in_new_outlined),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "開啟連結",
-                                    style: TextStyle(
-                                        fontSize: 22),
-                                  ),
-                                )
-                              ],
-                            )),
-                      ),
-                      TextButton(
-                          onPressed: () async {
-                            await Clipboard.setData(ClipboardData(text: snapshot.data![1]));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                content: Text(
-                                    "已複製連結至剪貼簿")));
+      bottomNavigationBar: FutureBuilder<List>(
+        future: contentPrivate,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data![1].length > 1) {
+              link = snapshot.data![1];
+              return BottomAppBar(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: TextButton(
+                          onPressed: () {
+                            _launchURL(context, snapshot.data![1]);
                           },
                           child: Row(
                             children: [
-                              Icon(Icons.copy_outlined),
+                              Icon(Icons.open_in_new_outlined),
                               Padding(
                                 padding: EdgeInsets.only(left: 10),
                                 child: Text(
-                                  "複製連結",
-                                  style: TextStyle(
-                                      fontSize: 22),
+                                  "開啟連結",
+                                  style: TextStyle(fontSize: 22),
                                 ),
                               )
                             ],
                           )),
-                    ],
-                  ),
-                );
-              }else{
-                return Padding(padding: EdgeInsets.only());
-              }
-            } else if (snapshot.hasError) {
-              return Text("");
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          await Clipboard.setData(
+                              ClipboardData(text: snapshot.data![1]));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text("已複製連結至剪貼簿")));
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.copy_outlined),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "複製連結",
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            )
+                          ],
+                        )),
+                  ],
+                ),
+              );
+            } else {
+              return Padding(padding: EdgeInsets.only());
             }
-            // By default, show a loading spinner.
+          } else if (snapshot.hasError) {
             return Text("");
-          },
-        ),
+          }
+          // By default, show a loading spinner.
+          return Text("");
+        },
+      ),
     );
   }
 }
@@ -383,14 +404,15 @@ class ErrorDesc extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.error_outline_outlined,size: 40,),
+                      Icon(
+                        Icons.error_outline_outlined,
+                        size: 40,
+                      ),
                       Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
                           "錯誤",
-                          style: TextStyle(
-                              fontSize: 30
-                          ),
+                          style: TextStyle(fontSize: 30),
                         ),
                       )
                     ],
@@ -405,9 +427,7 @@ class ErrorDesc extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
                           errordesc,
-                          style: TextStyle(
-                              fontSize: 20
-                          ),
+                          style: TextStyle(fontSize: 20),
                         ),
                       )
                     ],
@@ -428,10 +448,10 @@ class ErrorDesc extends StatelessWidget {
                               "確定",
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: Theme.of(context).colorScheme.onErrorContainer
-                              ),
-                            )
-                        ),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onErrorContainer),
+                            )),
                       )
                     ],
                   ),

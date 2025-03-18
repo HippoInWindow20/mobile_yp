@@ -135,16 +135,22 @@ class stateView extends State<ViewC> {
 
   void _launchURL(BuildContext context, link) async {
     try {
-      await launch(
+      await launchUrl(
         link,
-        customTabsOption: CustomTabsOption(
-          toolbarColor: Theme.of(context).primaryColor,
-          enableDefaultShare: true,
-          enableUrlBarHiding: true,
-          showPageTitle: true,
-          animation: CustomTabsSystemAnimation.slideIn(),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes:
+              CustomTabsColorSchemes(colorScheme: CustomTabsColorScheme.system),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+          animations: CustomTabsAnimations(
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          ),
         ),
-        safariVCOption: SafariViewControllerOption(
+        safariVCOptions: SafariViewControllerOptions(
           preferredBarTintColor: Theme.of(context).primaryColor,
           preferredControlTintColor: Colors.white,
           barCollapsingEnabled: true,
@@ -419,7 +425,6 @@ class stateView extends State<ViewC> {
                                 child: HtmlWidget(
                                   snapshot.data![0][0].trim(),
                                   customStylesBuilder: (element) {
-
                                     if (element.classes
                                         .contains("modal_content")) {
                                       return {'display': 'none'};
@@ -435,7 +440,8 @@ class stateView extends State<ViewC> {
                                     }
                                     return {
                                       'font-size': '${TextScaling.round()}px',
-                                      'line-height': '${TextScaling.round() * 1.83333}px'
+                                      'line-height':
+                                          '${TextScaling.round() * 1.83333}px'
                                     };
                                   },
                                   onTapImage: (image) {
@@ -455,7 +461,9 @@ class stateView extends State<ViewC> {
                             }
 
                             // By default, show a loading spinner.
-                            return Center(child: CircularProgressIndicator());
+                            return Center(
+                                child:
+                                    CircularProgressIndicator(year2023: false));
                           },
                         ))),
                 Padding(padding: EdgeInsets.symmetric(vertical: 50)),
@@ -482,12 +490,11 @@ class stateView extends State<ViewC> {
                       child: TextButton(
                           onPressed: () {
                             showModalBottomSheet(
-                              showDragHandle: true,
+                                showDragHandle: true,
                                 context: context,
-                                builder: (context){
+                                builder: (context) {
                                   return LinksOpen(links: links, exts: exts);
-                                }
-                            );
+                                });
                           },
                           child: Row(
                             children: [
@@ -496,8 +503,7 @@ class stateView extends State<ViewC> {
                                 padding: EdgeInsets.only(left: 10),
                                 child: Text(
                                   "附件",
-                                  style: TextStyle(
-                                      fontSize: 22),
+                                  style: TextStyle(fontSize: 22),
                                 ),
                               )
                             ],
@@ -508,10 +514,9 @@ class stateView extends State<ViewC> {
                           showModalBottomSheet(
                               showDragHandle: true,
                               context: context,
-                              builder: (context){
+                              builder: (context) {
                                 return LinksOpen(links: links, exts: exts);
-                              }
-                          );
+                              });
                         },
                         child: Row(
                           children: [
@@ -520,8 +525,7 @@ class stateView extends State<ViewC> {
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
                                 "連結",
-                                style: TextStyle(
-                                    fontSize: 22),
+                                style: TextStyle(fontSize: 22),
                               ),
                             )
                           ],
@@ -544,10 +548,9 @@ class stateView extends State<ViewC> {
                           showModalBottomSheet(
                               showDragHandle: true,
                               context: context,
-                              builder: (context){
+                              builder: (context) {
                                 return LinksOpen(links: [], exts: exts);
-                              }
-                          );
+                              });
                         },
                         child: Row(
                           children: [
@@ -556,8 +559,7 @@ class stateView extends State<ViewC> {
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
                                 "連結",
-                                style: TextStyle(
-                                    fontSize: 22),
+                                style: TextStyle(fontSize: 22),
                               ),
                             )
                           ],
@@ -577,10 +579,9 @@ class stateView extends State<ViewC> {
                           showModalBottomSheet(
                               showDragHandle: true,
                               context: context,
-                              builder: (context){
+                              builder: (context) {
                                 return LinksOpen(links: links, exts: []);
-                              }
-                          );
+                              });
                         },
                         child: Row(
                           children: [
@@ -589,8 +590,7 @@ class stateView extends State<ViewC> {
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
                                 "附件",
-                                style: TextStyle(
-                                    fontSize: 22),
+                                style: TextStyle(fontSize: 22),
                               ),
                             )
                           ],

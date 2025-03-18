@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:math';
 import 'package:app_popup_menu/app_popup_menu.dart';
@@ -18,32 +17,30 @@ class PublicItem {
   final String url;
   final int count;
   final List tags;
-  PublicItem({
-    required this.title,
-    required this.agency,
-    required this.date,
-    required this.url,
-    required this.count,
-    required this.tags
-  });
+  PublicItem(
+      {required this.title,
+      required this.agency,
+      required this.date,
+      required this.url,
+      required this.count,
+      required this.tags});
 }
 
 bool ShowPinned = true;
 
 Future<List<PublicItem>> result = Future.value([]);
 
-String cookieGenerator (int length){
+String cookieGenerator(int length) {
   var ListChar = "abcdefghijklmnopqrstuvwxyz012345";
   var res = "";
-  for (var x = 0;x < length;x++){
+  for (var x = 0; x < length; x++) {
     var intValue = Random().nextInt(ListChar.length);
     res += ListChar[intValue].toString();
   }
   return res;
 }
 
-
-Future<List<PublicItem>> getCC () async {
+Future<List<PublicItem>> getCC() async {
   var url = Uri.https('www.yphs.tp.edu.tw', 'category/news/news1/');
   var response = await http.get(url);
   var document = parse(response.body);
@@ -55,40 +52,68 @@ Future<List<PublicItem>> getCC () async {
   List<PublicItem> result = [];
   List urls = [];
   List tags = [];
-  for (var i = 0; i < newsCount;i++){
+  for (var i = 0; i < newsCount; i++) {
     List currentTags = [];
     int tagCount = 0;
-    if (TDs[i].children[1].getElementsByClassName("sticky_text").length == 1){
+    if (TDs[i].children[1].getElementsByClassName("sticky_text").length == 1) {
       currentTags.add("置頂");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_1").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_1")
+            .length ==
+        1) {
       currentTags.add("公告");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_2").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_2")
+            .length ==
+        1) {
       currentTags.add("轉知");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_3").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_3")
+            .length ==
+        1) {
       currentTags.add("檢定");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_4").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_4")
+            .length ==
+        1) {
       currentTags.add("狂賀");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_5").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_5")
+            .length ==
+        1) {
       currentTags.add("競賽");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_6").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_6")
+            .length ==
+        1) {
       currentTags.add("課程");
-      tagCount+=2;
+      tagCount += 2;
     }
-    if (TDs[i].children[1].getElementsByClassName("file_type news_type_7").length == 1){
+    if (TDs[i]
+            .children[1]
+            .getElementsByClassName("file_type news_type_7")
+            .length ==
+        1) {
       currentTags.add("重要");
-      tagCount+=2;
+      tagCount += 2;
     }
     titles.add(trimStr(TDs[i].children[1].children[0].text, tagCount, 0));
     dates.add(TDs[i].children[0].innerHtml);
@@ -96,11 +121,16 @@ Future<List<PublicItem>> getCC () async {
     urls.add(TDs[i].children[1].children[0].attributes['href'].toString());
     tags.add(currentTags);
   }
-  for (var j = 0; j < newsCount;j++){
-    result.add(PublicItem(title: titles[j], agency: agencies[j], date: dates[j], url: urls[j],count: j,tags: tags[j]));
+  for (var j = 0; j < newsCount; j++) {
+    result.add(PublicItem(
+        title: titles[j],
+        agency: agencies[j],
+        date: dates[j],
+        url: urls[j],
+        count: j,
+        tags: tags[j]));
   }
   return result;
-
 }
 
 class publicCC extends StatefulWidget {
@@ -113,25 +143,22 @@ class publicCC extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _publicCCState(setStateCallBack: setStateCallBack);
   }
-
 }
 
-
-Widget gotoSettings (child) {
+Widget gotoSettings(child) {
   return PageTransitionSwitcher(
-      transitionBuilder: (child, animation, secondaryAnimation) {
-        return SharedAxisTransition(
-          child: child,
-          transitionType: SharedAxisTransitionType.horizontal,
-          animation: animation,
-          secondaryAnimation: secondaryAnimation,
-        );
-      },
+    transitionBuilder: (child, animation, secondaryAnimation) {
+      return SharedAxisTransition(
+        child: child,
+        transitionType: SharedAxisTransitionType.horizontal,
+        animation: animation,
+        secondaryAnimation: secondaryAnimation,
+      );
+    },
     child: child,
     duration: Duration(milliseconds: 1000),
   );
 }
-
 
 class _publicCCState extends State<publicCC> {
   @override
@@ -144,7 +171,6 @@ class _publicCCState extends State<publicCC> {
   Stream<SwipeRefreshState> get _stream => _controller.stream;
 
   Widget build(BuildContext context) {
-
     Future<void> _refresh() async {
       result = getCC();
       _controller.sink.add(SwipeRefreshState.hidden);
@@ -162,49 +188,51 @@ class _publicCCState extends State<publicCC> {
                   return Column(
                     children: [
                       InkWell(
-                        onTap: () {
-                          if (ShowPinned == true){
-                            ShowPinned = false;
-                          }else{
-                            ShowPinned = true;
-                          }
-                          setState(() {
-
-                          });
-                        },
-                        child: Padding(
+                          onTap: () {
+                            if (ShowPinned == true) {
+                              ShowPinned = false;
+                            } else {
+                              ShowPinned = true;
+                            }
+                            setState(() {});
+                          },
+                          child: Padding(
                             padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              ShowPinned == true ? Icon(Icons.expand_more,size: 40) : Icon(Icons.expand_less,size: 40),
-                              Text("置頂公告",style: TextStyle(fontSize: 20),)
-                            ],
-                          ),
-                        )
-                      ),
+                            child: Row(
+                              children: [
+                                ShowPinned == true
+                                    ? Icon(Icons.expand_more, size: 40)
+                                    : Icon(Icons.expand_less, size: 40),
+                                Text(
+                                  "置頂公告",
+                                  style: TextStyle(fontSize: 20),
+                                )
+                              ],
+                            ),
+                          )),
                       Column(
-                        children:
-                        // [SwipeRefresh.material(
-                        //   shrinkWrap: true,
-                        //   stateStream: _stream,
-                        //   onRefresh: _refresh,
-                        //   padding: const EdgeInsets.symmetric(vertical: 10),
-                        //   children: List.generate(snapshot.data!.length, (index) =>
-                        //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
-                        //   ),
-                        // ),
-                        List.generate(snapshot.data!.length, (index) =>
-                            ListCard(
-                              title: snapshot.data![index].title,
-                              agency: snapshot.data![index].agency,
-                              date: snapshot.data![index].date,
-                              count: snapshot.data![index].count,
-                              url: snapshot.data![index].url,
-                              tags: snapshot.data![index].tags,
-                            )
-                        )
-                      // ],
-                    )
+                          children:
+                              // [SwipeRefresh.material(
+                              //   shrinkWrap: true,
+                              //   stateStream: _stream,
+                              //   onRefresh: _refresh,
+                              //   padding: const EdgeInsets.symmetric(vertical: 10),
+                              //   children: List.generate(snapshot.data!.length, (index) =>
+                              //       ListCard(title: snapshot.data![index][0], agency: snapshot.data![index][1], date: snapshot.data![index][2], count: snapshot.data![index][3])
+                              //   ),
+                              // ),
+                              List.generate(
+                                  snapshot.data!.length,
+                                  (index) => ListCard(
+                                        title: snapshot.data![index].title,
+                                        agency: snapshot.data![index].agency,
+                                        date: snapshot.data![index].date,
+                                        count: snapshot.data![index].count,
+                                        url: snapshot.data![index].url,
+                                        tags: snapshot.data![index].tags,
+                                      ))
+                          // ],
+                          )
                     ],
                   );
                 } else if (snapshot.hasError) {
@@ -214,15 +242,14 @@ class _publicCCState extends State<publicCC> {
                 // By default, show a loading spinner.
                 return const Center(
                     child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: CircularProgressIndicator(),
-                    )
-                );
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: CircularProgressIndicator(year2023: false),
+                ));
               },
             ),
           ),
         ],
-        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
@@ -247,60 +274,57 @@ class _publicCCState extends State<publicCC> {
             IconButton(
                 onPressed: () {
                   result = Future.value([]);
-                  setState(() {
-
-                  });
+                  setState(() {});
                   result = getCC();
                 },
-                icon: Icon(Icons.refresh_outlined)
-            ),
+                icon: Icon(Icons.refresh_outlined)),
           ],
         ),
       ),
-      );
+    );
   }
-
 }
 
 class FilterOptions extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
           child: Padding(
-              padding: EdgeInsets.only(left: 20,top:20,bottom: 20),
-              child: Row(
-                children: [
-                  Icon(Icons.apartment_outlined,size: 30,),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      "處室",
-                      style: TextStyle(
-                          fontSize: 30
-                      ),
-                    ),
-                  )
-                ],
-              ),
+            padding: EdgeInsets.only(left: 20, top: 20, bottom: 20),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.apartment_outlined,
+                  size: 30,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "處室",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                )
+              ],
+            ),
           ),
           onTap: () {},
         ),
         InkWell(
           child: Padding(
-            padding: EdgeInsets.only(left: 20,top:20,bottom: 20),
+            padding: EdgeInsets.only(left: 20, top: 20, bottom: 20),
             child: Row(
               children: [
-                Icon(Icons.calendar_month_outlined,size: 30,),
+                Icon(
+                  Icons.calendar_month_outlined,
+                  size: 30,
+                ),
                 Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
                     "日期",
-                    style: TextStyle(
-                        fontSize: 30
-                    ),
+                    style: TextStyle(fontSize: 30),
                   ),
                 )
               ],
@@ -320,19 +344,16 @@ class FilterOptions extends StatelessWidget {
   }
 }
 
-
-
-
 class ListCard extends StatelessWidget {
-  const ListCard({
-    Key? key,
-    required this.title,
-    required this.agency,
-    required this.date,
-    required this.count,
-    required this.url,
-    required this.tags
-  }) : super(key: key);
+  const ListCard(
+      {Key? key,
+      required this.title,
+      required this.agency,
+      required this.date,
+      required this.count,
+      required this.url,
+      required this.tags})
+      : super(key: key);
   final String title;
   final String agency;
   final String date;
@@ -342,208 +363,235 @@ class ListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Visibility(
+    return Visibility(
         visible: (tags.contains("置頂") == true) ? ShowPinned : true,
-          child: Hero(
-            tag: "main" + count.toString(),
-            child: Card(
-                clipBehavior: Clip.hardEdge,
-                margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                elevation: 0,
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                child: InkWell(
-                  onTap: () {
-                    content = getContentOfCC(url);
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return ViewC(
-                            title: title,
-                            agency: agency,
-                            date: date,
-                            count: count,
-                            url: url,
-                            tags: tags,
-                          );
-                        })
+        child: Hero(
+          tag: "main" + count.toString(),
+          child: Card(
+              clipBehavior: Clip.hardEdge,
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              elevation: 0,
+              color: Theme.of(context).colorScheme.surfaceVariant,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: InkWell(
+                onTap: () {
+                  content = getContentOfCC(url);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return ViewC(
+                      title: title,
+                      agency: agency,
+                      date: date,
+                      count: count,
+                      url: url,
+                      tags: tags,
                     );
-
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 20, top: 20,bottom: 30,right: 20),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(title,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              fontSize: 20,
-                            ),
+                  }));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 20, top: 20, bottom: 30, right: 20),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontSize: 20,
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20,right: 10),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(agency,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(date,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      ),
-                      if (tags.length != 0)
+                    ),
+                    Row(
+                      children: [
                         Padding(
-                            padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 5),
-                                  child: Icon(
-                                    Icons.sell_outlined,
-                                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                  ),),
-                                Row(
-                                  children: List.generate(
-                                      tags.length, (index) =>
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 15),
-                                        child: Text(
-                                          "#"+tags[index],
-                                          style: TextStyle(
-                                            color: Theme.of(context).colorScheme.onSecondaryContainer,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      )
-                                  ),
+                          padding:
+                              EdgeInsets.only(left: 20, bottom: 20, right: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Icon(
+                              Icons.apartment_outlined,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20, right: 10),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              agency,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 20, bottom: 20, right: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Icon(
+                              Icons.calendar_month_outlined,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              date,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (tags.length != 0)
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 20, bottom: 20, right: 5),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(
+                                  Icons.sell_outlined,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
                                 ),
-                              ],
-                            )
-                        )
-                    ],
-                  ),
-                )
-            ),
-
-          )
-      );
+                              ),
+                              Row(
+                                children: List.generate(
+                                    tags.length,
+                                    (index) => Padding(
+                                          padding: EdgeInsets.only(right: 15),
+                                          child: Text(
+                                            "#" + tags[index],
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        )),
+                              ),
+                            ],
+                          ))
+                  ],
+                ),
+              )),
+        ));
   }
 }
 
 class ErrorCard extends StatelessWidget {
   const ErrorCard({
-    Key? key, required this.errorCode,
+    Key? key,
+    required this.errorCode,
   }) : super(key: key);
   final String errorCode;
 
   @override
   Widget build(BuildContext context) {
-    return
-      Card(
-          margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-          elevation: 0,
-          color: Theme.of(context).colorScheme.errorContainer,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: InkWell(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 10,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child:
-                          Icon(
-                            Icons.signal_cellular_connected_no_internet_0_bar_sharp,
-                            size: 30,
-                            color: Theme.of(context).colorScheme.onErrorContainer,
-                          ),
+    return Card(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        elevation: 0,
+        color: Theme.of(context).colorScheme.errorContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        child: InkWell(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(
+                          Icons
+                              .signal_cellular_connected_no_internet_0_bar_sharp,
+                          size: 30,
+                          color: Theme.of(context).colorScheme.onErrorContainer,
                         ),
-                        Text("連線錯誤",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onErrorContainer,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text("點擊重新整理重試",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
-                        fontSize: 20,
                       ),
+                      Text(
+                        "連線錯誤",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "點擊重新整理重試",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontSize: 20,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 0,bottom: 10,right: 20),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(errorCode,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer,
-                        fontSize: 12,
-                      ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 20, top: 0, bottom: 10, right: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    errorCode,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontSize: 12,
                     ),
                   ),
                 ),
-              ],
-            ),
-          )
-      );
+              ),
+            ],
+          ),
+        ));
   }
 }

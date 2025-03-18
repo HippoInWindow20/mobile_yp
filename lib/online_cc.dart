@@ -1,4 +1,3 @@
-
 import 'package:app_popup_menu/app_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -9,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:mobile_yp/view_private.dart';
 
-
 String? ASPCookie2 = "";
 String? eventValidation2 = "";
 String? viewstateGenerator2 = "";
@@ -17,276 +15,271 @@ String? viewState2 = "";
 
 Future<Widget> personalResult = Future.value(Text(""));
 
-
-Future<Widget> personalCC (String chkCode, BuildContext context,Function displayChkCode,Function setState) async {
-
+Future<Widget> personalCC(String chkCode, BuildContext context,
+    Function displayChkCode, Function setState) async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx');
-  var response = await http.post(
-      url,
-      headers: {
-        "Content-Type":"application/x-www-form-urlencoded",
-        "cookie":ASPCookie2!
-      },
-      body: {
-        "__VIEWSTATE": viewState2,
-        "__VIEWSTATEGENERATOR": viewstateGenerator2,
-        "__EVENTVALIDATION":eventValidation2,
-        "chk_id":"學生",
-        "tbx_sno": defaultNumber,
-        "tbx_pwd": defaultPwd,
-        "txtChkCode": chkCode,
-        "but_login_stud":"登入"
-      }
-  );
+  var response = await http.post(url, headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "cookie": ASPCookie2!
+  }, body: {
+    "__VIEWSTATE": viewState2,
+    "__VIEWSTATEGENERATOR": viewstateGenerator2,
+    "__EVENTVALIDATION": eventValidation2,
+    "chk_id": "學生",
+    "tbx_sno": defaultNumber,
+    "tbx_pwd": defaultPwd,
+    "txtChkCode": chkCode,
+    "but_login_stud": "登入"
+  });
   if (response.body.contains("Object moved")) {
     OnlineCCStep = "main";
     return returnCC();
-  }else if (response.body.contains("驗證碼錯誤")) {
-    showDialog(context: context, builder: (context){
-      return Dialog(
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Wrap(
-            children: [
-              Column(
+  } else if (response.body.contains("驗證碼錯誤")) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Wrap(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.error_outline_outlined,size: 40,),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "錯誤",
-                            style: TextStyle(
-                                fontSize: 30
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.error_outline_outlined,
+                              size: 40,
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "驗證碼錯誤",
-                            style: TextStyle(
-                                fontSize: 20
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: TextButton(
-                              onPressed: () {
-                                setState();
-                                Navigator.pop(context);
-                              },
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                "重試",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.onErrorContainer
-                                ),
-                              )
-                          ),
-                        )
-                      ],
-                    ),
+                                "錯誤",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "驗證碼錯誤",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    "重試",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onErrorContainer),
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
-          ),
-        ),
-      );
-    },barrierDismissible: false);
+              ),
+            ),
+          );
+        },
+        barrierDismissible: false);
     return displayChkCode();
-  }else if (response.body.contains("密碼錯誤")){
-    showDialog(context: context, builder: (context){
-      return Dialog(
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Wrap(
-            children: [
-              Column(
+  } else if (response.body.contains("密碼錯誤")) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Wrap(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.error_outline_outlined,size: 40,),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "錯誤",
-                            style: TextStyle(
-                                fontSize: 30
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.error_outline_outlined,
+                              size: 40,
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "密碼錯誤",
-                            style: TextStyle(
-                                fontSize: 20
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: TextButton(
-                              onPressed: () {
-                                setState();
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) {
-                                          return editPersonal();
-                                        }
-                                    )
-                                );
-                              },
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                "檢查設定",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.onErrorContainer
-                                ),
-                              )
-                          ),
-                        )
-                      ],
-                    ),
+                                "錯誤",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "密碼錯誤",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState();
+                                    Navigator.pop(context);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return editPersonal();
+                                    }));
+                                  },
+                                  child: Text(
+                                    "檢查設定",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onErrorContainer),
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
-          ),
-        ),
-      );
-    },barrierDismissible: false);
+              ),
+            ),
+          );
+        },
+        barrierDismissible: false);
     return displayChkCode();
-  }else if (response.body.contains("學號錯誤")){
-    showDialog(context: context, builder: (context){
-      return Dialog(
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Wrap(
-            children: [
-              Column(
+  } else if (response.body.contains("學號錯誤")) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Wrap(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.error_outline_outlined,size: 40,),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "錯誤",
-                            style: TextStyle(
-                                fontSize: 30
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.error_outline_outlined,
+                              size: 40,
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "學號錯誤",
-                            style: TextStyle(
-                                fontSize: 20
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: TextButton(
-                              onPressed: () {
-                                setState();
-                                Navigator.pop(context);
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) {
-                                          return editPersonal();
-                                        }
-                                    )
-                                );
-                              },
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                "檢查設定",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.onErrorContainer
-                                ),
-                              )
-                          ),
-                        )
-                      ],
-                    ),
+                                "錯誤",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                "學號錯誤",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: TextButton(
+                                  onPressed: () {
+                                    setState();
+                                    Navigator.pop(context);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) {
+                                      return editPersonal();
+                                    }));
+                                  },
+                                  child: Text(
+                                    "檢查設定",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onErrorContainer),
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
-          ),
-        ),
-      );
-    },barrierDismissible: false);
+              ),
+            ),
+          );
+        },
+        barrierDismissible: false);
     return displayChkCode();
-  }else{
+  } else {
     return Column(
       children: [
         Text("未知錯誤"),
@@ -295,26 +288,24 @@ Future<Widget> personalCC (String chkCode, BuildContext context,Function display
               personalResult = displayChkCode();
               setState();
             },
-            child: Text("確定")
-        )
+            child: Text("確定"))
       ],
     );
   }
 }
 
-Future<Widget> returnCC () async {
+Future<Widget> returnCC() async {
   var url = Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2-1.aspx');
   var response = await http.get(
-      url,
-      headers: {
-        "cookie":ASPCookie2!
-      },
+    url,
+    headers: {"cookie": ASPCookie2!},
   );
   var document = parse(response.body);
 
-
-  viewstateGenerator3 = document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
-  eventValidation3 = document.getElementById("__EVENTVALIDATION")?.attributes['value'];
+  viewstateGenerator3 =
+      document.getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
+  eventValidation3 =
+      document.getElementById("__EVENTVALIDATION")?.attributes['value'];
   viewState3 = document.getElementById("__VIEWSTATE")?.attributes['value'];
 
   List titles = [];
@@ -322,76 +313,64 @@ Future<Widget> returnCC () async {
   List dates = [];
   var TDs = document.getElementsByTagName("td");
   for (var i in TDs) {
-    if (i.outerHtml.toString().contains('width="70"')){
+    if (i.outerHtml.toString().contains('width="70"')) {
       var tmp = i.innerHtml;
-      var str = tmp.substring(22,(tmp.length - 7));
+      var str = tmp.substring(22, (tmp.length - 7));
       agencies.add(str);
     }
   }
 
   for (var j in TDs) {
-    if (j.outerHtml.toString().contains('width="400"')){
+    if (j.outerHtml.toString().contains('width="400"')) {
       var tmp = j.innerHtml;
-      var str = tmp.substring(22,(tmp.length - 7));
+      var str = tmp.substring(22, (tmp.length - 7));
       titles.add(str);
     }
   }
 
   for (var k in TDs) {
-    if (k.outerHtml.toString().contains('width="180"')){
+    if (k.outerHtml.toString().contains('width="180"')) {
       var tmp = k.innerHtml;
-      var str = tmp.substring(22,(tmp.length - 7));
+      var str = tmp.substring(22, (tmp.length - 7));
       dates.add(str);
     }
   }
 
   var result = [];
 
-  for (var m = 0;m < dates.length;m++){
-    result.add([titles[m],agencies[m],dates[m],m]);
+  for (var m = 0; m < dates.length; m++) {
+    result.add([titles[m], agencies[m], dates[m], m]);
   }
-
 
   return Column(
     children: List.generate(
-        result.length, (index) =>
-        ListCardPrivate(
+        result.length,
+        (index) => ListCardPrivate(
             title: result[index][0],
             agency: result[index][1],
             date: result[index][2],
-            count: result[index][3])
-    ),
+            count: result[index][3])),
   );
 }
 
-
-
-
 class OnlineCC extends StatefulWidget {
-  OnlineCC({
-    required this.setStateCallBack,
-    required this.displayChkCode
-  });
+  OnlineCC({required this.setStateCallBack, required this.displayChkCode});
   final Function setStateCallBack;
   final Function displayChkCode;
 
   @override
   State<StatefulWidget> createState() {
-    return _OnlineCCState(setStateCallBack: setStateCallBack, displayChkCode: displayChkCode);
+    return _OnlineCCState(
+        setStateCallBack: setStateCallBack, displayChkCode: displayChkCode);
   }
-
 }
 
-
 class _OnlineCCState extends State<OnlineCC> {
-  _OnlineCCState({
-    required this.setStateCallBack,
-    required this.displayChkCode
-  });
+  _OnlineCCState(
+      {required this.setStateCallBack, required this.displayChkCode});
   final Function setStateCallBack;
   final Function displayChkCode;
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -409,10 +388,9 @@ class _OnlineCCState extends State<OnlineCC> {
 
                 return const Center(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: CircularProgressIndicator(),
-                    )
-                );
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: CircularProgressIndicator(year2023: false),
+                ));
               },
             ),
           ),
@@ -424,27 +402,27 @@ class _OnlineCCState extends State<OnlineCC> {
             IconButton(
                 onPressed: () {
                   personalResult = Future.value(Text(""));
-                  setState(() {
-
-                  });
+                  setState(() {});
                   if (OnlineCCStep == "validation")
                     personalResult = displayChkCode();
                   else
                     personalResult = returnCC();
                 },
-                icon: Icon(Icons.refresh_outlined)
-            ),
+                icon: Icon(Icons.refresh_outlined)),
           ],
         ),
       ),
     );
   }
-
 }
 
 class ListCardPrivate extends StatelessWidget {
   const ListCardPrivate({
-    Key? key, required this.title, required this.agency, required this.date, required this.count,
+    Key? key,
+    required this.title,
+    required this.agency,
+    required this.date,
+    required this.count,
   }) : super(key: key);
   final String title;
   final String agency;
@@ -453,92 +431,115 @@ class ListCardPrivate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Hero(
-        tag: "main" + count.toString(),
-        child: Card(
-            clipBehavior: Clip.hardEdge,
-            margin: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-            elevation: 0,
-            color: Theme.of(context).colorScheme.surfaceVariant,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: InkWell(
-              onTap: () {
-                contentPrivate = getContentOfOnlineCC(count);
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) {return ViewPrivate(title: title,agency: agency,date: date,count: count,);}));
-
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 20,bottom: 20,right: 20),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(title,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                          fontSize: 20,
-                        ),
+    return Hero(
+      tag: "main" + count.toString(),
+      child: Card(
+          clipBehavior: Clip.hardEdge,
+          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: InkWell(
+            onTap: () {
+              contentPrivate = getContentOfOnlineCC(count);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return ViewPrivate(
+                  title: title,
+                  agency: agency,
+                  date: date,
+                  count: count,
+                );
+              }));
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 20, top: 20, bottom: 20, right: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                        fontSize: 20,
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child:Icon(Icons.apartment_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, bottom: 20, right: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Icon(
+                          Icons.apartment_outlined,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          size: 20,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20,right: 10),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(agency,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              fontSize: 16,
-                            ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20, right: 10),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          agency,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 20,bottom: 20,right: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child:Icon(Icons.calendar_month_outlined,color: Theme.of(context).colorScheme.onSecondaryContainer,size: 20,),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, bottom: 20, right: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Icon(
+                          Icons.calendar_month_outlined,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          size: 20,
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(date,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondaryContainer,
-                              fontSize: 16,
-                            ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          date,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontSize: 16,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-
-                ],
-              ),
-            )
-        ),
-
-      );
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }
-

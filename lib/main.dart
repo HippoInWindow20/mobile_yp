@@ -24,18 +24,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'admin.dart';
 // import 'home.dart';
 
-Map<int, Color> color =
-{
-  50:Color.fromRGBO(50,107,0, .1),
-  100:Color.fromRGBO(50,107,0, .2),
-  200:Color.fromRGBO(50,107,0, .3),
-  300:Color.fromRGBO(50,107,0, .4),
-  400:Color.fromRGBO(50,107,0, .5),
-  500:Color.fromRGBO(50,107,0, .6),
-  600:Color.fromRGBO(50,107,0, .7),
-  700:Color.fromRGBO(50,107,0, .8),
-  800:Color.fromRGBO(50,107,0, .9),
-  900:Color.fromRGBO(50,107,0, 1),
+Map<int, Color> color = {
+  50: Color.fromRGBO(50, 107, 0, .1),
+  100: Color.fromRGBO(50, 107, 0, .2),
+  200: Color.fromRGBO(50, 107, 0, .3),
+  300: Color.fromRGBO(50, 107, 0, .4),
+  400: Color.fromRGBO(50, 107, 0, .5),
+  500: Color.fromRGBO(50, 107, 0, .6),
+  600: Color.fromRGBO(50, 107, 0, .7),
+  700: Color.fromRGBO(50, 107, 0, .8),
+  800: Color.fromRGBO(50, 107, 0, .9),
+  900: Color.fromRGBO(50, 107, 0, 1),
 };
 
 String? ASPCookie = "";
@@ -71,10 +70,10 @@ List<String> savedCCContentManual = [];
 // }
 
 // List<String> TitlesList = adminSwitch ? ["公告欄","收藏","網路聯絡簿","行事曆","聯絡簿上傳","設定"] : ["公告欄","收藏","網路聯絡簿","行事曆","設定"];
-List<String> TitlesList = adminSwitch ? ["公告欄","網路聯絡簿","聯絡簿上傳","設定"] : ["公告欄","網路聯絡簿","設定"];
+List<String> TitlesList =
+    adminSwitch ? ["公告欄", "網路聯絡簿", "聯絡簿上傳", "設定"] : ["公告欄", "網路聯絡簿", "設定"];
 
-
-Future<void> main()  async {
+Future<void> main() async {
   ASPCookie = "ASP.NET_SessionId=" + cookieGenerator(24);
   ASPCookie2 = "ASP.NET_SessionId=" + cookieGenerator(24);
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,66 +92,63 @@ Future<void> main()  async {
   final Object? prefsSavedContent = prefs.get("savedContent");
   final Object? prefsSavedCCContent = prefs.get("savedCCContent");
   final int? savedTextSize = prefs.getInt("savedTextSize");
-  if (savedTheme != null){
+  if (savedTheme != null) {
     setDisplayMode = savedTheme.toString();
     if (savedTheme.toString() == "深色")
       preferredTheme = ThemeMode.dark;
-    else if  (savedTheme.toString() == "淺色")
+    else if (savedTheme.toString() == "淺色")
       preferredTheme = ThemeMode.light;
-    else if  (savedTheme.toString() == "系統預設")
-      preferredTheme = ThemeMode.system;
+    else if (savedTheme.toString() == "系統預設") preferredTheme = ThemeMode.system;
   }
-  if (savedCS != null){
+  if (savedCS != null) {
     setColourMode = savedCS.toString();
     if (savedCS.toString() == "延平綠")
       preferredCS = green;
-    else if  (savedCS.toString() == "深夜藍")
+    else if (savedCS.toString() == "深夜藍")
       preferredCS = blue;
-    else if  (savedCS.toString() == "低調紫")
+    else if (savedCS.toString() == "低調紫")
       preferredCS = purple;
-    else if  (savedCS.toString() == "熱血紅")
+    else if (savedCS.toString() == "熱血紅")
       preferredCS = red;
-    else if  (savedCS.toString() == "陽光橘")
-      preferredCS = orange;
+    else if (savedCS.toString() == "陽光橘") preferredCS = orange;
   }
-  if (savedNumber != null){
+  if (savedNumber != null) {
     defaultNumber = savedNumber.toString();
   }
-  if (savedPwd != null){
+  if (savedPwd != null) {
     defaultPwd = savedPwd.toString();
   }
-  if (savedSerial != null){
+  if (savedSerial != null) {
     defaultSerial = savedSerial.toString();
   }
-  if (savedBD != null){
+  if (savedBD != null) {
     defaultBD = savedBD.toString();
   }
-  if (savedAdminSwitch != null){
+  if (savedAdminSwitch != null) {
     adminSwitch = savedAdminSwitch;
   }
-  if (savedAccount != null){
+  if (savedAccount != null) {
     defaultAccount = savedAccount.toString();
   }
-  if (savedAdminPwd != null){
+  if (savedAdminPwd != null) {
     defaultAdminPwd = savedAdminPwd.toString();
   }
-  if (savedClass != null){
+  if (savedClass != null) {
     defaultClass = savedClass.toString();
   }
-  if (savedGrade != null){
+  if (savedGrade != null) {
     selectedGrade = savedGrade;
   }
-  if (prefsSavedContent != null){
+  if (prefsSavedContent != null) {
     savedContent = prefsSavedContent.toString();
   }
-  if (prefsSavedCCContent != null){
+  if (prefsSavedCCContent != null) {
     savedCCContent = prefsSavedCCContent.toString();
   }
-  if (savedTextSize != null){
+  if (savedTextSize != null) {
     TextScaling = savedTextSize.toDouble();
   }
   runApp(MobileYP());
-
 }
 
 ThemeMode preferredTheme = ThemeMode.system;
@@ -169,8 +165,7 @@ class MobileYP extends StatefulWidget {
       context.findAncestorStateOfType<__MobileYPState>()!;
 }
 
-class __MobileYPState extends State<MobileYP>{
-
+class __MobileYPState extends State<MobileYP> {
   void changeTheme(ThemeMode themeMode) {
     setState(() {
       preferredTheme = themeMode;
@@ -184,8 +179,7 @@ class __MobileYPState extends State<MobileYP>{
   }
 
   void setStateFunc() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   Widget build(BuildContext context) {
@@ -205,23 +199,22 @@ class __MobileYPState extends State<MobileYP>{
       home: MainApp(),
     );
   }
-
 }
 
-
-
-Future<File> beforeChk () async {
+Future<File> beforeChk() async {
   var getPage = await http.get(Uri.https('lds.yphs.tp.edu.tw', 'tea/tu2.aspx'));
-  viewstateGenerator2 = parse(getPage.body).getElementById("__VIEWSTATEGENERATOR")?.attributes['value'];
-  eventValidation2 = parse(getPage.body).getElementById("__EVENTVALIDATION")?.attributes['value'];
-  viewState2 = parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
+  viewstateGenerator2 = parse(getPage.body)
+      .getElementById("__VIEWSTATEGENERATOR")
+      ?.attributes['value'];
+  eventValidation2 = parse(getPage.body)
+      .getElementById("__EVENTVALIDATION")
+      ?.attributes['value'];
+  viewState2 =
+      parse(getPage.body).getElementById("__VIEWSTATE")?.attributes['value'];
   Directory dir = await getTemporaryDirectory();
   var getValidate = await http.get(
       Uri.https('lds.yphs.tp.edu.tw', 'tea/validatecode.aspx'),
-      headers: {
-        "cookie":ASPCookie2!
-      }
-  );
+      headers: {"cookie": ASPCookie2!});
   var randomNumber = cookieGenerator(8);
   File tempfile = File(dir.path + "/${randomNumber}.png");
   await tempfile.writeAsBytes(getValidate.bodyBytes);
@@ -235,28 +228,24 @@ class MainApp extends StatefulWidget {
 
   @override
   State<MainApp> createState() => _currentPage();
-
 }
+
 int currentPage = 0;
+
 class _currentPage extends State<MainApp> {
-
-  void setStateFunc () {
-    setState(() {
-
-    });
+  void setStateFunc() {
+    setState(() {});
   }
 
   void initState() {
     super.initState();
     result = getCC();
     personalResult = displayChkCode();
-    uploadResult = retrieveAdminList(setStateFunc,context);
+    uploadResult = retrieveAdminList(setStateFunc, context);
     calResult = getCal();
   }
 
-
-
-  Future<Widget> displayChkCode () async {
+  Future<Widget> displayChkCode() async {
     var tempfile = await beforeChk();
     TextEditingController chkCodeController = TextEditingController();
     return Center(
@@ -265,7 +254,7 @@ class _currentPage extends State<MainApp> {
           Container(
             width: double.infinity,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50,vertical: 30),
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 30),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: Image.file(
@@ -276,7 +265,7 @@ class _currentPage extends State<MainApp> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+            padding: EdgeInsets.symmetric(horizontal: 50),
             child: TextFormField(
               controller: chkCodeController,
               decoration: InputDecoration(
@@ -284,61 +273,48 @@ class _currentPage extends State<MainApp> {
                   labelText: '驗證碼',
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.onBackground
-                      )
-                  ),
+                          color: Theme.of(context).colorScheme.onBackground)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.onBackground
-                      )
-                  )
-              ),
+                          color: Theme.of(context).colorScheme.onBackground))),
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(top: 30,left: 50,right: 50),
+            padding: EdgeInsets.only(top: 30, left: 50, right: 50),
             child: ElevatedButton(
-              style: ButtonStyle(
-                textStyle: MaterialStatePropertyAll(
-                    TextStyle(
-                      fontSize: 30
-                    )
-                ),
-                fixedSize: MaterialStatePropertyAll(
-                  Size(
-                      (MediaQuery.of(context).size.width - 32),100
+                style: ButtonStyle(
+                  textStyle: MaterialStatePropertyAll(TextStyle(fontSize: 30)),
+                  fixedSize: MaterialStatePropertyAll(
+                    Size((MediaQuery.of(context).size.width - 32), 100),
                   ),
                 ),
-              ),
                 onPressed: () {
-                  personalResult = Future.value(CircularProgressIndicator());
-                  setState(() {
-
-                  });
-                  personalResult = personalCC(chkCodeController.text,context,displayChkCode,setStateFromMain);
+                  personalResult =
+                      Future.value(CircularProgressIndicator(year2023: false));
+                  setState(() {});
+                  personalResult = personalCC(chkCodeController.text, context,
+                      displayChkCode, setStateFromMain);
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20,horizontal: 50),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                   child: Text("登入"),
-                )
-            ),
+                )),
           )
         ],
       ),
     );
   }
 
-
-
-  void setStateFromChild (index) {
+  void setStateFromChild(index) {
     setState(() {
       currentPage = index;
     });
   }
-  void setStateFromMain () {
-    setState(() {
-    });
+
+  void setStateFromMain() {
+    setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,8 +331,14 @@ class _currentPage extends State<MainApp> {
         },
         children: [
           UserAccountsDrawerHeader(
-              accountName: Text("測試用戶",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-              accountEmail: Text("testaccount@yphs.tp.edu.tw",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+            accountName: Text(
+              "測試用戶",
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+            accountEmail: Text(
+              "testaccount@yphs.tp.edu.tw",
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
           ),
           NavigationDrawerDestination(
             selectedIcon: Icon(Icons.info),
@@ -400,7 +382,9 @@ class _currentPage extends State<MainApp> {
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: publicCC(setStateCallBack: setStateFromMain,),
+          child: publicCC(
+            setStateCallBack: setStateFromMain,
+          ),
         ),
         // Container(
         //   color: Theme.of(context).colorScheme.onPrimary,
@@ -410,7 +394,10 @@ class _currentPage extends State<MainApp> {
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: OnlineCC(setStateCallBack: setStateFromMain,displayChkCode: displayChkCode,),
+          child: OnlineCC(
+            setStateCallBack: setStateFromMain,
+            displayChkCode: displayChkCode,
+          ),
         ),
         // Container(
         //   color: Theme.of(context).colorScheme.onPrimary,
@@ -421,16 +408,18 @@ class _currentPage extends State<MainApp> {
           Container(
             color: Theme.of(context).colorScheme.onPrimary,
             alignment: Alignment.center,
-            child: UploadCC(setStateCallBack: setStateFromMain,),
+            child: UploadCC(
+              setStateCallBack: setStateFromMain,
+            ),
           ),
         Container(
           color: Theme.of(context).colorScheme.onPrimary,
           alignment: Alignment.center,
-          child: Settings(setStateCallBack: setStateFromMain,),
+          child: Settings(
+            setStateCallBack: setStateFromMain,
+          ),
         ),
       ][currentPage],
     );
   }
 }
-
-

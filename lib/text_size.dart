@@ -55,50 +55,52 @@ class _StateTextSize extends State {
                   ),
                   Text(
                     "請滑動下方滑桿調整大小。",
-                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
-                  if(TextScaling < 24)
+                  if (TextScaling < 24)
                     Text(
-                      "目前大小："+ TextScaling.round().toString() + " (小)",
+                      "目前大小：" + TextScaling.round().toString() + " (小)",
                       style: TextStyle(fontSize: 20),
                     ),
-                  if(TextScaling == 24)
+                  if (TextScaling == 24)
                     Text(
-                      "目前大小："+ TextScaling.round().toString() + " (預設，中)",
+                      "目前大小：" + TextScaling.round().toString() + " (預設，中)",
                       style: TextStyle(fontSize: 20),
                     ),
-                  if(TextScaling > 24 && TextScaling <= 36)
+                  if (TextScaling > 24 && TextScaling <= 36)
                     Text(
-                      "目前大小："+ TextScaling.round().toString() + " (中)",
+                      "目前大小：" + TextScaling.round().toString() + " (中)",
                       style: TextStyle(fontSize: 20),
                     ),
-                  if(TextScaling > 36 && TextScaling <= 54)
+                  if (TextScaling > 36 && TextScaling <= 54)
                     Text(
-                      "目前大小："+ TextScaling.round().toString() + " (大)",
+                      "目前大小：" + TextScaling.round().toString() + " (大)",
                       style: TextStyle(fontSize: 20),
                     ),
-                  if(TextScaling > 54)
+                  if (TextScaling > 54)
                     Text(
-                      "目前大小："+ TextScaling.round().toString() + " (超大，你老花膩？)",
+                      "目前大小：" + TextScaling.round().toString() + " (超大，你老花膩？)",
                       style: TextStyle(fontSize: 20),
                     ),
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     child: SliderTheme(
                       data: SliderThemeData(
-                          trackHeight: 15,
-                          // valueIndicatorTextStyle: TextStyle(
-                          //     fontSize: 20,
-                          //     color: Theme.of(context).colorScheme.onPrimary,
-                          //     fontWeight: FontWeight.w500
-                          // )
+                        year2023: false,
+                        trackHeight: 15,
+                        // valueIndicatorTextStyle: TextStyle(
+                        //     fontSize: 20,
+                        //     color: Theme.of(context).colorScheme.onPrimary,
+                        //     fontWeight: FontWeight.w500
+                        // )
                       ),
                       child: Slider(
                         value: TextScaling,
                         onChanged: (value) async {
                           TextScaling = value;
                           var prefs = await SharedPreferences.getInstance();
-                          await prefs.setInt("savedTextSize", TextScaling.round());
+                          await prefs.setInt(
+                              "savedTextSize", TextScaling.round());
                           setStateFunc();
                           setState(() {});
                         },
